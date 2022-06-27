@@ -1,0 +1,96 @@
+# SPDX-License-Identifier: BUSL-1.1
+
+basePath: /v1w
+definitions:
+  notifications.NotifyUserArg:
+    properties:
+      type:
+        description: Optional, default is `PING`.
+        enum:
+        - PING
+        type: string
+      userId:
+        example: did:ethr:0x4B73C58370AEfcEf86A6021afCDe5673511376B2
+        type: string
+    type: object
+  server.ErrorResponse:
+    properties:
+      code:
+        example: SOMETHING_NOT_FOUND
+        type: string
+      data:
+        additionalProperties: true
+        type: object
+      error:
+        example: something is missing
+        type: string
+    type: object
+info:
+  contact:
+    name: ice.io
+    url: https://ice.io
+  description: API that handles everything related to write only operations for user
+    notifications.
+  title: User Notifications API
+  version: latest
+paths:
+  /notifications:
+    post:
+      consumes:
+      - application/json
+      description: Notifies users about specific use cases, via the `type` field.
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Request params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/notifications.NotifyUserArg'
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: ok - accepted
+        "400":
+          description: if validations fail
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "401":
+          description: if not authorized
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "403":
+          description: if not allowed
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "404":
+          description: if user not found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "409":
+          description: if user already notified in the last X seconds
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "422":
+          description: if syntax fails
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "504":
+          description: if request times out
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      tags:
+      - Notifications
+schemes:
+- https
+swagger: "2.0"

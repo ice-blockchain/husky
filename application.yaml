@@ -1,0 +1,42 @@
+# SPDX-License-Identifier: BUSL-1.1
+
+development: true
+logger:
+  encoder: console
+  level: debug
+cmd/husky-pack:
+  host: localhost:1443
+  version: local
+  defaultEndpointTimeout: 30s
+  httpServer:
+    port: 1443
+    certPath: cmd/husky-pack/.testdata/localhost.crt
+    keyPath: cmd/husky-pack/.testdata/localhost.key
+notifications:
+  db:
+    spaces:
+      - USERS
+      - NOTIFICATION_TYPES
+      - SENT_NOTIFICATIONS_HISTORY
+      - USER_DEVICE_SETTINGS
+    urls:
+      - localhost:3301
+    user: admin
+    password: pass
+  messageBroker:
+    consumerGroup: husky-local-testing
+    createTopics: true
+    urls:
+      - localhost:9092
+    topics:
+      - name: TODO
+        partitions: 10
+        replicationFactor: 1
+        retention: 1000h
+      ### The next topics are not owned by this service, but are needed to be created for the local/test environment.
+      - name: TODO
+        partitions: 10
+        replicationFactor: 1
+        retention: 1000h
+    consumingTopics:
+      - TODO
