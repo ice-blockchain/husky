@@ -1,0 +1,4 @@
+{
+ "body": "UIqembu lakho lisanda kuba likhulu! 🎉",
+ "title": "🔥 {{.Username}} ujoyine iqembu lakho."
+}

@@ -1,0 +1,4 @@
+{
+ "body": "Anjeun geus muka konci lencana tingkat {{.BadgeName}}! Pariksa dina profil anjeun.",
+ "title": "🎉 Lencana anyar meunang!"
+}

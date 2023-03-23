@@ -1,0 +1,4 @@
+{
+ "body": "Ju keni zhbllokuar simbolin e monedhës {{.BadgeName}}! Shikojeni në profilin tuaj.",
+ "title": "🎉 Fituar distinktivin e ri!"
+}

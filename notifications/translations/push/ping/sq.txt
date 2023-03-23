@@ -1,0 +1,4 @@
+{
+ "body": "Mos u përgjum, do të humbisni! Filloni seancën tuaj të regjistrimit 💪",
+ "title": "🔔 {{.Username}} ju ka prekur!"
+}

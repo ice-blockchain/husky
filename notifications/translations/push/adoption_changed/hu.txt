@@ -1,0 +1,4 @@
+{
+ "body": "Az alap kereseti ráta felére csökkent, {{.BaseMiningRate}} ice/h!",
+ "title": "🚨 A bevételi arány megváltozott 🚨"
+}

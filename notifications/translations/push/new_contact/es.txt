@@ -1,0 +1,4 @@
+{
+ "body": "Uno de tus amigos ahora es parte de la comunidad ice. 🚀",
+ "title": "👋 Tu amigo {{.Username}} se unió a ice"
+}

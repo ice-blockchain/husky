@@ -1,0 +1,4 @@
+{
+ "body": "Başardın! Büyükelçi ekibine hoş geldiniz. 🚀",
+ "title": "🌟Sen bir topluluk kahramanısın!"
+}

@@ -1,0 +1,4 @@
+{
+ "body": "Manatiling may alam sa mga pinakabagong pangyayari sa ice.",
+ "title": "🚨 Balitang Alerto"
+}

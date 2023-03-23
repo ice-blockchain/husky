@@ -1,0 +1,4 @@
+{
+ "body": "Gündəlik bonusunuzu tələb etmək üçün 1 saatınız var. Qaçırmayın!",
+ "title": "🎉 Gündəlik Bonus Xəbərdarlığı!"
+}

@@ -1,0 +1,4 @@
+{
+ "body": "Odklenili ste značko ravni {{.BadgeName}}! Preverite v svojem profilu.",
+ "title": "🎉 Pridobljena nova značka!"
+}

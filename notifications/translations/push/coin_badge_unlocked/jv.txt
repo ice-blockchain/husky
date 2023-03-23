@@ -1,0 +1,4 @@
+{
+ "body": "Sampeyan wis mbukak badge duwit receh {{.BadgeName}}! Priksa metu ing profil.",
+ "title": "🎉 Lencana anyar entuk!"
+}

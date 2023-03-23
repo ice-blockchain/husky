@@ -1,0 +1,4 @@
+{
+ "body": "Salah sawijining kanca saiki dadi bagian saka komunitas ice. 🚀",
+ "title": "👋 Kancamu {{.Username}} melu ice"
+}

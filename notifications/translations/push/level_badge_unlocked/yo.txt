@@ -1,0 +1,4 @@
+{
+ "body": "O ti ṣii baaji ipele {{.BadgeName}}! Ṣayẹwo rẹ ninu profaili rẹ.",
+ "title": "🎉 Titun baaji mina!"
+}

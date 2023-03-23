@@ -1,0 +1,4 @@
+{
+ "body": "Hai sbloccato il badge di livello {{.BadgeName}}! Dai un'occhiata nel tuo profilo.",
+ "title": "🎉 Nuovo badge guadagnato!"
+}

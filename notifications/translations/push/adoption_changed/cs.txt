@@ -1,0 +1,4 @@
+{
+ "body": "Základní výdělková sazba byla snížena na polovinu na {{.BaseMiningRate}} ice/h!",
+ "title": "🚨 Míra výdělku se změnila 🚨"
+}

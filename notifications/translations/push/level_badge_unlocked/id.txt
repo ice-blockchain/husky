@@ -1,0 +1,4 @@
+{
+ "body": "Anda telah membuka lencana level {{.BadgeName}}! Lihat di profil Anda.",
+ "title": "🎉 Lencana baru diperoleh!"
+}

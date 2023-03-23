@@ -1,0 +1,4 @@
+{
+ "body": "Sie haben es geschafft! Willkommen im Botschafter-Team. 🚀",
+ "title": "🌟Du bist ein Community-Held!"
+}

@@ -1,0 +1,4 @@
+{
+ "body": "Nhóm của bạn vừa trở nên lớn hơn! 🎉",
+ "title": "🔥 {{.Username}} đã tham gia nhóm của bạn."
+}

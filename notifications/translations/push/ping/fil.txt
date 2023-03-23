@@ -1,0 +1,4 @@
+{
+ "body": "Huwag i-snooze, matatalo ka! Simulan ang iyong check-in session 💪",
+ "title": "🔔 Na-ping ka ni {{.Username}}!"
+}

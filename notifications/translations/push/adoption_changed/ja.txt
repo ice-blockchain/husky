@@ -1,0 +1,4 @@
+{
+ "body": "基本獲得率が {{.BaseMiningRate}} ice/h に半分になりました!",
+ "title": "🚨獲得率変更🚨"
+}

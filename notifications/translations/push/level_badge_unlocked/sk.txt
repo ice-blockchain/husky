@@ -1,0 +1,4 @@
+{
+ "body": "Odomkli ste odznak úrovne {{.BadgeName}}! Pozrite si to vo svojom profile.",
+ "title": "🎉 Získali ste nový odznak!"
+}

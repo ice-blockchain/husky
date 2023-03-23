@@ -1,0 +1,4 @@
+{
+ "body": "Grundinkomsten har halverats till {{.BaseMiningRate}} ice/h!",
+ "title": "🚨 Intjäningsgraden ändrad 🚨"
+}

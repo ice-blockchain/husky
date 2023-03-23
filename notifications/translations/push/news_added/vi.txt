@@ -1,0 +1,4 @@
+{
+ "body": "Được thông báo với những diễn biến mới nhất trên ice.",
+ "title": "🚨 Thông báo tin tức"
+}

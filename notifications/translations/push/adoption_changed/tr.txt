@@ -1,0 +1,4 @@
+{
+ "body": "Temel kazanç oranı {{.BaseMiningRate}} ice/h olarak yarıya indirildi!",
+ "title": "🚨 Kazanç oranı değişti 🚨"
+}

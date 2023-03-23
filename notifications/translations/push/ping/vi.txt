@@ -1,0 +1,4 @@
+{
+ "body": "Đừng ngủ, bạn sẽ thua! Bắt đầu buổi đăng ký của bạn 💪",
+ "title": "🔔 {{.Username}} đã liên lạc với bạn!"
+}

@@ -1,0 +1,4 @@
+{
+ "body": "Tong snooze, anjeun bakal éléh! Mimitian sési check-in anjeun 💪",
+ "title": "🔔 {{.Username}} geus ping anjeun!"
+}

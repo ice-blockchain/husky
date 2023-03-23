@@ -1,0 +1,4 @@
+{
+ "body": "Uvule ibheji yemali engu-{{.BadgeName}}! Kuhlole kuphrofayela yakho.",
+ "title": "🎉 Ibheji elisha elizuziwe!"
+}

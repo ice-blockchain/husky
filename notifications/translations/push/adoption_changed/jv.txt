@@ -1,0 +1,4 @@
+{
+ "body": "Tingkat pangentukan dhasar wis setengah dadi {{.BaseMiningRate}} ice/h!",
+ "title": "🚨 Tingkat penghasilan diganti 🚨"
+}

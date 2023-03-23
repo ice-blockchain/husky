@@ -1,0 +1,4 @@
+{
+ "body": "Jou span het net groter geword! 🎉",
+ "title": "🔥 {{.Username}} het by jou span aangesluit."
+}

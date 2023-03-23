@@ -1,0 +1,4 @@
+{
+ "body": "¡Has desbloqueado la insignia de la moneda {{.BadgeName}}! Compruébalo en tu perfil.",
+ "title": "🎉 ¡Nueva insignia ganada!"
+}

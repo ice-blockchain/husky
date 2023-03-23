@@ -1,0 +1,4 @@
+{
+ "body": "Mürgüləmə, itirəcəksən! Qeydiyyat seansına başlayın 💪",
+ "title": "🔔 {{.Username}} sizə ping atdı!"
+}

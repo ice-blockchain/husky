@@ -1,0 +1,4 @@
+{
+ "body": "Ne dremežajte, izgubili boste! Začnite sejo prijave 💪",
+ "title": "🔔 {{.Username}} vas je pingal!"
+}

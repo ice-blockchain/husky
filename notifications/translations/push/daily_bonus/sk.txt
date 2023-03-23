@@ -1,0 +1,4 @@
+{
+ "body": "Na uplatnenie denného bonusu máte 1 hodinu. Nenechajte si to ujsť!",
+ "title": "🎉 Denné bonusové upozornenie!"
+}

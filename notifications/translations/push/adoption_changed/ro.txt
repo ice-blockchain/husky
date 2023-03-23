@@ -1,0 +1,4 @@
+{
+ "body": "Rata de bază a câștigului a fost redusă la jumătate la {{.BaseMiningRate}} ice/h!",
+ "title": "🚨 Rata de câștig s-a schimbat 🚨"
+}

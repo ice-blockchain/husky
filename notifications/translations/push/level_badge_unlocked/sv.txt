@@ -1,0 +1,4 @@
+{
+ "body": "Du har låst upp nivåmärket {{.BadgeName}}! Kolla in det i din profil.",
+ "title": "🎉 Nytt märke intjänat!"
+}

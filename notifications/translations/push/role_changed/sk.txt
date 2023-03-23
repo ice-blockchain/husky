@@ -1,0 +1,4 @@
+{
+ "body": "Dokázal si to! Vitajte v tíme ambasádorov. 🚀",
+ "title": "🌟Ste hrdina komunity!"
+}

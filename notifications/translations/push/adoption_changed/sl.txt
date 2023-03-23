@@ -1,0 +1,4 @@
+{
+ "body": "Osnovna stopnja zaslužka je bila prepolovljena na {{.BaseMiningRate}} ice/h!",
+ "title": "🚨 Spremenjena stopnja zaslužka 🚨"
+}

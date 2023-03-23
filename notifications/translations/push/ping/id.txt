@@ -1,0 +1,4 @@
+{
+ "body": "Jangan tunda, Anda akan kalah! Mulai sesi check-in Anda 💪",
+ "title": "🔔 {{.Username}} telah mem-ping Anda!"
+}

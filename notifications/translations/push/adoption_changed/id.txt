@@ -1,0 +1,4 @@
+{
+ "body": "Tingkat perolehan dasar telah dibelah dua menjadi {{.BaseMiningRate}} ice/h!",
+ "title": "🚨 Tingkat penghasilan berubah 🚨"
+}

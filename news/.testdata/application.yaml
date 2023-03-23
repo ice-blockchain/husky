@@ -1,0 +1,52 @@
+# SPDX-License-Identifier: ice License 1.0
+
+development: true
+logger:
+  encoder: console
+  level: info
+news: &news
+  deeplinkApp: staging.ice.app
+  db: &newsDatabase
+    urls:
+      - localhost:3305
+    user: admin
+    password: pass
+  messageBroker: &newsMessageBroker
+    consumerGroup: husky-news-testing
+    createTopics: true
+    urls:
+      - localhost:9096
+    topics: &newsMessageBrokerTopics
+      - name: husky-news-health-check
+        partitions: 1
+        replicationFactor: 1
+        retention: 1000h
+      - name: news-table
+        partitions: 10
+        replicationFactor: 1
+        retention: 1000h
+      - name: viewed-news
+        partitions: 10
+        replicationFactor: 1
+        retention: 1000h
+      ### The next topics are not owned by this service, but are needed to be created for the local/test environment.
+      - name: announcements
+        partitions: 10
+        replicationFactor: 1
+        retention: 1000h
+    consumingTopics:
+      - name: news-table
+    producingTopics:
+      - name: announcements
+  wintr/multimedia/picture:
+    urlUpload: https://storage.bunnycdn.com/ice-staging/news
+    urlDownload: https://ice-staging.b-cdn.net/news
+news_test:
+  <<: *news
+  messageBroker:
+    <<: *newsMessageBroker
+    consumingTopics: *newsMessageBrokerTopics
+    consumerGroup: husky-news-testing-runner
+  db:
+    <<: *newsDatabase
+    schemaPath: news/DDL.lua

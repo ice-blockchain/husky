@@ -1,0 +1,4 @@
+{
+ "body": "Maṣe ṣan, iwọ yoo padanu! Bẹrẹ igba iwọle 💪",
+ "title": "🔔 {{.Username}} ti kọ ọ!"
+}
