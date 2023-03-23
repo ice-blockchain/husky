@@ -1,0 +1,4 @@
+{
+ "body": "Ungasnuzi, uzolahlekelwa! Qala iseshini yakho yokungena 💪",
+ "title": "🔔 {{.Username}} ukuphikile!"
+}

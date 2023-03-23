@@ -1,0 +1,4 @@
+{
+ "body": "Feloldottad a {{.BadgeName}} szintjelvényt! Nézd meg a profilodban.",
+ "title": "🎉 Új jelvényt szerzett!"
+}

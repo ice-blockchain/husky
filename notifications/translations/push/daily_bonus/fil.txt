@@ -1,0 +1,4 @@
+{
+ "body": "Mayroon kang 1 oras para i-claim ang iyong pang-araw-araw na bonus. Huwag palampasin!",
+ "title": "🎉 Araw-araw na Alerto sa Bonus!"
+}

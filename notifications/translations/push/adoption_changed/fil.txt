@@ -1,0 +1,4 @@
+{
+ "body": "Ang batayang rate ng kita ay hinati sa {{.BaseMiningRate}} ice/h!",
+ "title": "🚨 Binago ang rate ng kita 🚨"
+}

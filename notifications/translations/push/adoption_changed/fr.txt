@@ -1,0 +1,4 @@
+{
+ "body": "Le taux de rémunération de base a été réduit de moitié à {{.BaseMiningRate}} ice/h!",
+ "title": "🚨 Le taux de gain a changé 🚨"
+}

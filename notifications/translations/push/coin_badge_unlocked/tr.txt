@@ -1,0 +1,4 @@
+{
+ "body": "{{.BadgeName}} madeni para rozetinin kilidini açtınız! Profilinizde kontrol edin.",
+ "title": "🎉 Yeni rozet kazanıldı!"
+}

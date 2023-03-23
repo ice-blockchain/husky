@@ -1,0 +1,4 @@
+{
+ "body": "Stay informed with the latest happenings on ice.",
+ "title": "🚨 News Alert"
+}

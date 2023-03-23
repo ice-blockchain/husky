@@ -1,0 +1,4 @@
+{
+ "body": "Snooza inte, du kommer att förlora! Starta din incheckningssession 💪",
+ "title": "🔔 {{.Username}} har pingat dig!"
+}

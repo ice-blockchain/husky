@@ -1,0 +1,407 @@
+{
+    "schemes": [
+        "https"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "API that handles everything related to read-only operations for notifying users about anything worthwhile.",
+        "title": "Notifications API",
+        "contact": {
+            "name": "ice.io",
+            "url": "https://ice.io"
+        },
+        "version": "latest"
+    },
+    "basePath": "/v1r",
+    "paths": {
+        "/news/{language}": {
+            "get": {
+                "description": "Returns a list of news.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "News"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAdd access token here\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "regular",
+                            "featured"
+                        ],
+                        "type": "string",
+                        "description": "type of news to look for. Default is `regular`.",
+                        "name": "type",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "the language of the news article",
+                        "name": "language",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Limit of elements to return. Defaults to 10",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Elements to skip before starting to look for",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/news.PersonalNews"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "if validations fail",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "if not authorized",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "if syntax fails",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    },
+                    "504": {
+                        "description": "if request times out",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/notification-channels/{notificationChannel}/toggles": {
+            "get": {
+                "description": "Returns the user's list of notification channel toggles for the provided notificationChannel.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notifications"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAdd access token here\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "push",
+                            "email"
+                        ],
+                        "type": "string",
+                        "description": "email/push",
+                        "name": "notificationChannel",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/notifications.NotificationChannelToggle"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "if validations fail",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "if not authorized",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "if syntax fails",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    },
+                    "504": {
+                        "description": "if request times out",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/unread-news-count/{language}": {
+            "get": {
+                "description": "Returns the number of unread news the authorized user has.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "News"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAdd access token here\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "The language of the news to be counted",
+                        "name": "language",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Example `2022-01-03T16:20:52.156534Z`. If unspecified, the creation date of the news articles will be ignored.",
+                        "name": "createdAfter",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/news.UnreadNewsCount"
+                        }
+                    },
+                    "401": {
+                        "description": "if not authorized",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "if syntax fails",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    },
+                    "504": {
+                        "description": "if request times out",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "news.PersonalNews": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string",
+                    "example": "2022-01-03T16:20:52.156534Z"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "did:ethr:0x4B73C58370AEfcEf86A6021afCDe5673511376B2"
+                },
+                "imageUrl": {
+                    "type": "string",
+                    "example": "https://somewebsite.com/blockchain.jpg"
+                },
+                "language": {
+                    "type": "string",
+                    "example": "en"
+                },
+                "notificationChannels": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "inapp",
+                            "sms",
+                            "email",
+                            "push",
+                            "analytics",
+                            "push||analytics",
+                            "push||email",
+                            "push||email||analytics"
+                        ]
+                    }
+                },
+                "title": {
+                    "type": "string",
+                    "example": "The importance of the blockchain technology"
+                },
+                "type": {
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/news.Type"
+                        }
+                    ],
+                    "example": "regular"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "example": "2022-01-03T16:20:52.156534Z"
+                },
+                "url": {
+                    "type": "string",
+                    "example": "https://somewebsite.com/blockchain"
+                },
+                "viewed": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "views": {
+                    "type": "integer",
+                    "example": 123
+                }
+            }
+        },
+        "news.Type": {
+            "type": "string",
+            "enum": [
+                "regular",
+                "featured"
+            ],
+            "x-enum-varnames": [
+                "RegularNewsType",
+                "FeaturedNewsType"
+            ]
+        },
+        "news.UnreadNewsCount": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "notifications.NotificationChannelToggle": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "type": {
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/notifications.NotificationDomain"
+                        }
+                    ],
+                    "example": "system"
+                }
+            }
+        },
+        "notifications.NotificationDomain": {
+            "type": "string",
+            "enum": [
+                "disable_all",
+                "all",
+                "weekly_report",
+                "weekly_stats",
+                "achievements",
+                "promotions",
+                "news",
+                "micro_community",
+                "mining",
+                "daily_bonus",
+                "system"
+            ],
+            "x-enum-varnames": [
+                "DisableAllNotificationDomain",
+                "AllNotificationDomain",
+                "WeeklyReportNotificationDomain",
+                "WeeklyStatsNotificationDomain",
+                "AchievementsNotificationDomain",
+                "PromotionsNotificationDomain",
+                "NewsNotificationDomain",
+                "MicroCommunityNotificationDomain",
+                "MiningNotificationDomain",
+                "DailyBonusNotificationDomain",
+                "SystemNotificationDomain"
+            ]
+        },
+        "server.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "example": "SOMETHING_NOT_FOUND"
+                },
+                "data": {
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "error": {
+                    "type": "string",
+                    "example": "something is missing"
+                }
+            }
+        }
+    }
+}

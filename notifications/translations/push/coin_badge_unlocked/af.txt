@@ -1,0 +1,4 @@
+{
+ "body": "Jy het die {{.BadgeName}} muntwapen ontsluit! Kyk dit in jou profiel.",
+ "title": "🎉 Nuwe kenteken verdien!"
+}

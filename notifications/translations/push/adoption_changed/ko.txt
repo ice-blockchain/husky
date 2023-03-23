@@ -1,0 +1,4 @@
+{
+ "body": "기본 적립률이 {{.BaseMiningRate}} ice/h로 절반으로 줄었습니다!",
+ "title": "🚨 적립률 변경됨 🚨"
+}

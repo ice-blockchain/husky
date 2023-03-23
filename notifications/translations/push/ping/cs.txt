@@ -1,0 +1,4 @@
+{
+ "body": "Neodkládejte, prohrajete! Začněte svou check-in relaci 💪",
+ "title": "🔔 {{.Username}} vám odeslal ping!"
+}

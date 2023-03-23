@@ -1,0 +1,4 @@
+{
+ "body": "Bleiben Sie mit den neuesten Ereignissen auf ice auf dem Laufenden.",
+ "title": "🚨 Nachrichtenalarm"
+}

@@ -1,0 +1,4 @@
+{
+ "body": "Du hast das Level-Abzeichen {{.BadgeName}} freigeschaltet! Sieh es dir in deinem Profil an.",
+ "title": "🎉 Neues Abzeichen verdient!"
+}

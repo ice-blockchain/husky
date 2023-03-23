@@ -1,0 +1,4 @@
+{
+ "body": "Du har 1 timme på dig att hämta din dagliga bonus. Missa inte det!",
+ "title": "🎉 Daglig bonusvarning!"
+}

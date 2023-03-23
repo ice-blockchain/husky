@@ -1,0 +1,4 @@
+{
+ "body": "Kekal dimaklumkan dengan kejadian terkini di ice.",
+ "title": "🚨 Makluman Berita"
+}

@@ -1,0 +1,4 @@
+{
+ "body": "Moenie sluimer nie, jy sal verloor! Begin jou inkloksessie 💪",
+ "title": "🔔 {{.Username}} het jou geping!"
+}

@@ -1,0 +1,496 @@
+# SPDX-License-Identifier: ice License 1.0
+
+basePath: /v1w
+definitions:
+  main.News:
+    properties:
+      checksum:
+        example: "1232412415326543647657"
+        type: string
+      createdAt:
+        example: "2022-01-03T16:20:52.156534Z"
+        type: string
+      id:
+        example: did:ethr:0x4B73C58370AEfcEf86A6021afCDe5673511376B2
+        type: string
+      imageUrl:
+        example: https://somewebsite.com/blockchain.jpg
+        type: string
+      language:
+        example: en
+        type: string
+      notificationChannels:
+        items:
+          enum:
+          - inapp
+          - sms
+          - email
+          - push
+          - analytics
+          - push||analytics
+          - push||email
+          - push||email||analytics
+          type: string
+        type: array
+      tags:
+        example:
+        - cats
+        - dogs
+        - frogs
+        items:
+          type: string
+        type: array
+      title:
+        example: The importance of the blockchain technology
+        type: string
+      type:
+        allOf:
+        - $ref: '#/definitions/news.Type'
+        example: regular
+      updatedAt:
+        example: "2022-01-03T16:20:52.156534Z"
+        type: string
+      url:
+        example: https://somewebsite.com/blockchain
+        type: string
+      views:
+        example: 123
+        type: integer
+    type: object
+  main.ToggleNotificationChannelDomainRequestBody:
+    properties:
+      enabled:
+        example: true
+        type: boolean
+    type: object
+  news.Type:
+    enum:
+    - regular
+    - featured
+    type: string
+    x-enum-varnames:
+    - RegularNewsType
+    - FeaturedNewsType
+  notifications.InAppNotificationsUserAuthToken:
+    properties:
+      apiKey:
+        type: string
+      apiSecret:
+        type: string
+      appId:
+        type: string
+    type: object
+  server.ErrorResponse:
+    properties:
+      code:
+        example: SOMETHING_NOT_FOUND
+        type: string
+      data:
+        additionalProperties: {}
+        type: object
+      error:
+        example: something is missing
+        type: string
+    type: object
+info:
+  contact:
+    name: ice.io
+    url: https://ice.io
+  description: API that handles everything related to write-only operations for notifying
+    users about anything worthwhile.
+  title: Notifications API
+  version: latest
+paths:
+  /inapp-notifications-user-auth-token:
+    put:
+      consumes:
+      - application/json
+      description: Generates a new token for the user to be used to connect to the
+        inApp notifications stream on behalf of the user.
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/notifications.InAppNotificationsUserAuthToken'
+        "400":
+          description: if validations fail
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "401":
+          description: if not authorized
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "403":
+          description: if not allowed
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "422":
+          description: if syntax fails
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "504":
+          description: if request times out
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      tags:
+      - Notifications
+  /news:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Creates a news article, for each specified language.
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Required, if `newsImportFile` param is not specified.
+        in: formData
+        name: news
+        type: string
+      - description: The image for the news article
+        in: formData
+        name: image
+        required: true
+        type: file
+      - description: A json file with an array of all language variants for 1 news
+          article
+        in: formData
+        name: newsImportFile
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            items:
+              $ref: '#/definitions/main.News'
+            type: array
+        "400":
+          description: if validations fail
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "401":
+          description: if not authorized
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "403":
+          description: not allowed
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "409":
+          description: if it conflicts with existing news articles
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "422":
+          description: if syntax fails
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "504":
+          description: if request times out
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      tags:
+      - News
+  /news/{language}/{newsId}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a language variant of a news article
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID of the news article
+        in: path
+        name: newsId
+        required: true
+        type: string
+      - description: the language code
+        in: path
+        name: language
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK - found and deleted
+        "204":
+          description: No Content - already deleted
+        "400":
+          description: if validations fail
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "401":
+          description: if not authorized
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "403":
+          description: if not allowed
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "422":
+          description: if syntax fails
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "504":
+          description: if request times out
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      tags:
+      - News
+    patch:
+      consumes:
+      - multipart/form-data
+      description: Modifies a language variant of a news article
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID of the news article
+        in: path
+        name: newsId
+        required: true
+        type: string
+      - description: The language of the news article
+        in: path
+        name: language
+        required: true
+        type: string
+      - description: Optional. Setting this will save you from race conditions. Example:`1232412415326543647657`.
+        in: formData
+        name: checksum
+        type: string
+      - in: formData
+        name: markViewed
+        type: boolean
+      - collectionFormat: multi
+        description: 'Optional. Example: `financial`.'
+        in: formData
+        items:
+          type: string
+        name: tags
+        type: array
+      - description: Optional.
+        in: formData
+        name: title
+        type: string
+      - description: 'Optional. Example: any of `regular`, `featured`.'
+        enum:
+        - regular
+        - featured
+        in: formData
+        name: type
+        type: string
+      - description: 'Optional. Example: `https://somewebsite.com/blockchain`.'
+        in: formData
+        name: url
+        type: string
+      - description: The image for the news article
+        in: formData
+        name: image
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.News'
+        "400":
+          description: if validations fail
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "401":
+          description: if not authorized
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "403":
+          description: if not allowed
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "404":
+          description: if news or user not found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "409":
+          description: if conflict occurs
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "422":
+          description: if syntax fails
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "504":
+          description: if request times out
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      tags:
+      - News
+  /notification-channels/{notificationChannel}/toggles/{type}:
+    put:
+      consumes:
+      - application/json
+      description: Toggles the specific notification channel toggle type on/off.
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Request params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/main.ToggleNotificationChannelDomainRequestBody'
+      - description: name of the channel
+        enum:
+        - push
+        - email
+        in: path
+        name: notificationChannel
+        required: true
+        type: string
+      - description: the type of the toggle
+        enum:
+        - disable_all
+        - weekly_report
+        - weekly_stats
+        - achievements
+        - promotions
+        - news
+        - micro_community
+        - mining
+        - daily_bonus
+        - system
+        in: path
+        name: type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: if validations fail
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "401":
+          description: if not authorized
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "404":
+          description: if user not found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "422":
+          description: if syntax fails
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "504":
+          description: if request times out
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      tags:
+      - Notifications
+  /user-pings/{userId}:
+    post:
+      consumes:
+      - application/json
+      description: Pings the user.
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID of the user to ping
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: accepted
+        "400":
+          description: if validations fail
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "401":
+          description: if not authorized
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "403":
+          description: not allowed
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "404":
+          description: if user not found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "409":
+          description: if already pinged and need to try later
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "422":
+          description: if syntax fails
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "504":
+          description: if request times out
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      tags:
+      - Notifications
+schemes:
+- https
+swagger: "2.0"

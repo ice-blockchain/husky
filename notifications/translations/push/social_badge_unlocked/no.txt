@@ -1,0 +1,4 @@
+{
+ "body": "Du har låst opp det sosiale merket {{.BadgeName}}! Sjekk det ut i profilen din.",
+ "title": "🎉 Nytt merke opptjent!"
+}

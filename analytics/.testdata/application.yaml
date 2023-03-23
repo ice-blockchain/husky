@@ -1,0 +1,42 @@
+# SPDX-License-Identifier: ice License 1.0
+
+development: true
+logger:
+  encoder: console
+  level: info
+analytics: &analytics
+  wintr/analytics/tracking:
+    baseUrl: https://api-02.moengage.com
+  db: &analyticsDatabase
+    urls:
+      - localhost:3507
+    user: admin
+    password: pass
+  messageBroker: &analyticsMessageBroker
+    consumerGroup: husky-local-analytics-testing
+    createTopics: true
+    urls:
+      - localhost:9097
+    topics: &analyticsTopics
+      - name: analytics-set-attributes
+        partitions: 10
+        replicationFactor: 1
+        retention: 1000h
+      - name: analytics-track-action
+        partitions: 10
+        replicationFactor: 1
+        retention: 1000h
+    consumingTopics:
+      - name: analytics-set-attributes
+        oneGoroutinePerPartition: true
+      - name: analytics-track-action
+        oneGoroutinePerPartition: true
+analytics_test:
+  <<: *analytics
+  messageBroker:
+    <<: *analyticsMessageBroker
+    consumingTopics: *analyticsTopics
+    consumerGroup: husky-analytics-testing-runner
+  db:
+    <<: *analyticsDatabase
+    schemaPath: analytics/DDL.lua

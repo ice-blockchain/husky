@@ -1,0 +1,4 @@
+{
+ "body": "En av vennene dine er nå en del av ice-fellesskapet. 🚀",
+ "title": "👋 Vennen din {{.Username}} ble med i ice"
+}

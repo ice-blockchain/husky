@@ -1,0 +1,4 @@
+{
+ "body": "Laju panghasilan dasar parantos diréduksi jadi {{.BaseMiningRate}} ice/h!",
+ "title": "🚨 Tingkat earning robah 🚨"
+}

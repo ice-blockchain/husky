@@ -1,0 +1,4 @@
+{
+ "body": "Anda telah membuka kunci lencana sosial {{.BadgeName}}! Semak dalam profil anda.",
+ "title": "🎉 Lencana baharu diperoleh!"
+}

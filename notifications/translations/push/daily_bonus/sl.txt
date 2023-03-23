@@ -1,0 +1,4 @@
+{
+ "body": "Imate 1 uro, da zahtevate svoj dnevni bonus. Ne zamudite!",
+ "title": "🎉 Opozorilo o dnevnem bonusu!"
+}

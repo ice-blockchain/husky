@@ -1,0 +1,4 @@
+{
+ "body": "Oṣuwọn gbigba ipilẹ ti jẹ idaji si {{.BaseMiningRate}} ice/h!",
+ "title": "🚨 Oṣuwọn owo-owo ti yipada 🚨"
+}

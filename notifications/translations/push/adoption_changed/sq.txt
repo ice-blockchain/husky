@@ -1,0 +1,4 @@
+{
+ "body": "Norma bazë e fitimit është përgjysmuar në {{.BaseMiningRate}} ice/h!",
+ "title": "🚨 Norma e fitimit ndryshoi 🚨"
+}

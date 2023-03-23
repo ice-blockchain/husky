@@ -1,0 +1,4 @@
+{
+ "body": "שיעור ההשתכרות הבסיסי הופחת ל-{{.BaseMiningRate}} ice/h!",
+ "title": "🚨 שיעור ההשתכרות השתנה 🚨"
+}

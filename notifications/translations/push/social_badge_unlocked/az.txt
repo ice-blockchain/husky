@@ -1,0 +1,4 @@
+{
+ "body": "Siz {{.BadgeName}} sosial nişanını açdınız! Bunu profilinizdə yoxlayın.",
+ "title": "🎉 Yeni nişan qazanıldı!"
+}

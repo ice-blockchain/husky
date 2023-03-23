@@ -1,0 +1,4 @@
+{
+ "body": "Vous avez 1 heure pour réclamer votre bonus quotidien. Ne manquez pas!",
+ "title": "🎉 Alerte bonus quotidienne!"
+}

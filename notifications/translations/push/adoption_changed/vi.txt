@@ -1,0 +1,4 @@
+{
+ "body": "Tỷ lệ thu nhập cơ bản đã giảm một nửa xuống còn {{.BaseMiningRate}} ice/h!",
+ "title": "🚨 Tỷ lệ thu nhập đã thay đổi 🚨"
+}

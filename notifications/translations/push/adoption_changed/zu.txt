@@ -1,0 +1,4 @@
+{
+ "body": "Izinga lokuhola eliyisisekelo lehliswe ngohhafu ukuze libe ngu-{{.BaseMiningRate}} ice/h!",
+ "title": "🚨 Izinga lokuhola lishintshile 🚨"
+}

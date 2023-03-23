@@ -1,0 +1,4 @@
+{
+ "body": "Váš tým se právě rozrostl! 🎉",
+ "title": "🔥 {{.Username}} se připojil k vašemu týmu."
+}

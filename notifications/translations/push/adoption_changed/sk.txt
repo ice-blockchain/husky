@@ -1,0 +1,4 @@
+{
+ "body": "Základná sadzba zárobku bola znížená na polovicu na {{.BaseMiningRate}} ice/h!",
+ "title": "🚨 Miera zárobku sa zmenila 🚨"
+}

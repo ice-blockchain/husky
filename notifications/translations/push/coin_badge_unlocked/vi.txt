@@ -1,0 +1,4 @@
+{
+ "body": "Bạn đã mở khóa huy hiệu xu {{.BadgeName}}! Kiểm tra nó ra trong hồ sơ của bạn.",
+ "title": "🎉 Đã kiếm được huy hiệu mới!"
+}

@@ -1,0 +1,4 @@
+{
+ "body": "Kadar pendapatan asas telah dikurangkan separuh kepada {{.BaseMiningRate}} ice/j!",
+ "title": "🚨 Kadar pendapatan berubah 🚨"
+}

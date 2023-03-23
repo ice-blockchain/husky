@@ -1,0 +1,4 @@
+{
+ "body": "Ọkan ninu awọn ọrẹ rẹ jẹ apakan ti agbegbe ice. 🚀",
+ "title": "👋 Ọrẹ rẹ {{.Username}} darapọ mọ ice"
+}

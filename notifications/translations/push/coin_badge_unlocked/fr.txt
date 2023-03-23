@@ -1,0 +1,4 @@
+{
+ "body": "Vous avez débloqué le badge de pièce {{.BadgeName}}! Vérifiez-le dans votre profil.",
+ "title": "🎉 Nouveau badge gagné!"
+}

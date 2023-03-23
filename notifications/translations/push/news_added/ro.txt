@@ -1,0 +1,4 @@
+{
+ "body": "Rămâneți la curent cu cele mai recente evenimente de pe ice.",
+ "title": "🚨 Alertă de știri"
+}

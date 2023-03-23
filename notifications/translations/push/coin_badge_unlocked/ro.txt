@@ -1,0 +1,4 @@
+{
+ "body": "Ați deblocat insigna de monedă {{.BadgeName}}! Verifică-l în profilul tău.",
+ "title": "🎉 Insigna nouă obținută!"
+}

@@ -1,0 +1,4 @@
+{
+ "body": "Hold deg informert om de siste hendelsene på ice.",
+ "title": "🚨 Nyhetsvarsel"
+}

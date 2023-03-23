@@ -1,0 +1,4 @@
+{
+ "body": "You've unlocked the {{.BadgeName}} coin badge! Check it out in your profile.",
+ "title": "🎉 New badge earned!"
+}

@@ -1,0 +1,90 @@
+# SPDX-License-Identifier: ice License 1.0
+
+development: true
+logger:
+  encoder: console
+  level: info
+notifications: &notifications
+  deeplinkScheme: staging.ice.app
+  pingCooldown: 1m
+  wintr/multimedia/picture:
+    urlDownload: https://ice-staging.b-cdn.net
+  db: &notificationsDatabase
+    urls:
+      - localhost:3504
+    user: admin
+    password: pass
+  messageBroker: &notificationsMessageBroker
+    consumerGroup: husky-notifications-testing
+    createTopics: true
+    urls:
+      - localhost:9095
+    topics: &notificationsMessageBrokerTopics
+      - name: husky-notifications-health-check
+        partitions: 1
+        replicationFactor: 1
+        retention: 1000h
+      - name: user-pings
+        partitions: 10
+        replicationFactor: 1
+        retention: 1000h
+      ### The next topics are not owned by this service, but are needed to be created for the local/test environment.
+      - name: users-table
+        partitions: 10
+        replicationFactor: 1
+        retention: 1000h
+      - name: user-device-metadata-table
+        partitions: 10
+        replicationFactor: 1
+        retention: 1000h
+      - name: adoption-table
+        partitions: 10
+        replicationFactor: 1
+        retention: 1000h
+      - name: news-table
+        partitions: 10
+        replicationFactor: 1
+        retention: 1000h
+      - name: available-daily-bonuses
+        partitions: 10
+        replicationFactor: 1
+        retention: 1000h
+      - name: started-days-off
+        partitions: 10
+        replicationFactor: 1
+        retention: 1000h
+      - name:  achieved-badges
+        partitions: 10
+        replicationFactor: 1
+        retention: 1000h
+      - name: completed-levels
+        partitions: 10
+        replicationFactor: 1
+        retention: 1000h
+      - name: enabled-roles
+        partitions: 10
+        replicationFactor: 1
+        retention: 1000h
+    consumingTopics:
+      - name: users-table
+      - name: user-device-metadata-table
+      - name: adoption-table
+      - name: news-table
+      - name: available-daily-bonuses
+      - name: user-pings
+      - name: started-days-off
+      - name: achieved-badges
+      - name: completed-levels
+      - name: enabled-roles
+    producingTopics:
+      - name: analytics-set-attributes
+      - name: analytics-track-action
+notifications_test:
+  <<: *notifications
+  messageBroker:
+    <<: *notificationsMessageBroker
+    consumingTopics: *notificationsMessageBrokerTopics
+    consumerGroup: husky-notifications-testing-runner
+  db:
+    <<: *notificationsDatabase
+    schemaPath: notifications/DDL.lua

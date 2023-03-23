@@ -1,0 +1,4 @@
+{
+ "body": "Əsas qazanc dərəcəsi iki dəfə azaldılıb {{.BaseMiningRate}} ice/saat!",
+ "title": "🚨 Qazanc dərəcəsi dəyişdi 🚨"
+}

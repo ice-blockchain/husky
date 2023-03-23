@@ -1,0 +1,4 @@
+{
+ "body": "1 órája van a napi bónusz igénylésére. Ne hagyd ki!",
+ "title": "🎉 Napi bónusz figyelmeztetés!"
+}

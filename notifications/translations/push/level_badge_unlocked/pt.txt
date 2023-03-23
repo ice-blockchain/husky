@@ -1,0 +1,4 @@
+{
+ "body": "Você desbloqueou a insígnia de nível {{.BadgeName}}! Confira no seu perfil.",
+ "title": "🎉 Nova insígnia conquistada!"
+}
