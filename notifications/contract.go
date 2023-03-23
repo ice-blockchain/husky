@@ -244,8 +244,9 @@ type (
 		*repository
 	}
 	config struct {
-		DeeplinkScheme       string                   `yaml:"deeplinkScheme"`
-		messagebroker.Config `mapstructure:",squash"` //nolint:tagliatelle // Nope.
-		PingCooldown         stdlibtime.Duration      `yaml:"pingCooldown"`
+		DeeplinkScheme                                   string                   `yaml:"deeplinkScheme"`
+		messagebroker.Config                             `mapstructure:",squash"` //nolint:tagliatelle // Nope.
+		PingCooldown                                     stdlibtime.Duration      `yaml:"pingCooldown"`
+		DisableBadgeUnlockedPushOrAnalyticsNotifications bool                     `yaml:"disableBadgeUnlockedPushOrAnalyticsNotifications"`
 	}
 )
