@@ -126,7 +126,7 @@ func (*CreateNewsRequestBody) validateNews(nws []*news.TaggedNews) error {
 	errChan := make(chan string, (conditions+len(allAllowedNewsNotificationChannels))*len(nws))
 	wg := new(sync.WaitGroup)
 	wg.Add(len(nws))
-	featured := 0
+	featured := 0 //nolint:ifshort // Wrong.
 	allLanguages := make(map[string]int, len(nws))
 	allURLs := make(map[string]int, len(nws))
 	for idx, nw := range nws {
