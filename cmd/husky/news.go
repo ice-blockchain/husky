@@ -40,7 +40,7 @@ func (s *service) setupNewsRoutes(router *server.Router) {
 //	@Failure		500				{object}	server.ErrorResponse
 //	@Failure		504				{object}	server.ErrorResponse	"if request times out"
 //	@Router			/news/{language} [GET].
-func (s *service) GetNews( //nolint:gocritic // False negative.
+func (s *service) GetNews( //nolint:gocritic,funlen // False negative. Temporary.
 	ctx context.Context,
 	req *server.Request[GetNewsArg, []*news.PersonalNews],
 ) (*server.Response[[]*news.PersonalNews], *server.Response[server.ErrorResponse]) {

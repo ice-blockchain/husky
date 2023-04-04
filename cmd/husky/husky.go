@@ -39,10 +39,10 @@ func (s *service) RegisterRoutes(router *server.Router) {
 	s.setupNotificationsRoutes(router)
 }
 
-func (s *service) Init(ctx context.Context, cancel context.CancelFunc) {
+func (*service) Init(_ context.Context, _ context.CancelFunc) {
 }
 
-func (s *service) Close(ctx context.Context) error {
+func (*service) Close(ctx context.Context) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "could not close service because context ended")
 	}
