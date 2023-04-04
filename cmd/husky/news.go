@@ -40,7 +40,7 @@ func (s *service) setupNewsRoutes(router *server.Router) {
 //	@Failure		500				{object}	server.ErrorResponse
 //	@Failure		504				{object}	server.ErrorResponse	"if request times out"
 //	@Router			/news/{language} [GET].
-func (s *service) GetNews( //nolint:gocritic // False negative.
+func (s *service) GetNews( //nolint:gocritic,funlen // False negative. Temporary.
 	ctx context.Context,
 	req *server.Request[GetNewsArg, []*news.PersonalNews],
 ) (*server.Response[[]*news.PersonalNews], *server.Response[server.ErrorResponse]) {
@@ -62,6 +62,11 @@ func (s *service) GetNews( //nolint:gocritic // False negative.
 	}
 	if req.Data.Type != news.RegularNewsType && req.Data.Type != news.FeaturedNewsType {
 		return nil, server.BadRequest(errors.Errorf("invalid type %v", req.Data.Type), invalidPropertiesErrorCode)
+	}
+	if true {
+		resp := []*news.PersonalNews{}
+
+		return server.OK(&resp), nil
 	}
 	resp, err := s.newsRepository.GetNews(ctx, req.Data.Type, req.Data.Language, req.Data.Limit, req.Data.Offset)
 	if err != nil {
@@ -103,6 +108,11 @@ func (s *service) GetUnreadNewsCount( //nolint:gocritic // False negative.
 	req.Data.Language = strings.ToLower(req.Data.Language)
 	if _, validLanguage := languages[req.Data.Language]; !validLanguage {
 		return nil, server.BadRequest(errors.Errorf("invalid language `%v`", req.Data.Language), invalidPropertiesErrorCode)
+	}
+	if true {
+		resp := &news.UnreadNewsCount{}
+
+		return server.OK(resp), nil
 	}
 	resp, err := s.newsRepository.GetUnreadNewsCount(ctx, req.Data.Language, createdAfter)
 	if err != nil {
