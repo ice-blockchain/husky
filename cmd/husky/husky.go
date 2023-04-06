@@ -5,6 +5,7 @@ package main
 import (
 	"context"
 
+	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 
 	"github.com/ice-blockchain/husky/cmd/husky/api"
@@ -39,15 +40,20 @@ func (s *service) RegisterRoutes(router *server.Router) {
 	s.setupNotificationsRoutes(router)
 }
 
-func (*service) Init(_ context.Context, _ context.CancelFunc) {
+func (s *service) Init(ctx context.Context, cancel context.CancelFunc) {
+	s.newsRepository = news.New(ctx, cancel)
+	s.notificationsRepository = notifications.New(ctx, cancel)
 }
 
-func (*service) Close(ctx context.Context) error {
+func (s *service) Close(ctx context.Context) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "could not close service because context ended")
 	}
 
-	return nil
+	return multierror.Append( //nolint:wrapcheck // .
+		errors.Wrap(s.newsRepository.Close(), "could not close news repository"),
+		errors.Wrap(s.notificationsRepository.Close(), "could not close notifications repository"),
+	).ErrorOrNil()
 }
 
 func (s *service) CheckHealth(ctx context.Context) error {

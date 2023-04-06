@@ -40,11 +40,6 @@ func (s *service) GetNotificationChannelToggles( //nolint:gocritic // False nega
 	if req.Data.NotificationChannel != notifications.PushNotificationChannel && req.Data.NotificationChannel != notifications.EmailNotificationChannel {
 		return nil, server.UnprocessableEntity(errors.Errorf("invalid notificationChannel `%v`", req.Data.NotificationChannel), invalidPropertiesErrorCode)
 	}
-	if true {
-		resp := []*notifications.NotificationChannelToggle{}
-
-		return server.OK(&resp), nil
-	}
 	resp, err := s.notificationsRepository.GetNotificationChannelToggles(ctx, req.Data.NotificationChannel, req.AuthenticatedUser.UserID)
 	if err != nil {
 		return nil, server.Unexpected(errors.Wrapf(err, "failed to GetNotificationChannelToggles for %#v, userID:%v", req.Data, req.AuthenticatedUser.UserID))
