@@ -9,9 +9,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/ice-blockchain/eskimo/users"
 	"github.com/ice-blockchain/husky/news"
-	"github.com/ice-blockchain/husky/notifications"
 	"github.com/ice-blockchain/wintr/server"
 	"github.com/ice-blockchain/wintr/time"
 )
@@ -66,97 +64,7 @@ func (s *service) GetNews( //nolint:gocritic,funlen // False negative. Temporary
 		return nil, server.BadRequest(errors.Errorf("invalid type %v", req.Data.Type), invalidPropertiesErrorCode)
 	}
 	if true {
-		falseVal := false
-		updatedAt := time.New(time.Now().Add(-10 * 24 * stdlibtime.Hour))
-		var resp []*news.PersonalNews
-		if req.Data.Type == news.FeaturedNewsType {
-			resp = append(resp, &news.PersonalNews{
-				News: &news.News{
-					CreatedAt: updatedAt,
-					UpdatedAt: updatedAt,
-					NotificationChannels: &notifications.NotificationChannels{
-						NotificationChannels: &users.Enum[notifications.NotificationChannel]{notifications.PushNotificationChannel},
-					},
-					ID:       "aaf40a9a-c8a4-49c6-bafc-b6682a4c4ddc",
-					Type:     news.FeaturedNewsType,
-					Language: "en",
-					Title:    "Early release version",
-					URL:      "https://ice.io/early-release-version",
-					ImageURL: "https://ice-production.b-cdn.net/news/a275d3fe-d96a-4f12-84de-6355564d85d3_1679390631040234346.png",
-					Views:    1125, //nolint:gomnd // .
-				},
-				Viewed: &falseVal,
-			})
-		} else {
-			resp = append(resp, &news.PersonalNews{
-				News: &news.News{
-					CreatedAt: time.New(updatedAt.Add(-1 * stdlibtime.Second)),
-					UpdatedAt: time.New(updatedAt.Add(-1 * stdlibtime.Second)),
-					NotificationChannels: &notifications.NotificationChannels{
-						NotificationChannels: &users.Enum[notifications.NotificationChannel]{notifications.PushNotificationChannel},
-					},
-					ID:       "bbf40a9a-c8a4-49c6-bafc-aa682a4c4ddc",
-					Type:     news.RegularNewsType,
-					Language: "en",
-					Title:    "The Future is Now: How Present Actions are Determining Our Destiny",
-					URL:      "https://ice.io/the-future-is-now-how-present-actions-are-determining-our-destiny",
-					ImageURL: "https://ice-production.b-cdn.net/news/9bf2f930-dd40-40d4-a794-3745f873d820_1679336606304175788.png",
-					Views:    913, //nolint:gomnd // .
-				},
-				Viewed: &falseVal,
-			},
-				&news.PersonalNews{
-					News: &news.News{
-						CreatedAt: time.New(updatedAt.Add(-3 * stdlibtime.Second)),
-						UpdatedAt: time.New(updatedAt.Add(-3 * stdlibtime.Second)),
-						NotificationChannels: &notifications.NotificationChannels{
-							NotificationChannels: &users.Enum[notifications.NotificationChannel]{notifications.PushNotificationChannel},
-						},
-						ID:       "ccf40a9a-c8a4-49c6-bafc-b6682a4c4ddc",
-						Type:     news.RegularNewsType,
-						Language: "en",
-						Title:    "Get Ready for a New Era – The Launch of the ice Project",
-						URL:      "https://ice.io/get-ready-for-a-new-era-the-launch-of-the-ice-project",
-						ImageURL: "https://ice-production.b-cdn.net/news/e3d6b2c8-0299-41ab-9c82-84c5173b2386_1679668581190361312.png",
-						Views:    817, //nolint:gomnd // .
-					},
-					Viewed: &falseVal,
-				},
-				&news.PersonalNews{
-					News: &news.News{
-						CreatedAt: time.New(updatedAt.Add(-4 * stdlibtime.Second)),
-						UpdatedAt: time.New(updatedAt.Add(-4 * stdlibtime.Second)),
-						NotificationChannels: &notifications.NotificationChannels{
-							NotificationChannels: &users.Enum[notifications.NotificationChannel]{notifications.PushNotificationChannel},
-						},
-						ID:       "ddf40a9a-c8a4-49c6-bafc-b6682a4c4ddc",
-						Type:     news.RegularNewsType,
-						Language: "en",
-						Title:    "The ice network: A Solution to Restore Trust in Crypto Assets?",
-						URL:      "https://ice.io/the-ice-network-a-solution-to-restore-trust-in-crypto-assets",
-						ImageURL: "https://ice-production.b-cdn.net/news/76cce00e-7642-4530-b0c7-0e7e65920d8d_1679669742645375645.png",
-						Views:    789, //nolint:gomnd // .
-					},
-					Viewed: &falseVal,
-				},
-				&news.PersonalNews{
-					News: &news.News{
-						CreatedAt: time.New(updatedAt.Add(-5 * stdlibtime.Second)),
-						UpdatedAt: time.New(updatedAt.Add(-5 * stdlibtime.Second)),
-						NotificationChannels: &notifications.NotificationChannels{
-							NotificationChannels: &users.Enum[notifications.NotificationChannel]{notifications.PushNotificationChannel},
-						},
-						ID:       "eef40a9a-c8a4-49c6-bafc-b6682a4c4ddc",
-						Type:     news.RegularNewsType,
-						Language: "en",
-						Title:    "Is it too late to get into the crypto game?",
-						URL:      "https://ice.io/is-it-too-late-to-get-into-the-crypto-game",
-						ImageURL: "https://ice-production.b-cdn.net/news/8f373914-9901-4017-a059-ba4efef0b25d_1679651118362251974.png",
-						Views:    656, //nolint:gomnd // .
-					},
-					Viewed: &falseVal,
-				})
-		}
+		resp := []*news.PersonalNews{}
 
 		return server.OK(&resp), nil
 	}
