@@ -8,6 +8,8 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ice-blockchain/husky/cmd/husky/api"
+	"github.com/ice-blockchain/husky/news"
+	"github.com/ice-blockchain/husky/notifications"
 	appCfg "github.com/ice-blockchain/wintr/config"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/server"
@@ -48,8 +50,15 @@ func (*service) Close(ctx context.Context) error {
 	return nil
 }
 
-func (*service) CheckHealth(_ context.Context) error {
+func (s *service) CheckHealth(ctx context.Context) error {
 	log.Debug("checking health...", "package", "news")
+	if _, err := s.newsRepository.GetNews(ctx, news.FeaturedNewsType, "en", 1, 0); err != nil {
+		return errors.Wrap(err, "failed to get featured news")
+	}
+	log.Debug("checking health...", "package", "notifications")
+	if _, err := s.notificationsRepository.GetNotificationChannelToggles(ctx, notifications.PushNotificationChannel, "bogus"); err != nil {
+		return errors.Wrap(err, "failed to GetNotificationChannelToggles")
+	}
 
 	return nil
 }
