@@ -4,6 +4,7 @@ package analytics
 
 import (
 	"context"
+	storagev2 "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"math/rand"
 	stdlibtime "time"
 
@@ -35,9 +36,11 @@ func StartProcessor(ctx context.Context, cancel context.CancelFunc) Processor {
 		}
 		cancel()
 	}, ddl, applicationYamlKey)
+	dbV2 := storagev2.MustConnect(ctx, ddlV2, applicationYamlKey)
 	prc.repository = &repository{
 		cfg:            &cfg,
 		db:             db,
+		dbV2:           dbV2,
 		trackingClient: tracking.New(applicationYamlKey),
 	}
 	//nolint:contextcheck // It's intended. Cuz we want to close everything gracefully.

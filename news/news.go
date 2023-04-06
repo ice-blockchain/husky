@@ -5,6 +5,7 @@ package news
 import (
 	"context"
 	"fmt"
+	storagev2 "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"mime/multipart"
 	"strconv"
 	"strings"
@@ -29,11 +30,13 @@ func New(ctx context.Context, cancel context.CancelFunc) Repository {
 	appCfg.MustLoadFromKey(applicationYamlKey, &cfg)
 
 	db := storage.MustConnect(ctx, cancel, ddl, applicationYamlKey)
+	dbV2 := storagev2.MustConnect(ctx, ddlV2, applicationYamlKey)
 
 	return &repository{
 		cfg:           &cfg,
 		shutdown:      db.Close,
 		db:            db,
+		dbV2:          dbV2,
 		pictureClient: picture.New(applicationYamlKey),
 	}
 }
@@ -43,12 +46,14 @@ func StartProcessor(ctx context.Context, cancel context.CancelFunc) Processor {
 	appCfg.MustLoadFromKey(applicationYamlKey, &cfg)
 
 	db := storage.MustConnect(context.Background(), cancel, ddl, applicationYamlKey) //nolint:contextcheck // We need to gracefully shut it down.
+	dbV2 := storagev2.MustConnect(ctx, ddlV2, applicationYamlKey)
 	mbProducer := messagebroker.MustConnect(ctx, applicationYamlKey)
 
 	return &processor{repository: &repository{
 		cfg:           &cfg,
 		shutdown:      closeAll(mbProducer, db),
 		db:            db,
+		dbV2:          dbV2,
 		mb:            mbProducer,
 		pictureClient: picture.New(applicationYamlKey),
 	}}

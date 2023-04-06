@@ -14,6 +14,7 @@ import (
 	"github.com/ice-blockchain/go-tarantool-client"
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
 	"github.com/ice-blockchain/wintr/connectors/storage"
+	storagev2 "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/email"
 	"github.com/ice-blockchain/wintr/multimedia/picture"
 	"github.com/ice-blockchain/wintr/notifications/inapp"
@@ -169,6 +170,8 @@ const (
 var (
 	//go:embed DDL.lua
 	ddl string
+	//go:embed DDL.sql
+	ddlV2 string
 	//go:embed translations
 	translations embed.FS
 	//nolint:gochecknoglobals // Its loaded once at startup.
@@ -233,6 +236,7 @@ type (
 		cfg                     *config
 		shutdown                func() error
 		db                      tarantool.Connector
+		dbV2                    *storagev2.DB
 		mb                      messagebroker.Client
 		pushNotificationsClient push.Client
 		emailClient             email.Client
