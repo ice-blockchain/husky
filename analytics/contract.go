@@ -5,6 +5,7 @@ package analytics
 import (
 	"context"
 	_ "embed"
+	storagev2 "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"io"
 
 	"github.com/ice-blockchain/go-tarantool-client"
@@ -41,6 +42,8 @@ const (
 var (
 	//go:embed DDL.lua
 	ddl string
+	//go:embed DDL.sql
+	ddlV2 string
 )
 
 type (
@@ -62,6 +65,7 @@ type (
 		cfg            *config
 		shutdown       func() error
 		db             tarantool.Connector
+		dbV2           *storagev2.DB
 		trackingClient tracking.Client
 	}
 	config struct {
