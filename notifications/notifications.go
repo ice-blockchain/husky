@@ -4,7 +4,7 @@ package notifications
 
 import (
 	"context"
-	storagev2 "github.com/ice-blockchain/wintr/connectors/storage/v2"
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"math/rand"
 	"sync"
 	stdlibtime "time"
@@ -13,10 +13,8 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 
-	"github.com/ice-blockchain/go-tarantool-client"
 	appCfg "github.com/ice-blockchain/wintr/config"
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
-	"github.com/ice-blockchain/wintr/connectors/storage"
 	"github.com/ice-blockchain/wintr/email"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/multimedia/picture"
@@ -33,14 +31,12 @@ func New(ctx context.Context, cancel context.CancelFunc) Repository {
 	var cfg config
 	appCfg.MustLoadFromKey(applicationYamlKey, &cfg)
 
-	db := storage.MustConnect(ctx, cancel, ddl, applicationYamlKey)
-	dbV2 := storagev2.MustConnect(ctx, ddlV2, applicationYamlKey)
+	db := storage.MustConnect(ctx, ddlV2, applicationYamlKey)
 
 	return &repository{
 		cfg:           &cfg,
 		shutdown:      db.Close,
 		db:            db,
-		dbV2:          dbV2,
 		pictureClient: picture.New(applicationYamlKey),
 	}
 }
@@ -51,14 +47,8 @@ func StartProcessor(ctx context.Context, cancel context.CancelFunc) Processor { 
 
 	var mbConsumer messagebroker.Client
 	prc := &processor{repository: &repository{
-		cfg: &cfg,
-		db: storage.MustConnect(context.Background(), func() { //nolint:contextcheck // It's intended. Cuz we want to close everything gracefully.
-			if mbConsumer != nil {
-				log.Error(errors.Wrap(mbConsumer.Close(), "failed to close mbConsumer due to db premature cancellation"))
-			}
-			cancel()
-		}, ddl, applicationYamlKey),
-		dbV2:                    storagev2.MustConnect(ctx, ddlV2, applicationYamlKey),
+		cfg:                     &cfg,
+		db:                      storage.MustConnect(ctx, ddlV2, applicationYamlKey),
 		mb:                      messagebroker.MustConnect(ctx, applicationYamlKey),
 		pushNotificationsClient: push.New(applicationYamlKey),
 		pictureClient:           picture.New(applicationYamlKey),
@@ -92,7 +82,7 @@ func (r *repository) Close() error {
 	return errors.Wrap(r.shutdown(), "closing repository failed")
 }
 
-func closeAll(mbConsumer, mbProducer messagebroker.Client, db tarantool.Connector, otherClosers ...func() error) func() error {
+func closeAll(mbConsumer, mbProducer messagebroker.Client, db *storage.DB, otherClosers ...func() error) func() error {
 	return func() error {
 		err1 := errors.Wrap(mbConsumer.Close(), "closing message broker consumer connection failed")
 		err2 := errors.Wrap(db.Close(), "closing db connection failed")
@@ -110,7 +100,7 @@ func closeAll(mbConsumer, mbProducer messagebroker.Client, db tarantool.Connecto
 }
 
 func (p *processor) CheckHealth(ctx context.Context) error {
-	if _, err := p.db.Ping(); err != nil {
+	if err := p.db.Ping(ctx); err != nil {
 		return errors.Wrap(err, "[health-check] failed to ping DB")
 	}
 	type ts struct {
@@ -170,10 +160,8 @@ func (p *processor) deleteOldSentNotifications(ctx context.Context) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
-	sql := `DELETE FROM sent_notifications WHERE sent_at < :reference_date`
-	params := make(map[string]any, 1)
-	params["reference_date"] = time.New(time.Now().Add(-24 * stdlibtime.Hour))
-	if _, err := storage.CheckSQLDMLResponse(p.db.PrepareExecute(sql, params)); err != nil {
+	sql := `DELETE FROM sent_notifications WHERE sent_at < $1`
+	if _, err := storage.Exec(ctx, p.db, sql, stdlibtime.Now().Add(-24*stdlibtime.Hour)); err != nil {
 		return errors.Wrap(err, "failed to delete old data from sent_notifications")
 	}
 
@@ -184,10 +172,8 @@ func (p *processor) deleteOldSentAnnouncements(ctx context.Context) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
-	sql := `DELETE FROM sent_announcements WHERE sent_at < :reference_date`
-	params := make(map[string]any, 1)
-	params["reference_date"] = time.New(time.Now().Add(-24 * stdlibtime.Hour))
-	if _, err := storage.CheckSQLDMLResponse(p.db.PrepareExecute(sql, params)); err != nil {
+	sql := `DELETE FROM sent_announcements WHERE sent_at < $1`
+	if _, err := storage.Exec(ctx, p.db, sql, stdlibtime.Now().Add(-24*stdlibtime.Hour)); err != nil {
 		return errors.Wrap(err, "failed to delete old data from sent_announcements")
 	}
 
@@ -247,4 +233,46 @@ func executeConcurrently(fs ...func() error) error {
 	}
 
 	return errors.Wrap(multierror.Append(nil, errs...).ErrorOrNil(), "at least one execution failed")
+}
+
+func (r *repository) insertSentNotification(ctx context.Context, conn storage.Execer, sn *sentNotification) error {
+	sql := `INSERT INTO sent_notifications (
+                                SENT_AT,
+                                language,
+                                USER_ID,
+                                UNIQUENESS,
+                                NOTIFICATION_TYPE,
+                                NOTIFICATION_CHANNEL,
+                                NOTIFICATION_CHANNEL_VALUE
+        	) VALUES ($1,$2, $3,$4,$5,$6,$7);`
+
+	if _, err := storage.Exec(ctx, conn, sql,
+		sn.SentAt.Time,
+		sn.Language,
+		sn.UserID,
+		sn.Uniqueness,
+		sn.NotificationType,
+		sn.NotificationChannel,
+		sn.NotificationChannelValue,
+	); err != nil {
+		return errors.Wrapf(err, "failed to insert sent notification %#v", sn)
+	}
+	return nil
+}
+
+func (r *repository) insertSentAnnouncement(ctx context.Context, conn storage.Execer, sa *sentAnnouncement) error {
+	sql := `INSERT INTO sent_announcements (SENT_AT, LANGUAGE, UNIQUENESS, NOTIFICATION_TYPE, NOTIFICATION_CHANNEL, NOTIFICATION_CHANNEL_VALUE)
+        	) VALUES ($1,$2, $3,$4,$5,$6);`
+
+	if _, err := storage.Exec(ctx, conn, sql,
+		sa.SentAt.Time,
+		sa.Language,
+		sa.Uniqueness,
+		sa.NotificationType,
+		sa.NotificationChannel,
+		sa.NotificationChannelValue,
+	); err != nil {
+		return errors.Wrapf(err, "failed to insert sent announcement %#v", sa)
+	}
+	return nil
 }
