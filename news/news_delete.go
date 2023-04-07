@@ -23,8 +23,8 @@ func (r *repository) DeleteNews(ctx context.Context, newsID, language string) er
 		return errors.Wrapf(err, "failed to get news for pk(newID:%v,language:%v)", newsID, language)
 	}
 	sql := `DELETE FROM news WHERE language = $1 AND id = $2`
-	if _, err := storage.Exec(ctx, r.db, sql, language, newsID); err != nil {
-		return errors.Wrapf(err, "failed to delete news by (newsID:%v,language:%v)", newsID, language)
+	if _, tErr := storage.Exec(ctx, r.db, sql, language, newsID); tErr != nil {
+		return errors.Wrapf(tErr, "failed to delete news by (newsID:%v,language:%v)", newsID, language)
 	}
 	gNews.ImageURL = r.pictureClient.DownloadURL(gNews.ImageURL)
 	ss := &TaggedNewsSnapshot{Before: gNews}

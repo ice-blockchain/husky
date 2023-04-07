@@ -106,7 +106,7 @@ func (s *setUserAttributesSource) Process(ctx context.Context, msg *messagebroke
 	return errors.Wrapf(trackingCtx.Err(), "deadline expired and couldn't set attributes %#v", cmd)
 }
 
-func (s *trackActionSource) Process(ctx context.Context, msg *messagebroker.Message) error {
+func (s *trackActionSource) Process(ctx context.Context, msg *messagebroker.Message) error { //nolint:funlen // .
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}

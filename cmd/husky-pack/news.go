@@ -126,14 +126,14 @@ func (*CreateNewsRequestBody) validateNews(nws []*news.TaggedNews) error {
 	errChan := make(chan string, (conditions+len(allAllowedNewsNotificationChannels))*len(nws))
 	wg := new(sync.WaitGroup)
 	wg.Add(len(nws))
-	featured := 0 //nolint:ifshort // Wrong.
+	count := 0
 	allLanguages := make(map[string]int, len(nws))
 	allURLs := make(map[string]int, len(nws))
 	for idx, nw := range nws {
 		if nw.Type != news.FeaturedNewsType && nw.Type != news.RegularNewsType {
 			errChan <- fmt.Sprintf("invalid `[%v].type=%q`", idx, nw.Type)
 		} else if nw.Type == news.FeaturedNewsType {
-			featured++
+			count++
 		}
 		if nw.NotificationChannels == nil || nw.NotificationChannels.NotificationChannels == nil {
 			nw.NotificationChannels = &notifications.NotificationChannels{
@@ -195,7 +195,7 @@ func (*CreateNewsRequestBody) validateNews(nws []*news.TaggedNews) error {
 		}(idx)
 	}
 	wg.Wait()
-	if featured > 1 {
+	if count > 1 {
 		errChan <- "only 1 item can be of type='featured'"
 	}
 	for k, v := range allLanguages {

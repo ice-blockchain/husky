@@ -5,11 +5,11 @@ package notifications
 import (
 	"context"
 	"fmt"
-	storagev2 "github.com/ice-blockchain/wintr/connectors/storage/v2"
 
 	"github.com/pkg/errors"
 
 	"github.com/ice-blockchain/eskimo/users"
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/notifications/inapp"
 	"github.com/ice-blockchain/wintr/notifications/push"
@@ -114,7 +114,7 @@ func (r *repository) sendNewContactNotification(ctx context.Context, us *users.U
 	}), "failed to executeConcurrently")
 }
 
-func (r *repository) getPushNotificationTokensForNewContactNotification( //nolint:funlen // .
+func (r *repository) getPushNotificationTokensForNewContactNotification(
 	ctx context.Context, phoneNumberHash string,
 ) ([]*pushNotificationTokens, error) {
 	if ctx.Err() != nil {
@@ -139,7 +139,7 @@ func (r *repository) getPushNotificationTokensForNewContactNotification( //nolin
 						  AND POSITION($1 IN u.agenda_phone_number_hashes) != 0
 						GROUP BY u.user_id`, MicroCommunityNotificationDomain, AllNotificationDomain)
 
-	resp, err := storagev2.Select[pushNotificationTokens](ctx, r.db, sql, phoneNumberHash)
+	resp, err := storage.Select[pushNotificationTokens](ctx, r.db, sql, phoneNumberHash)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to select for push notification tokens for `%v`, phomeNumberHash:%v", NewContactNotificationType, phoneNumberHash)
 	}

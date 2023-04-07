@@ -80,7 +80,7 @@ func (r *repository) addNewsTagsPerNews(ctx context.Context, news ...*TaggedNews
 		}
 		for _, tag := range *nws.Tags {
 			args = append(args, nws.CreatedAt.Time, nws.ID, nws.Language, tag)
-			values = append(values, fmt.Sprintf(`($%[1]v, $%[2]v, $%[3]v, $%[4]v)`, nextIdx+1, nextIdx+2, nextIdx+3, nextIdx+4))
+			values = append(values, fmt.Sprintf(`($%[1]v, $%[2]v, $%[3]v, $%[4]v)`, nextIdx+1, nextIdx+2, nextIdx+3, nextIdx+4)) //nolint:gomnd // .
 			nextIdx += fields
 		}
 	}
