@@ -11,9 +11,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ice-blockchain/eskimo/users"
-	"github.com/ice-blockchain/go-tarantool-client"
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
-	"github.com/ice-blockchain/wintr/connectors/storage"
 	storagev2 "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/email"
 	"github.com/ice-blockchain/wintr/multimedia/picture"
@@ -64,9 +62,9 @@ const (
 )
 
 var (
-	ErrNotFound              = storage.ErrNotFound
-	ErrDuplicate             = storage.ErrDuplicate
-	ErrRelationNotFound      = storage.ErrRelationNotFound
+	ErrNotFound              = storagev2.ErrNotFound
+	ErrDuplicate             = storagev2.ErrDuplicate
+	ErrRelationNotFound      = storagev2.ErrRelationNotFound
 	ErrPingingUserNotAllowed = errors.New("pinging user is not allowed")
 	//nolint:gochecknoglobals // It's just for more descriptive validation messages.
 	AllNotificationChannels = users.Enum[NotificationChannel]{
@@ -133,7 +131,6 @@ type (
 		Enabled bool               `json:"enabled" example:"true"`
 	}
 	UserPing struct {
-		_msgpack                struct{}   `msgpack:",asArray"` //nolint:unused,tagliatelle,revive,nosnakecase // To insert we need asArray
 		LastPingCooldownEndedAt *time.Time `json:"lastPingCooldownEndedAt,omitempty" example:"2022-01-03T16:20:52.156534Z"`
 		UserID                  string     `json:"userId,omitempty" example:"edfd8c02-75e0-4687-9ac2-1ce4723865c4"`
 		PingedBy                string     `json:"pingedBy,omitempty" example:"edfd8c02-75e0-4687-9ac2-1ce4723865c4"`
@@ -185,7 +182,6 @@ var (
 type (
 	languageCode = string
 	user         struct {
-		_msgpack                         struct{}                        `msgpack:",asArray"` //nolint:unused,tagliatelle,revive,nosnakecase // .
 		LastPingCooldownEndedAt          *time.Time                      `json:"lastPingCooldownEndedAt,omitempty"`
 		DisabledPushNotificationDomains  *users.Enum[NotificationDomain] `json:"disabledPushNotificationDomains,omitempty"`
 		DisabledEmailNotificationDomains *users.Enum[NotificationDomain] `json:"disabledEmailNotificationDomains,omitempty"`
@@ -235,8 +231,7 @@ type (
 	repository struct {
 		cfg                     *config
 		shutdown                func() error
-		db                      tarantool.Connector
-		dbV2                    *storagev2.DB
+		db                      *storagev2.DB
 		mb                      messagebroker.Client
 		pushNotificationsClient push.Client
 		emailClient             email.Client

@@ -5,6 +5,7 @@ package notifications
 import (
 	"context"
 	"fmt"
+	storagev2 "github.com/ice-blockchain/wintr/connectors/storage/v2"
 
 	"github.com/pkg/errors"
 
@@ -119,29 +120,28 @@ func (r *repository) getPushNotificationTokensForNewContactNotification( //nolin
 	if ctx.Err() != nil {
 		return nil, errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
-	sql := fmt.Sprintf(`SELECT GROUP_CONCAT(dm.push_notification_token) AS push_notification_tokens, 
+	sql := fmt.Sprintf(`SELECT STRING_AGG(dm.push_notification_token, ',') AS push_notification_tokens, 
 							   u.language,
 							   u.user_id
 						FROM users u
 							 LEFT JOIN device_metadata dm
 									ON ( u.disabled_push_notification_domains IS NULL 
 										OR (
-											POSITION('%[1]v', u.disabled_push_notification_domains) == 0
+											POSITION('%[1]v' IN u.disabled_push_notification_domains) = 0
 								   			AND 
-								   			POSITION('%[2]v', u.disabled_push_notification_domains) == 0
+								   			POSITION('%[2]v' IN u.disabled_push_notification_domains) = 0
 								   		   )
 								   	   )
 								   AND dm.user_id = u.user_id
 								   AND dm.push_notification_token IS NOT NULL 
 								   AND dm.push_notification_token != ''
 						WHERE u.agenda_phone_number_hashes IS NOT NULL
-						  AND POSITION(:phone_number_hash, u.agenda_phone_number_hashes) != 0
+						  AND POSITION($1 IN u.agenda_phone_number_hashes) != 0
 						GROUP BY u.user_id`, MicroCommunityNotificationDomain, AllNotificationDomain)
-	params := make(map[string]any, 1)
-	params["phone_number_hash"] = phoneNumberHash
-	resp := make([]*pushNotificationTokens, 0)
-	if err := r.db.PrepareExecuteTyped(sql, params, &resp); err != nil {
-		return nil, errors.Wrapf(err, "failed to select for push notification tokens for `%v`, params:%#v", NewContactNotificationType, params)
+
+	resp, err := storagev2.Select[pushNotificationTokens](ctx, r.db, sql, phoneNumberHash)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to select for push notification tokens for `%v`, phomeNumberHash:%v", NewContactNotificationType, phoneNumberHash)
 	}
 
 	return resp, nil
