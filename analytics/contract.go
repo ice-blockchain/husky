@@ -5,12 +5,11 @@ package analytics
 import (
 	"context"
 	_ "embed"
-	storagev2 "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"io"
 
-	"github.com/ice-blockchain/go-tarantool-client"
 	"github.com/ice-blockchain/wintr/analytics/tracking"
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/time"
 )
 
@@ -40,17 +39,14 @@ const (
 
 // .
 var (
-	//go:embed DDL.lua
-	ddl string
 	//go:embed DDL.sql
-	ddlV2 string
+	ddl string
 )
 
 type (
 	trackedAction struct {
-		_msgpack struct{}   `msgpack:",asArray"` //nolint:unused,tagliatelle,revive,nosnakecase // .
-		SentAt   *time.Time `json:"sentAt,omitempty"`
-		ID       string     `json:"id,omitempty"`
+		SentAt *time.Time `json:"sentAt,omitempty"`
+		ID     string     `json:"id,omitempty"`
 	}
 	setUserAttributesSource struct {
 		*processor
@@ -64,8 +60,7 @@ type (
 	repository struct {
 		cfg            *config
 		shutdown       func() error
-		db             tarantool.Connector
-		dbV2           *storagev2.DB
+		db             *storage.DB
 		trackingClient tracking.Client
 	}
 	config struct {

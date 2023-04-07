@@ -7,11 +7,14 @@ logger:
 analytics: &analytics
   wintr/analytics/tracking:
     baseUrl: https://api-02.moengage.com
-  db: &analyticsDatabase
-    urls:
-      - localhost:3507
-    user: admin
-    password: pass
+  wintr/connectors/storage/v2:
+    runDDL: true
+    primaryURL: postgresql://root:pass@localhost:5432/ice
+    credentials:
+      user: root
+      password: pass
+    replicaURLs:
+      - postgresql://root:pass@localhost:5432/ice
   messageBroker: &analyticsMessageBroker
     consumerGroup: husky-local-analytics-testing
     createTopics: true
@@ -37,6 +40,3 @@ analytics_test:
     <<: *analyticsMessageBroker
     consumingTopics: *analyticsTopics
     consumerGroup: husky-analytics-testing-runner
-  db:
-    <<: *analyticsDatabase
-    schemaPath: analytics/DDL.lua

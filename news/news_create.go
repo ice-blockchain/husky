@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 
-	"github.com/ice-blockchain/wintr/connectors/storage"
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/time"
 )
 
@@ -48,23 +48,17 @@ func (r *repository) insertNews(ctx context.Context, news []*TaggedNews) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "context failed")
 	}
-	const fields = 8
-	params := make(map[string]any, len(news)*fields)
+	const fields = 9
+	args := make([]any, 0, len(news)*fields)
 	values := make([]string, 0, len(news))
 	for ix, nws := range news {
-		params[fmt.Sprintf(`created_at%v`, ix)] = nws.CreatedAt
-		params[fmt.Sprintf(`notification_channels%v`, ix)] = nws.NotificationChannels.NotificationChannels
-		params[fmt.Sprintf(`id%v`, ix)] = nws.ID
-		params[fmt.Sprintf(`type%v`, ix)] = nws.Type
-		params[fmt.Sprintf(`language%v`, ix)] = nws.Language
-		params[fmt.Sprintf(`title%v`, ix)] = nws.Title
-		params[fmt.Sprintf(`image_url%v`, ix)] = nws.ImageURL
-		params[fmt.Sprintf(`url%v`, ix)] = nws.URL
-		values = append(values, fmt.Sprintf(`(:created_at%[1]v, :created_at%[1]v, :notification_channels%[1]v, :id%[1]v, :type%[1]v, :language%[1]v, :title%[1]v, :image_url%[1]v, :url%[1]v)`, ix)) //nolint:lll // .
+		args = append(args, nws.CreatedAt.Time, nws.UpdatedAt.Time, nws.NotificationChannels.NotificationChannels, nws.ID, nws.Type, nws.Language, nws.Title, nws.ImageURL, nws.URL)
+		values = append(values, fmt.Sprintf("($%[1]v,$%[2]v,$%[3]v,$%[4]v,$%[5]v,$%[6]v,$%[7]v,$%[8]v,$%[9]v)",
+			fields*ix+1, fields*ix+2, fields*ix+3, fields*ix+4, fields*ix+5, fields*ix+6, fields*ix+7, fields*ix+8, fields*ix+9)) //nolint:gomnd // .
 	}
 	sql := fmt.Sprintf(`INSERT INTO news (CREATED_AT, UPDATED_AT, NOTIFICATION_CHANNELS, ID, TYPE, LANGUAGE, TITLE, IMAGE_URL, URL) VALUES %v`, strings.Join(values, ",")) //nolint:lll // .
-	if err := storage.CheckSQLDMLErr(r.db.PrepareExecute(sql, params)); err != nil {
-		return errors.Wrapf(detectAndParseDuplicateDatabaseError(err), "failed to insert news %#v", news)
+	if _, err := storage.Exec(ctx, r.db, sql, args...); err != nil {
+		return errors.Wrapf(err, "failed to insert news %#v", news)
 	}
 
 	return nil
