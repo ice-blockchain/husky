@@ -4,7 +4,6 @@ package notifications
 
 import (
 	"context"
-	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"math/rand"
 	"sync"
 	stdlibtime "time"
@@ -15,6 +14,7 @@ import (
 
 	appCfg "github.com/ice-blockchain/wintr/config"
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/email"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/multimedia/picture"

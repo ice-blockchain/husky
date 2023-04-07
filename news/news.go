@@ -5,7 +5,6 @@ package news
 import (
 	"context"
 	"fmt"
-	storagev2 "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"mime/multipart"
 	"strconv"
 	"strings"
@@ -16,44 +15,39 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 
-	"github.com/ice-blockchain/go-tarantool-client"
 	appCfg "github.com/ice-blockchain/wintr/config"
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
-	"github.com/ice-blockchain/wintr/connectors/storage"
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/multimedia/picture"
 	"github.com/ice-blockchain/wintr/time"
 )
 
-func New(ctx context.Context, cancel context.CancelFunc) Repository {
+func New(ctx context.Context, _ context.CancelFunc) Repository {
 	var cfg config
 	appCfg.MustLoadFromKey(applicationYamlKey, &cfg)
 
-	db := storage.MustConnect(ctx, cancel, ddl, applicationYamlKey)
-	dbV2 := storagev2.MustConnect(ctx, ddlV2, applicationYamlKey)
+	db := storage.MustConnect(ctx, ddl, applicationYamlKey)
 
 	return &repository{
 		cfg:           &cfg,
 		shutdown:      db.Close,
 		db:            db,
-		dbV2:          dbV2,
 		pictureClient: picture.New(applicationYamlKey),
 	}
 }
 
-func StartProcessor(ctx context.Context, cancel context.CancelFunc) Processor {
+func StartProcessor(ctx context.Context, _ context.CancelFunc) Processor {
 	var cfg config
 	appCfg.MustLoadFromKey(applicationYamlKey, &cfg)
 
-	db := storage.MustConnect(context.Background(), cancel, ddl, applicationYamlKey) //nolint:contextcheck // We need to gracefully shut it down.
-	dbV2 := storagev2.MustConnect(ctx, ddlV2, applicationYamlKey)
+	db := storage.MustConnect(ctx, ddl, applicationYamlKey)
 	mbProducer := messagebroker.MustConnect(ctx, applicationYamlKey)
 
 	return &processor{repository: &repository{
 		cfg:           &cfg,
 		shutdown:      closeAll(mbProducer, db),
 		db:            db,
-		dbV2:          dbV2,
 		mb:            mbProducer,
 		pictureClient: picture.New(applicationYamlKey),
 	}}
@@ -63,7 +57,7 @@ func (r *repository) Close() error {
 	return errors.Wrap(r.shutdown(), "closing repository failed")
 }
 
-func closeAll(mbProducer messagebroker.Client, db tarantool.Connector, otherClosers ...func() error) func() error {
+func closeAll(mbProducer messagebroker.Client, db *storage.DB, otherClosers ...func() error) func() error {
 	return func() error {
 		err1 := errors.Wrap(db.Close(), "closing db connection failed")
 		err2 := errors.Wrap(mbProducer.Close(), "closing message broker producer connection failed")
@@ -80,7 +74,7 @@ func closeAll(mbProducer messagebroker.Client, db tarantool.Connector, otherClos
 }
 
 func (p *processor) CheckHealth(ctx context.Context) error {
-	if _, err := p.db.Ping(); err != nil {
+	if err := p.db.Ping(ctx); err != nil {
 		return errors.Wrap(err, "[health-check] failed to ping DB")
 	}
 	type ts struct {

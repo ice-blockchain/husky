@@ -4,7 +4,6 @@ package analytics
 
 import (
 	"context"
-	storagev2 "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"math/rand"
 	stdlibtime "time"
 
@@ -12,11 +11,10 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 
-	"github.com/ice-blockchain/go-tarantool-client"
 	"github.com/ice-blockchain/wintr/analytics/tracking"
 	appCfg "github.com/ice-blockchain/wintr/config"
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
-	"github.com/ice-blockchain/wintr/connectors/storage"
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/time"
 )
@@ -26,21 +24,14 @@ func StartProcessor(ctx context.Context, cancel context.CancelFunc) Processor {
 	appCfg.MustLoadFromKey(applicationYamlKey, &cfg)
 
 	var (
-		db         tarantool.Connector
+		db         *storage.DB
 		mbConsumer messagebroker.Client
 		prc        = &processor{}
 	)
-	db = storage.MustConnect(context.Background(), func() { //nolint:contextcheck // It's intended. Cuz we want to close everything gracefully.
-		if mbConsumer != nil {
-			log.Error(errors.Wrap(mbConsumer.Close(), "failed to close mbConsumer due to db premature cancellation"))
-		}
-		cancel()
-	}, ddl, applicationYamlKey)
-	dbV2 := storagev2.MustConnect(ctx, ddlV2, applicationYamlKey)
+	db = storage.MustConnect(ctx, ddl, applicationYamlKey)
 	prc.repository = &repository{
 		cfg:            &cfg,
 		db:             db,
-		dbV2:           dbV2,
 		trackingClient: tracking.New(applicationYamlKey),
 	}
 	//nolint:contextcheck // It's intended. Cuz we want to close everything gracefully.
@@ -58,7 +49,7 @@ func (r *repository) Close() error {
 	return errors.Wrap(r.shutdown(), "closing repository failed")
 }
 
-func closeAll(mbConsumer messagebroker.Client, db tarantool.Connector, otherClosers ...func() error) func() error {
+func closeAll(mbConsumer messagebroker.Client, db *storage.DB, otherClosers ...func() error) func() error {
 	return func() error {
 		err1 := errors.Wrap(mbConsumer.Close(), "closing message broker consumer connection failed")
 		err2 := errors.Wrap(db.Close(), "closing db connection failed")
@@ -78,7 +69,7 @@ func (p *processor) CheckHealth(ctx context.Context) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
-	if _, err := p.db.Ping(); err != nil {
+	if err := p.db.Ping(ctx); err != nil {
 		return errors.Wrap(err, "[health-check] failed to ping DB")
 	}
 
@@ -130,7 +121,8 @@ func (s *trackActionSource) Process(ctx context.Context, msg *messagebroker.Mess
 		return nil
 	}
 	tuple := &trackedAction{SentAt: time.New(msg.Timestamp), ID: cmd.ID}
-	if err := storage.CheckNoSQLDMLErr(s.db.InsertTyped("TRACKED_ACTIONS", tuple, &[]*trackedAction{})); err != nil {
+	sql := `INSERT INTO TRACKED_ACTIONS (SENT_AT, ACTION_ID) VALUES ($1, $2)`
+	if _, err := storage.Exec(ctx, s.db, sql, tuple.SentAt.Time, tuple.ID); err != nil {
 		return errors.Wrapf(err, "failed to insert TRACKED_ACTIONS %#v", tuple)
 	}
 	const deadline = 62 * stdlibtime.Second
@@ -169,10 +161,8 @@ func (p *processor) deleteOldTrackedActions(ctx context.Context) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
-	sql := `DELETE FROM tracked_actions WHERE sent_at < :reference_date`
-	params := make(map[string]any, 1)
-	params["reference_date"] = time.New(time.Now().Add(-24 * stdlibtime.Hour))
-	if _, err := storage.CheckSQLDMLResponse(p.db.PrepareExecute(sql, params)); err != nil {
+	sql := `DELETE FROM tracked_actions WHERE sent_at < $1`
+	if _, err := storage.Exec(ctx, p.db, sql, time.New(time.Now().Add(-24*stdlibtime.Hour)).Time); err != nil {
 		return errors.Wrap(err, "failed to delete old data from tracked_actions")
 	}
 

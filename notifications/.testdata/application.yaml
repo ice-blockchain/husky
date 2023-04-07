@@ -9,11 +9,14 @@ notifications: &notifications
   pingCooldown: 1m
   wintr/multimedia/picture:
     urlDownload: https://ice-staging.b-cdn.net
-  db: &notificationsDatabase
-    urls:
-      - localhost:3504
-    user: admin
-    password: pass
+  wintr/connectors/storage/v2:
+    runDDL: true
+    primaryURL: postgresql://root:pass@localhost:5432/ice
+    credentials:
+      user: root
+      password: pass
+    replicaURLs:
+      - postgresql://root:pass@localhost:5432/ice
   messageBroker: &notificationsMessageBroker
     consumerGroup: husky-notifications-testing
     createTopics: true
