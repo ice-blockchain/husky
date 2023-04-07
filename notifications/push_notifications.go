@@ -6,7 +6,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	storagev2 "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"strings"
 	"text/template"
 
@@ -15,6 +14,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ice-blockchain/eskimo/users"
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/notifications/push"
 	"github.com/ice-blockchain/wintr/time"
@@ -105,7 +105,7 @@ func (r *repository) getPushNotificationTokens( //nolint:funlen // .
 								   AND dm.push_notification_token != ''
 						WHERE u.user_id = $1
 						GROUP BY u.user_id`, domain, AllNotificationDomain)
-	resp, err := storagev2.Get[pushNotificationTokens](ctx, r.db, sql, userID)
+	resp, err := storage.Get[pushNotificationTokens](ctx, r.db, sql, userID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to select for push notification tokens for `%v`, userID:%#v", domain, userID)
 	}
@@ -139,7 +139,7 @@ func (r *repository) sendPushNotification(ctx context.Context, pn *pushNotificat
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
-	err := storagev2.DoInTransaction(ctx, r.db, func(conn storagev2.QueryExecer) error {
+	err := storage.DoInTransaction(ctx, r.db, func(conn storage.QueryExecer) error {
 		if err := r.insertSentNotification(ctx, conn, pn.sn); err != nil {
 			return errors.Wrapf(err, "failed to insert %#v", pn.sn)
 		}
@@ -151,6 +151,7 @@ func (r *repository) sendPushNotification(ctx context.Context, pn *pushNotificat
 				return push.ErrInvalidDeviceToken
 			}
 		}
+
 		return nil
 	})
 	if err != nil {
@@ -158,7 +159,8 @@ func (r *repository) sendPushNotification(ctx context.Context, pn *pushNotificat
 			return multierror.Append(err, r.clearInvalidPushNotificationToken(ctx, pn.sn.UserID, pn.pn.Target))
 		}
 	}
-	return err
+
+	return errors.Wrapf(err, "transaction rollback")
 }
 
 func (r *repository) clearInvalidPushNotificationToken(ctx context.Context, userID string, token push.DeviceToken) error {
@@ -169,7 +171,8 @@ func (r *repository) clearInvalidPushNotificationToken(ctx context.Context, user
 			SET push_notification_token = null
 			WHERE user_id = $1
 			  AND push_notification_token = $2`
-	_, err := storagev2.Exec(ctx, r.db, sql, userID, token)
+	_, err := storage.Exec(ctx, r.db, sql, userID, token)
+
 	return errors.Wrapf(err, "failed to update push_notification_token to empty for userID:%v and token %v", userID, token)
 }
 
@@ -195,10 +198,12 @@ func (r *repository) broadcastPushNotification(ctx context.Context, bpn *broadca
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
-	return storagev2.DoInTransaction(ctx, r.db, func(conn storagev2.QueryExecer) error {
+
+	return errors.Wrapf(storage.DoInTransaction(ctx, r.db, func(conn storage.QueryExecer) error {
 		if err := r.insertSentAnnouncement(ctx, conn, bpn.sa); err != nil {
 			return errors.Wrapf(err, "failed to insert %#v", bpn.sa)
 		}
+
 		return errors.Wrapf(r.pushNotificationsClient.Broadcast(ctx, bpn.pn), "failed to broadcast push notification:%#v, desired to be sent:%#v", bpn.pn, bpn.sa)
-	})
+	}), "transaction rollback")
 }

@@ -5,7 +5,6 @@ package notifications
 import (
 	"context"
 	"fmt"
-	storagev2 "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"strings"
 	stdlibtime "time"
 
@@ -15,7 +14,7 @@ import (
 
 	"github.com/ice-blockchain/eskimo/users"
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
-	"github.com/ice-blockchain/wintr/connectors/storage"
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/time"
 )
@@ -80,7 +79,7 @@ func (*repository) defaultNotificationChannelToggles(channel NotificationChannel
 	return resp
 }
 
-func (r *repository) ToggleNotificationChannelDomain( //nolint:funlen,gocognit,gocyclo,revive,cyclop,maintidx // .
+func (r *repository) ToggleNotificationChannelDomain( //nolint:funlen,gocognit,gocyclo,revive,cyclop // .
 	ctx context.Context, channel NotificationChannel, domain NotificationDomain, enabled bool, userID string,
 ) error {
 	if ctx.Err() != nil {
@@ -205,7 +204,7 @@ func (r *repository) ToggleNotificationChannelDomain( //nolint:funlen,gocognit,g
 	if valuesForUpdate == nil {
 		return nil
 	}
-	disabledDomains := *(valuesForUpdate) //nolint:forcetypeassert // We know for sure.
+	disabledDomains := *(valuesForUpdate)
 	sanitizedDisabledDomains := make(users.Enum[NotificationDomain], 0, len(disabledDomains))
 	for _, notificationDomain := range disabledDomains {
 		if notificationDomain != "" {
@@ -214,12 +213,12 @@ func (r *repository) ToggleNotificationChannelDomain( //nolint:funlen,gocognit,g
 	}
 	valuesForUpdate = &sanitizedDisabledDomains
 	sql := fmt.Sprintf(`UPDATE users SET %v where user_id = $1`, fieldForUpdate)
-	if rowsUpdated, err := storagev2.Exec(ctx, r.db, sql, append([]any{userID}, valuesForUpdate)...); err != nil { //nolint:lll // .
-		if rowsUpdated == 0 || errors.Is(err, storagev2.ErrNotFound) {
-			err = ErrRelationNotFound
+	if rowsUpdated, tErr := storage.Exec(ctx, r.db, sql, append([]any{userID}, valuesForUpdate)...); tErr != nil {
+		if rowsUpdated == 0 || errors.Is(tErr, storage.ErrNotFound) {
+			tErr = ErrRelationNotFound
 		}
 
-		return errors.Wrapf(err, "failed to update users for userID:%v,ops:%#v with values %#v", userID, fieldForUpdate, valuesForUpdate)
+		return errors.Wrapf(tErr, "failed to update users for userID:%v,ops:%#v with values %#v", userID, fieldForUpdate, valuesForUpdate)
 	}
 
 	return nil
@@ -252,7 +251,7 @@ func (s *userTableSource) Process(ctx context.Context, msg *messagebroker.Messag
 	).ErrorOrNil()
 }
 
-func (s *userTableSource) upsertUser(ctx context.Context, us *users.UserSnapshot) error {
+func (s *userTableSource) upsertUser(ctx context.Context, us *users.UserSnapshot) error { //nolint:funlen // Big SQL.
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "context failed")
 	}
@@ -268,7 +267,7 @@ func (s *userTableSource) upsertUser(ctx context.Context, us *users.UserSnapshot
                    AGENDA_PHONE_NUMBER_HASHES,
                    LANGUAGE,
                    USER_ID
-    ) VALUES ($1, $2, $3, $4,$5,$6,$7,$8,$9,$10,$11)
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
     ON CONFLICT(user_id)
       DO UPDATE
       	SET        PHONE_NUMBER = EXCLUDED.PHONE_NUMBER,
@@ -281,7 +280,7 @@ func (s *userTableSource) upsertUser(ctx context.Context, us *users.UserSnapshot
                    PHONE_NUMBER_HASH = EXCLUDED.PHONE_NUMBER_HASH,
                    AGENDA_PHONE_NUMBER_HASHES = EXCLUDED.AGENDA_PHONE_NUMBER_HASHES,
                    LANGUAGE = EXCLUDED.LANGUAGE`
-	_, err := storagev2.Exec(ctx, s.db, sql,
+	_, err := storage.Exec(ctx, s.db, sql,
 		us.PhoneNumber,
 		us.Email,
 		us.FirstName,
@@ -294,6 +293,7 @@ func (s *userTableSource) upsertUser(ctx context.Context, us *users.UserSnapshot
 		us.Language,
 		us.ID,
 	)
+
 	return errors.Wrapf(err, "failed to upsert %#v", us)
 }
 
@@ -302,7 +302,8 @@ func (s *userTableSource) deleteUser(ctx context.Context, us *users.UserSnapshot
 		return errors.Wrap(ctx.Err(), "context failed")
 	}
 	sql := `DELETE FROM users WHERE user_id = :user_id`
-	_, err := storagev2.Exec(ctx, s.db, sql, us.Before.ID)
+	_, err := storage.Exec(ctx, s.db, sql, us.Before.ID)
+
 	return errors.Wrapf(err, "failed to delete user:%#v", us)
 }
 
@@ -310,7 +311,7 @@ func (r *repository) getUserByID(ctx context.Context, userID string) (*user, err
 	if ctx.Err() != nil {
 		return nil, errors.Wrap(ctx.Err(), "context failed")
 	}
-	usr, err := storagev2.Get[user](ctx, r.db, `SELECT * FROM users WHERE user_id = $1`, userID)
+	usr, err := storage.Get[user](ctx, r.db, `SELECT * FROM users WHERE user_id = $1`, userID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to get user by id: %#v", userID)
 	}
@@ -341,12 +342,13 @@ func (u *deviceMetadataTableSource) Process(ctx context.Context, msg *messagebro
 		snapshot.ID.DeviceUniqueID,
 		snapshot.PushNotificationToken,
 	}
-	_, err := storagev2.Exec(ctx, u.db, sql, params...)
+	_, err := storage.Exec(ctx, u.db, sql, params...)
+
 	return errors.Wrapf(err,
-		"failed to upsert %#v", params)
+		"failed to upsert %#v", params...)
 }
 
-func (r *repository) PingUser(ctx context.Context, userID string) error { //nolint:funlen,gocognit,revive // .
+func (r *repository) PingUser(ctx context.Context, userID string) error { //nolint:funlen,gocognit,revive,gocyclo,cyclop // .
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected context deadline")
 	}
@@ -385,24 +387,24 @@ func (r *repository) PingUser(ctx context.Context, userID string) error { //noli
 		lastPingedTime,
 	}
 	var rowsUpdated uint64
-	if rowsUpdated, err = storagev2.Exec(ctx, r.db, sql, params...); rowsUpdated == 0 || (err != nil && errors.Is(err, storage.ErrNotFound)) {
+	if rowsUpdated, err = storage.Exec(ctx, r.db, sql, params...); rowsUpdated == 0 || (err != nil && errors.Is(err, storage.ErrNotFound)) {
 		return r.PingUser(ctx, userID)
 	} else if err != nil {
-		return errors.Wrapf(err, "failed to update users to set last_ping_cooldown_ended_at params:%#v", params)
+		return errors.Wrapf(err, "failed to update users to set last_ping_cooldown_ended_at params:%#v", params...)
 	}
 	up := &UserPing{UserID: userID, PingedBy: reqUserID, LastPingCooldownEndedAt: newPingCooldownEndsAt}
 
 	if err = r.sendUserPingMessage(ctx, up); err != nil {
 		params[0] = usr.LastPingCooldownEndedAt
 		params[3] = newPingCooldownEndsAt
-		rRowsUpdated, rErr := storagev2.Exec(ctx, r.db, sql, params...)
+		rRowsUpdated, rErr := storage.Exec(ctx, r.db, sql, params...)
 		if rRowsUpdated == 0 || (rErr != nil && errors.Is(rErr, storage.ErrNotFound)) {
 			return r.PingUser(ctx, userID)
 		}
 
 		return multierror.Append( //nolint:wrapcheck // Not needed.
 			errors.Wrapf(err, "failed to sendUserPingMessage %#v", up),
-			errors.Wrapf(rErr, "[rollback] failed to update users to set last_ping_cooldown_ended_at params:%#v", params),
+			errors.Wrapf(rErr, "[rollback] failed to update users to set last_ping_cooldown_ended_at params:%#v", params...),
 		).ErrorOrNil()
 	}
 

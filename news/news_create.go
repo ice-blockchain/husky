@@ -52,7 +52,9 @@ func (r *repository) insertNews(ctx context.Context, news []*TaggedNews) error {
 	args := make([]any, 0, len(news)*fields)
 	values := make([]string, 0, len(news))
 	for ix, nws := range news {
-		args = append(args, nws.CreatedAt.Time, nws.UpdatedAt.Time, nws.NotificationChannels.NotificationChannels, nws.ID, nws.Type, nws.Language, nws.Title, nws.ImageURL, nws.URL)
+		args = append(args, nws.CreatedAt.Time, nws.UpdatedAt.Time, nws.NotificationChannels.NotificationChannels, nws.ID, nws.Type, nws.Language,
+			nws.Title, nws.ImageURL, nws.URL,
+		)
 		values = append(values, fmt.Sprintf("($%[1]v,$%[2]v,$%[3]v,$%[4]v,$%[5]v,$%[6]v,$%[7]v,$%[8]v,$%[9]v)",
 			fields*ix+1, fields*ix+2, fields*ix+3, fields*ix+4, fields*ix+5, fields*ix+6, fields*ix+7, fields*ix+8, fields*ix+9)) //nolint:gomnd // .
 	}

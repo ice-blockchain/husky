@@ -12,7 +12,7 @@ import (
 
 	"github.com/ice-blockchain/eskimo/users"
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
-	storagev2 "github.com/ice-blockchain/wintr/connectors/storage/v2"
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/email"
 	"github.com/ice-blockchain/wintr/multimedia/picture"
 	"github.com/ice-blockchain/wintr/notifications/inapp"
@@ -62,9 +62,9 @@ const (
 )
 
 var (
-	ErrNotFound              = storagev2.ErrNotFound
-	ErrDuplicate             = storagev2.ErrDuplicate
-	ErrRelationNotFound      = storagev2.ErrRelationNotFound
+	ErrNotFound              = storage.ErrNotFound
+	ErrDuplicate             = storage.ErrDuplicate
+	ErrRelationNotFound      = storage.ErrRelationNotFound
 	ErrPingingUserNotAllowed = errors.New("pinging user is not allowed")
 	//nolint:gochecknoglobals // It's just for more descriptive validation messages.
 	AllNotificationChannels = users.Enum[NotificationChannel]{
@@ -165,10 +165,8 @@ const (
 )
 
 var (
-	//go:embed DDL.lua
-	ddl string
 	//go:embed DDL.sql
-	ddlV2 string
+	ddl string
 	//go:embed translations
 	translations embed.FS
 	//nolint:gochecknoglobals // Its loaded once at startup.
@@ -231,7 +229,7 @@ type (
 	repository struct {
 		cfg                     *config
 		shutdown                func() error
-		db                      *storagev2.DB
+		db                      *storage.DB
 		mb                      messagebroker.Client
 		pushNotificationsClient push.Client
 		emailClient             email.Client

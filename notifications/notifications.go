@@ -27,11 +27,11 @@ func init() {
 	loadPushNotificationTranslationTemplates()
 }
 
-func New(ctx context.Context, cancel context.CancelFunc) Repository {
+func New(ctx context.Context, _ context.CancelFunc) Repository {
 	var cfg config
 	appCfg.MustLoadFromKey(applicationYamlKey, &cfg)
 
-	db := storage.MustConnect(ctx, ddlV2, applicationYamlKey)
+	db := storage.MustConnect(ctx, ddl, applicationYamlKey)
 
 	return &repository{
 		cfg:           &cfg,
@@ -48,7 +48,7 @@ func StartProcessor(ctx context.Context, cancel context.CancelFunc) Processor { 
 	var mbConsumer messagebroker.Client
 	prc := &processor{repository: &repository{
 		cfg:                     &cfg,
-		db:                      storage.MustConnect(ctx, ddlV2, applicationYamlKey),
+		db:                      storage.MustConnect(ctx, ddl, applicationYamlKey),
 		mb:                      messagebroker.MustConnect(ctx, applicationYamlKey),
 		pushNotificationsClient: push.New(applicationYamlKey),
 		pictureClient:           picture.New(applicationYamlKey),
@@ -235,7 +235,7 @@ func executeConcurrently(fs ...func() error) error {
 	return errors.Wrap(multierror.Append(nil, errs...).ErrorOrNil(), "at least one execution failed")
 }
 
-func (r *repository) insertSentNotification(ctx context.Context, conn storage.Execer, sn *sentNotification) error {
+func (*repository) insertSentNotification(ctx context.Context, conn storage.Execer, sn *sentNotification) error {
 	sql := `INSERT INTO sent_notifications (
                                 SENT_AT,
                                 language,
@@ -244,7 +244,7 @@ func (r *repository) insertSentNotification(ctx context.Context, conn storage.Ex
                                 NOTIFICATION_TYPE,
                                 NOTIFICATION_CHANNEL,
                                 NOTIFICATION_CHANNEL_VALUE
-        	) VALUES ($1,$2, $3,$4,$5,$6,$7);`
+        	) VALUES ($1,$2,$3,$4,$5,$6,$7);`
 
 	if _, err := storage.Exec(ctx, conn, sql,
 		sn.SentAt.Time,
@@ -257,12 +257,13 @@ func (r *repository) insertSentNotification(ctx context.Context, conn storage.Ex
 	); err != nil {
 		return errors.Wrapf(err, "failed to insert sent notification %#v", sn)
 	}
+
 	return nil
 }
 
-func (r *repository) insertSentAnnouncement(ctx context.Context, conn storage.Execer, sa *sentAnnouncement) error {
+func (*repository) insertSentAnnouncement(ctx context.Context, conn storage.Execer, sa *sentAnnouncement) error {
 	sql := `INSERT INTO sent_announcements (SENT_AT, LANGUAGE, UNIQUENESS, NOTIFICATION_TYPE, NOTIFICATION_CHANNEL, NOTIFICATION_CHANNEL_VALUE)
-        	) VALUES ($1,$2, $3,$4,$5,$6);`
+        	) VALUES ($1,$2,$3,$4,$5,$6);`
 
 	if _, err := storage.Exec(ctx, conn, sql,
 		sa.SentAt.Time,
@@ -274,5 +275,6 @@ func (r *repository) insertSentAnnouncement(ctx context.Context, conn storage.Ex
 	); err != nil {
 		return errors.Wrapf(err, "failed to insert sent announcement %#v", sa)
 	}
+
 	return nil
 }

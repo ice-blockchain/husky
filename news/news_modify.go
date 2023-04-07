@@ -97,11 +97,12 @@ func (r *repository) updateNews(ctx context.Context, news *TaggedNews) error { /
 		sql += fmt.Sprintf(" AND UPDATED_AT = $%v", fieldIndex)
 	}
 	if _, err := storage.Exec(ctx, r.db, sql, args...); err != nil {
-		if err := detectAndParseDuplicateDatabaseError(err); storage.IsErr(err, storage.ErrNotFound) {
-			err = ErrRaceCondition
+		tErr := detectAndParseDuplicateDatabaseError(err)
+		if storage.IsErr(tErr, storage.ErrNotFound) {
+			return errors.Wrapf(ErrRaceCondition, "failed to update news:%#v", news)
 		}
 
-		return errors.Wrapf(err, "failed to update news:%#v", news)
+		return errors.Wrapf(tErr, "failed to update news:%#v", news)
 	}
 
 	return nil
@@ -126,7 +127,7 @@ func (n *TaggedNews) override(news *TaggedNews) *TaggedNews {
 	return nws
 }
 
-func (r *repository) IncrementViews(ctx context.Context, newsID, language string) error { //nolint:funlen // A lot of negative flow handling.
+func (r *repository) IncrementViews(ctx context.Context, newsID, language string) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), " context failed")
 	}
@@ -145,7 +146,7 @@ func (r *repository) IncrementViews(ctx context.Context, newsID, language string
 		}
 
 		sql = `UPDATE news SET views = views + 1 WHERE language = $1 AND id = $2`
-		if _, err := storage.Exec(ctx, r.db, sql, language, newsID); err != nil { //nolint:lll,revive // .
+		if _, err := storage.Exec(ctx, r.db, sql, language, newsID); err != nil {
 			if storage.IsErr(err, storage.ErrNotFound) {
 				err = ErrNotFound
 			}
@@ -154,7 +155,7 @@ func (r *repository) IncrementViews(ctx context.Context, newsID, language string
 		}
 
 		return errors.Wrapf(r.sendNewsViewedMessage(ctx, tuple), "failed to sendNewsViewedMessage for %#v", tuple)
-	}), "can't execute increment views transaction")
+	}), "transaction rollback")
 }
 
 func (r *repository) sendNewsViewedMessage(ctx context.Context, vn *ViewedNews) error {
@@ -178,10 +179,10 @@ func (r *repository) sendNewsViewedMessage(ctx context.Context, vn *ViewedNews) 
 func detectAndParseDuplicateDatabaseError(err error) error {
 	if errors.Is(err, storage.ErrDuplicate) {
 		field := ""
-		if storage.IsErr(err, storage.ErrDuplicate, "url") {
+		if storage.IsErr(err, storage.ErrDuplicate, "url") { //nolint:gocritic // Switch case not possible.
 			field = "url"
-		} else if storage.IsErr(err, storage.ErrDuplicate, "language") {
-			field = "language"
+		} else if storage.IsErr(err, storage.ErrDuplicate, "pk") {
+			field = "pk"
 		} else {
 			log.Panic("unexpected duplicate for news space")
 		}

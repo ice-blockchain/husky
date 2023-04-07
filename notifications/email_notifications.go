@@ -5,11 +5,11 @@ package notifications
 import (
 	"context"
 	"fmt"
-	storagev2 "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"strings"
 
 	"github.com/pkg/errors"
 
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/email"
 )
 
@@ -30,7 +30,7 @@ func (r *repository) sendEmailNotification(ctx context.Context, en *emailNotific
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
 
-	return storagev2.DoInTransaction(ctx, r.db, func(conn storagev2.QueryExecer) error {
+	return errors.Wrapf(storage.DoInTransaction(ctx, r.db, func(conn storage.QueryExecer) error {
 		if err := r.insertSentNotification(ctx, conn, en.sn); err != nil {
 			return errors.Wrapf(err, "failed to insert %#v", en.sn)
 		}
@@ -38,9 +38,10 @@ func (r *repository) sendEmailNotification(ctx context.Context, en *emailNotific
 		if en.en.From.Name = internationalizedEmailDisplayNames[en.sn.Language]; en.en.From.Name == "" {
 			en.en.From.Name = internationalizedEmailDisplayNames["en"]
 		}
+
 		return errors.Wrapf(r.emailClient.Send(ctx, en.en, email.Participant{Name: en.displayName, Email: en.sn.NotificationChannelValue}),
 			"failed to send email notification:%#v, desired to be sent:%#v", en.en, en.sn)
-	})
+	}), "transaction rollback")
 }
 
 func (r *repository) getEmailNotificationParams( //nolint:funlen,revive // .
@@ -84,7 +85,7 @@ func (r *repository) getEmailNotificationParams( //nolint:funlen,revive // .
 						FROM users u
 						WHERE u.user_id = $1
 						GROUP BY u.user_id`, domain, AllNotificationDomain)
-	resp, err := storagev2.Get[emailNotificationParams](ctx, r.db, sql, userID)
+	resp, err := storage.Get[emailNotificationParams](ctx, r.db, sql, userID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to select for emailNotificationParams for `%v`, userID:%v", domain, userID)
 	}
