@@ -65,7 +65,7 @@ func (s *service) GetNews( //nolint:gocritic,funlen // False negative. Temporary
 	if req.Data.Type != news.RegularNewsType && req.Data.Type != news.FeaturedNewsType {
 		return nil, server.BadRequest(errors.Errorf("invalid type %v", req.Data.Type), invalidPropertiesErrorCode)
 	}
-	if true {
+	if !strings.HasPrefix(s.cfg.Host, "staging.") {
 		falseVal := false
 		updatedAt := time.New(time.Now().Add(-10 * 24 * stdlibtime.Hour))
 		var resp []*news.PersonalNews
@@ -201,7 +201,7 @@ func (s *service) GetUnreadNewsCount( //nolint:gocritic // False negative.
 	if _, validLanguage := languages[req.Data.Language]; !validLanguage {
 		return nil, server.BadRequest(errors.Errorf("invalid language `%v`", req.Data.Language), invalidPropertiesErrorCode)
 	}
-	if true {
+	if !strings.HasPrefix(s.cfg.Host, "staging.") {
 		resp := &news.UnreadNewsCount{}
 
 		return server.OK(resp), nil
