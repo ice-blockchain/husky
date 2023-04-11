@@ -237,6 +237,7 @@ type (
 	service struct {
 		newsRepository          news.Repository
 		notificationsRepository notifications.Repository
+		cfg                     *config
 	}
 	config struct {
 		Host    string `yaml:"host"`

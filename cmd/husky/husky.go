@@ -29,7 +29,9 @@ func main() {
 	appCfg.MustLoadFromKey(applicationYamlKey, &cfg)
 	api.SwaggerInfo.Host = cfg.Host
 	api.SwaggerInfo.Version = cfg.Version
-	server.New(new(service), applicationYamlKey, swaggerRoot).ListenAndServe(ctx, cancel)
+	s := new(service)
+	s.cfg = &cfg
+	server.New(s, applicationYamlKey, swaggerRoot).ListenAndServe(ctx, cancel)
 }
 
 func (s *service) RegisterRoutes(router *server.Router) {
