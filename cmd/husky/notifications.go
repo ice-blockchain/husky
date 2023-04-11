@@ -4,10 +4,12 @@ package main
 
 import (
 	"context"
+	"strings"
 
 	"github.com/pkg/errors"
 
 	"github.com/ice-blockchain/husky/notifications"
+	appCfg "github.com/ice-blockchain/wintr/config"
 	"github.com/ice-blockchain/wintr/server"
 )
 
@@ -40,7 +42,9 @@ func (s *service) GetNotificationChannelToggles( //nolint:gocritic // False nega
 	if req.Data.NotificationChannel != notifications.PushNotificationChannel && req.Data.NotificationChannel != notifications.EmailNotificationChannel {
 		return nil, server.UnprocessableEntity(errors.Errorf("invalid notificationChannel `%v`", req.Data.NotificationChannel), invalidPropertiesErrorCode)
 	}
-	if true {
+	var cfg config
+	appCfg.MustLoadFromKey(applicationYamlKey, &cfg)
+	if !strings.HasPrefix(cfg.Host, "staging.") {
 		resp := []*notifications.NotificationChannelToggle{}
 
 		return server.OK(&resp), nil
