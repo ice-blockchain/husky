@@ -263,7 +263,7 @@ func (*repository) insertSentNotification(ctx context.Context, conn storage.Exec
 
 func (*repository) insertSentAnnouncement(ctx context.Context, conn storage.Execer, sa *sentAnnouncement) error {
 	sql := `INSERT INTO sent_announcements (SENT_AT, LANGUAGE, UNIQUENESS, NOTIFICATION_TYPE, NOTIFICATION_CHANNEL, NOTIFICATION_CHANNEL_VALUE)
-        	) VALUES ($1,$2,$3,$4,$5,$6);`
+            VALUES ($1,$2,$3,$4,$5,$6);`
 
 	if _, err := storage.Exec(ctx, conn, sql,
 		sa.SentAt.Time,
