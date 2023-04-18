@@ -358,9 +358,9 @@ func (req *ModifyNewsRequestBody) validate() error { //nolint:gocognit // Beg to
 }
 
 func verifyIfAuthorizedToAlterNews(usr *server.AuthenticatedUser) error {
-	//if !strings.EqualFold(usr.Role, "admin") && !strings.EqualFold(usr.Role, "author") {
-	//	return errors.Errorf("access denied, invalid role `%v`", usr.Role)
-	//}
+	if !strings.EqualFold(usr.Role, "admin") && !strings.EqualFold(usr.Role, "author") {
+		return errors.Errorf("access denied, invalid role `%v`", usr.Role)
+	}
 
 	return nil
 }

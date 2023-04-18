@@ -177,7 +177,7 @@ func (r *repository) sendNewsViewedMessage(ctx context.Context, vn *ViewedNews) 
 }
 
 func detectAndParseDuplicateDatabaseError(err error) error {
-	if errors.Is(err, storage.ErrDuplicate) {
+	if storage.IsErr(err, storage.ErrDuplicate) {
 		field := ""
 		if storage.IsErr(err, storage.ErrDuplicate, "url") { //nolint:gocritic // Switch case not possible.
 			field = "url"

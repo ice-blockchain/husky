@@ -48,7 +48,7 @@ func StartProcessor(ctx context.Context, cancel context.CancelFunc) Processor { 
 	var mbConsumer messagebroker.Client
 	prc := &processor{repository: &repository{
 		cfg:                     &cfg,
-		db:                      storage.MustConnect(ctx, ddl, applicationYamlKey),
+		db:                      storage.MustConnect(context.Background(), ddl, applicationYamlKey), //nolint:contextcheck // We need to gracefully shut it down.
 		mb:                      messagebroker.MustConnect(ctx, applicationYamlKey),
 		pushNotificationsClient: push.New(applicationYamlKey),
 		pictureClient:           picture.New(applicationYamlKey),
@@ -238,7 +238,7 @@ func executeConcurrently(fs ...func() error) error {
 func (*repository) insertSentNotification(ctx context.Context, conn storage.Execer, sn *sentNotification) error {
 	sql := `INSERT INTO sent_notifications (
                                 SENT_AT,
-                                language,
+                                LANGUAGE,
                                 USER_ID,
                                 UNIQUENESS,
                                 NOTIFICATION_TYPE,
@@ -246,7 +246,7 @@ func (*repository) insertSentNotification(ctx context.Context, conn storage.Exec
                                 NOTIFICATION_CHANNEL_VALUE
         	) VALUES ($1,$2,$3,$4,$5,$6,$7);`
 
-	if _, err := storage.Exec(ctx, conn, sql,
+	_, err := storage.Exec(ctx, conn, sql,
 		sn.SentAt.Time,
 		sn.Language,
 		sn.UserID,
@@ -254,27 +254,23 @@ func (*repository) insertSentNotification(ctx context.Context, conn storage.Exec
 		sn.NotificationType,
 		sn.NotificationChannel,
 		sn.NotificationChannelValue,
-	); err != nil {
-		return errors.Wrapf(err, "failed to insert sent notification %#v", sn)
-	}
+	)
 
-	return nil
+	return errors.Wrapf(err, "failed to insert sent notification %#v", sn)
 }
 
 func (*repository) insertSentAnnouncement(ctx context.Context, conn storage.Execer, sa *sentAnnouncement) error {
 	sql := `INSERT INTO sent_announcements (SENT_AT, LANGUAGE, UNIQUENESS, NOTIFICATION_TYPE, NOTIFICATION_CHANNEL, NOTIFICATION_CHANNEL_VALUE)
             VALUES ($1,$2,$3,$4,$5,$6);`
 
-	if _, err := storage.Exec(ctx, conn, sql,
+	_, err := storage.Exec(ctx, conn, sql,
 		sa.SentAt.Time,
 		sa.Language,
 		sa.Uniqueness,
 		sa.NotificationType,
 		sa.NotificationChannel,
 		sa.NotificationChannelValue,
-	); err != nil {
-		return errors.Wrapf(err, "failed to insert sent announcement %#v", sa)
-	}
+	)
 
-	return nil
+	return errors.Wrapf(err, "failed to insert sent announcement %#v", sa)
 }
