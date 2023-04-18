@@ -28,7 +28,7 @@ func (r *repository) GetNotificationChannelToggles( //nolint:funlen,gocognit,goc
 	resp = r.defaultNotificationChannelToggles(channel)
 	usr, err := r.getUserByID(ctx, userID)
 	if err != nil {
-		if errors.Is(err, ErrNotFound) {
+		if storage.IsErr(err, ErrNotFound) {
 			return resp, nil
 		}
 
@@ -87,7 +87,7 @@ func (r *repository) ToggleNotificationChannelDomain( //nolint:funlen,gocognit,g
 	}
 	usr, err := r.getUserByID(ctx, userID)
 	if err != nil {
-		if errors.Is(err, ErrNotFound) {
+		if storage.IsErr(err, ErrNotFound) {
 			err = ErrRelationNotFound
 		}
 
@@ -214,7 +214,7 @@ func (r *repository) ToggleNotificationChannelDomain( //nolint:funlen,gocognit,g
 	valuesForUpdate = &sanitizedDisabledDomains
 	sql := fmt.Sprintf(`UPDATE users SET %v where user_id = $1`, fieldForUpdate)
 	if rowsUpdated, tErr := storage.Exec(ctx, r.db, sql, append([]any{userID}, valuesForUpdate)...); tErr != nil {
-		if rowsUpdated == 0 || errors.Is(tErr, storage.ErrNotFound) {
+		if rowsUpdated == 0 || storage.IsErr(tErr, storage.ErrNotFound) {
 			tErr = ErrRelationNotFound
 		}
 
@@ -301,7 +301,7 @@ func (s *userTableSource) deleteUser(ctx context.Context, us *users.UserSnapshot
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "context failed")
 	}
-	sql := `DELETE FROM users WHERE user_id = :user_id`
+	sql := `DELETE FROM users WHERE user_id = $1`
 	_, err := storage.Exec(ctx, s.db, sql, us.Before.ID)
 
 	return errors.Wrapf(err, "failed to delete user:%#v", us)
@@ -344,8 +344,7 @@ func (u *deviceMetadataTableSource) Process(ctx context.Context, msg *messagebro
 	}
 	_, err := storage.Exec(ctx, u.db, sql, params...)
 
-	return errors.Wrapf(err,
-		"failed to upsert %#v", params...)
+	return errors.Wrapf(err, "failed to upsert %#v", params...)
 }
 
 func (r *repository) PingUser(ctx context.Context, userID string) error { //nolint:funlen,gocognit,revive,gocyclo,cyclop // .
@@ -386,11 +385,10 @@ func (r *repository) PingUser(ctx context.Context, userID string) error { //noli
 		usr.ReferredBy,
 		lastPingedTime,
 	}
-	var rowsUpdated uint64
-	if rowsUpdated, err = storage.Exec(ctx, r.db, sql, params...); rowsUpdated == 0 || (err != nil && errors.Is(err, storage.ErrNotFound)) {
+	if rowsUpdated, sErr := storage.Exec(ctx, r.db, sql, params...); rowsUpdated == 0 || (sErr != nil && storage.IsErr(sErr, storage.ErrNotFound)) {
 		return r.PingUser(ctx, userID)
-	} else if err != nil {
-		return errors.Wrapf(err, "failed to update users to set last_ping_cooldown_ended_at params:%#v", params...)
+	} else if sErr != nil {
+		return errors.Wrapf(sErr, "failed to update users to set last_ping_cooldown_ended_at params:%#v", params...)
 	}
 	up := &UserPing{UserID: userID, PingedBy: reqUserID, LastPingCooldownEndedAt: newPingCooldownEndsAt}
 
@@ -398,7 +396,7 @@ func (r *repository) PingUser(ctx context.Context, userID string) error { //noli
 		params[0] = usr.LastPingCooldownEndedAt
 		params[3] = newPingCooldownEndsAt
 		rRowsUpdated, rErr := storage.Exec(ctx, r.db, sql, params...)
-		if rRowsUpdated == 0 || (rErr != nil && errors.Is(rErr, storage.ErrNotFound)) {
+		if rRowsUpdated == 0 || (rErr != nil && storage.IsErr(rErr, storage.ErrNotFound)) {
 			return r.PingUser(ctx, userID)
 		}
 

@@ -41,7 +41,7 @@ func StartProcessor(ctx context.Context, _ context.CancelFunc) Processor {
 	var cfg config
 	appCfg.MustLoadFromKey(applicationYamlKey, &cfg)
 
-	db := storage.MustConnect(ctx, ddl, applicationYamlKey)
+	db := storage.MustConnect(context.Background(), ddl, applicationYamlKey) //nolint:contextcheck // We need to gracefully shut it down.
 	mbProducer := messagebroker.MustConnect(ctx, applicationYamlKey)
 
 	return &processor{repository: &repository{

@@ -16,7 +16,7 @@ func (r *repository) DeleteNews(ctx context.Context, newsID, language string) er
 	}
 	gNews, err := r.getNewsByPK(ctx, newsID, language)
 	if err != nil {
-		if errors.Is(err, storage.ErrNotFound) {
+		if storage.IsErr(err, storage.ErrNotFound) {
 			err = ErrNotFound
 		}
 

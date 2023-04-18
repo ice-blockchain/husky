@@ -50,7 +50,7 @@ func (r *repository) getEmailNotificationParams( //nolint:funlen,revive // .
 	if ctx.Err() != nil {
 		return nil, errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
-	sql := fmt.Sprintf(`SELECT u.username as display_name, 
+	sql := fmt.Sprintf(`SELECT u.username AS display_name, 
 							   (CASE WHEN (u.disabled_email_notification_domains IS NULL 
 												OR (
 													POSITION('%[1]v' IN u.disabled_email_notification_domains) = 0

@@ -154,10 +154,9 @@ func (r *repository) sendPushNotification(ctx context.Context, pn *pushNotificat
 
 		return nil
 	})
-	if err != nil {
-		if errors.Is(err, push.ErrInvalidDeviceToken) {
-			return multierror.Append(err, r.clearInvalidPushNotificationToken(ctx, pn.sn.UserID, pn.pn.Target))
-		}
+	if err != nil && errors.Is(err, push.ErrInvalidDeviceToken) {
+		return errors.Wrapf(multierror.Append(err, r.clearInvalidPushNotificationToken(ctx, pn.sn.UserID, pn.pn.Target)).ErrorOrNil(),
+			"errInvalidDeviceToken handling failed")
 	}
 
 	return errors.Wrapf(err, "transaction rollback")
