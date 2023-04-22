@@ -245,10 +245,7 @@ func (s *userTableSource) Process(ctx context.Context, msg *messagebroker.Messag
 		return errors.Wrapf(err, "failed to upsert:%#v", snapshot)
 	}
 
-	return multierror.Append(nil, //nolint:wrapcheck // Not needed.
-		errors.Wrapf(s.sendNewReferralNotification(ctx, snapshot), "failed to sendNewReferralNotification for :%#v", snapshot),
-		errors.Wrapf(s.sendNewContactNotification(ctx, snapshot), "failed to sendNewContactNotification for :%#v", snapshot),
-	).ErrorOrNil()
+	return errors.Wrapf(s.sendNewReferralNotification(ctx, snapshot), "failed to sendNewReferralNotification for :%#v", snapshot)
 }
 
 func (s *userTableSource) upsertUser(ctx context.Context, us *users.UserSnapshot) error { //nolint:funlen // Big SQL.
@@ -264,10 +261,9 @@ func (s *userTableSource) upsertUser(ctx context.Context, us *users.UserSnapshot
                    PROFILE_PICTURE_NAME,
                    REFERRED_BY,
                    PHONE_NUMBER_HASH,
-                   AGENDA_PHONE_NUMBER_HASHES,
                    LANGUAGE,
                    USER_ID
-    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
     ON CONFLICT(user_id)
       DO UPDATE
       	SET        PHONE_NUMBER = EXCLUDED.PHONE_NUMBER,
@@ -278,7 +274,6 @@ func (s *userTableSource) upsertUser(ctx context.Context, us *users.UserSnapshot
                    PROFILE_PICTURE_NAME = EXCLUDED.PROFILE_PICTURE_NAME,
                    REFERRED_BY = EXCLUDED.REFERRED_BY,
                    PHONE_NUMBER_HASH = EXCLUDED.PHONE_NUMBER_HASH,
-                   AGENDA_PHONE_NUMBER_HASHES = EXCLUDED.AGENDA_PHONE_NUMBER_HASHES,
                    LANGUAGE = EXCLUDED.LANGUAGE`
 	_, err := storage.Exec(ctx, s.db, sql,
 		us.PhoneNumber,
@@ -289,7 +284,6 @@ func (s *userTableSource) upsertUser(ctx context.Context, us *users.UserSnapshot
 		s.pictureClient.StripDownloadURL(strings.Replace(us.ProfilePictureURL, "profile/", "", 1)),
 		us.ReferredBy,
 		us.PhoneNumberHash,
-		us.AgendaPhoneNumberHashes,
 		us.Language,
 		us.ID,
 	)

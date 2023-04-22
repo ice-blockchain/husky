@@ -15,10 +15,14 @@ CREATE TABLE IF NOT EXISTS users  (
                     profile_picture_name                    TEXT,
                     referred_by                             TEXT,
                     phone_number_hash                       TEXT,
-                    agenda_phone_number_hashes              TEXT,
                     language                                TEXT NOT NULL default 'en'
                   );
-CREATE INDEX IF NOT EXISTS users_agenda_phone_number_hashes_ix ON users (agenda_phone_number_hashes);
+--************************************************************************************************************************************
+-- contacts
+CREATE TABLE IF NOT EXISTS contacts  (
+                    user_id          text primary key REFERENCES users(user_id) ON DELETE CASCADE,
+                    contact_user_ids text NOT NULL
+                  );
 --************************************************************************************************************************************
 -- sent_notifications
 CREATE TABLE IF NOT EXISTS sent_notifications  (

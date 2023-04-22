@@ -70,6 +70,7 @@ func StartProcessor(ctx context.Context, cancel context.CancelFunc) Processor { 
 		&achievedBadgesSource{processor: prc},
 		&completedLevelsSource{processor: prc},
 		&enabledRolesSource{processor: prc},
+		&contactsTableSource{processor: prc},
 	)
 	prc.shutdown = closeAll(mbConsumer, prc.mb, prc.db, prc.pushNotificationsClient.Close)
 	go prc.startOldSentNotificationsCleaner(ctx)
