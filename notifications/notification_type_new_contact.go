@@ -126,7 +126,7 @@ func (r *repository) getPushNotificationTokensForNewContactNotification(
 								   AND dm.push_notification_token IS NOT NULL 
 								   AND dm.push_notification_token != ''
 						WHERE u.user_id = $1
-							  AND $2 = ANY(string_to_array((SELECT contact_user_ids FROM contacts WHERE user_id = $1), ','))
+							  AND $2 = ANY(u.agenda_contact_user_ids)
 						GROUP BY u.user_id`, MicroCommunityNotificationDomain, AllNotificationDomain)
 
 	resp, err := storage.Select[pushNotificationTokens](ctx, r.db, sql, userID, contactID)

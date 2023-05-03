@@ -15,13 +15,8 @@ CREATE TABLE IF NOT EXISTS users  (
                     profile_picture_name                    TEXT,
                     referred_by                             TEXT,
                     phone_number_hash                       TEXT,
+                    agenda_contact_user_ids                 TEXT[],
                     language                                TEXT NOT NULL default 'en'
-                  );
---************************************************************************************************************************************
--- contacts
-CREATE TABLE IF NOT EXISTS contacts  (
-                    user_id          text primary key REFERENCES users(user_id) ON DELETE CASCADE,
-                    contact_user_ids text NOT NULL
                   );
 --************************************************************************************************************************************
 -- sent_notifications
