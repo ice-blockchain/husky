@@ -9,6 +9,7 @@ import (
 	"mime/multipart"
 
 	"github.com/goccy/go-json"
+	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
@@ -96,11 +97,11 @@ func (r *repository) updateNews(ctx context.Context, news *TaggedNews) error { /
 		args = append(args, lu.Time)
 		sql += fmt.Sprintf(" AND UPDATED_AT = $%v", fieldIndex)
 	}
-	if _, err := storage.Exec(ctx, r.db, sql, args...); err != nil {
-		tErr := detectAndParseDuplicateDatabaseError(err)
-		if storage.IsErr(tErr, storage.ErrNotFound) {
+	if rowsUpdated, err := storage.Exec(ctx, r.db, sql, args...); rowsUpdated == 0 || err != nil {
+		if rowsUpdated == 0 && err == nil {
 			return errors.Wrapf(ErrRaceCondition, "failed to update news:%#v", news)
 		}
+		tErr := detectAndParseDuplicateDatabaseError(err)
 
 		return errors.Wrapf(tErr, "failed to update news:%#v", news)
 	}
@@ -127,7 +128,7 @@ func (n *TaggedNews) override(news *TaggedNews) *TaggedNews {
 	return nws
 }
 
-func (r *repository) IncrementViews(ctx context.Context, newsID, language string) error {
+func (r *repository) IncrementViews(ctx context.Context, newsID, language string) error { //nolint:funlen,gocognit // A lot of negative flow handling.
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), " context failed")
 	}
@@ -137,25 +138,34 @@ func (r *repository) IncrementViews(ctx context.Context, newsID, language string
 		Language:  language,
 		UserID:    requestingUserID(ctx),
 	}
-
-	return errors.Wrapf(storage.DoInTransaction(ctx, r.db, func(conn storage.QueryExecer) error {
-		args := []any{tuple.CreatedAt.Time, tuple.NewsID, tuple.Language, tuple.UserID}
-		sql := `INSERT INTO NEWS_VIEWED_BY_USERS (created_at, news_id, language, user_id) VALUES($1, $2, $3, $4)`
-		if _, err := storage.Exec(ctx, r.db, sql, args...); err != nil {
-			return errors.Wrapf(err, "failed to insert NEWS_VIEWED_BY_USERS %#v", tuple)
+	args := []any{tuple.CreatedAt.Time, tuple.NewsID, tuple.Language, tuple.UserID}
+	sql := `INSERT INTO NEWS_VIEWED_BY_USERS (created_at, news_id, language, user_id) VALUES($1, $2, $3, $4)`
+	if _, err := storage.Exec(ctx, r.db, sql, args...); err != nil {
+		return errors.Wrapf(err, "failed to insert NEWS_VIEWED_BY_USERS %#v", tuple)
+	}
+	sql = `UPDATE news SET views = views + 1 WHERE language = $1 AND id = $2`
+	if rowsUpdated, err := storage.Exec(ctx, r.db, sql, language, newsID); rowsUpdated == 0 || err != nil {
+		if rowsUpdated == 0 && err == nil {
+			err = ErrNotFound
 		}
 
-		sql = `UPDATE news SET views = views + 1 WHERE language = $1 AND id = $2`
-		if _, err := storage.Exec(ctx, r.db, sql, language, newsID); err != nil {
-			if storage.IsErr(err, storage.ErrNotFound) {
-				err = ErrNotFound
-			}
-
-			return errors.Wrapf(err, "failed to increment news views count for newsId:%v,language:%v", newsID, language)
+		return errors.Wrapf(err, "failed to increment news views count for newsId:%v,language:%v", newsID, language)
+	}
+	if err := r.sendNewsViewedMessage(ctx, tuple); err != nil {
+		bErr := errors.Wrapf(err, "failed to sendNewsViewedMessage for %#v", tuple)
+		sql = `UPDATE news SET views = views - 1 WHERE language = $1 AND id = $2`
+		if _, rErr := storage.Exec(ctx, r.db, sql, language, newsID); rErr != nil {
+			return multierror.Append(bErr, errors.Wrapf(rErr, "[rollback]failed to decrement news views count for newsId:%v,language:%v", newsID, language)).ErrorOrNil() //nolint:lll,wrapcheck // .
+		}
+		sql = `DELETE FROM NEWS_VIEWED_BY_USERS WHERE language = $1 AND news_id = $2`
+		if _, rErr := storage.Exec(ctx, r.db, sql, language, newsID); rErr != nil {
+			return multierror.Append(bErr, errors.Wrapf(rErr, "[rollback]failed to delete NEWS_VIEWED_BY_USERS%#v", tuple)).ErrorOrNil() //nolint:wrapcheck // .
 		}
 
-		return errors.Wrapf(r.sendNewsViewedMessage(ctx, tuple), "failed to sendNewsViewedMessage for %#v", tuple)
-	}), "transaction rollback")
+		return bErr
+	}
+
+	return nil
 }
 
 func (r *repository) sendNewsViewedMessage(ctx context.Context, vn *ViewedNews) error {
@@ -182,7 +192,7 @@ func detectAndParseDuplicateDatabaseError(err error) error {
 		if storage.IsErr(err, storage.ErrDuplicate, "url") { //nolint:gocritic // Switch case not possible.
 			field = "url"
 		} else if storage.IsErr(err, storage.ErrDuplicate, "pk") {
-			field = "pk"
+			field = "id"
 		} else {
 			log.Panic("unexpected duplicate for news space")
 		}

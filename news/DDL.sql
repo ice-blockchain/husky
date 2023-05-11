@@ -3,17 +3,17 @@
 CREATE TABLE IF NOT EXISTS news (
                     created_at            TIMESTAMP NOT NULL,
                     updated_at            TIMESTAMP NOT NULL,
-                    notification_channels TEXT,
+                    views                 SMALLINT NOT NULL DEFAULT 0,
                     id                    TEXT NOT NULL,
                     type                  TEXT NOT NULL,
                     language              TEXT NOT NULL,
                     title                 TEXT NOT NULL,
                     image_url             TEXT NOT NULL,
                     url                   TEXT NOT NULL UNIQUE,
-                    views                 BIGINT NOT NULL DEFAULT 0,
+                    notification_channels TEXT[],
                     PRIMARY KEY(language,id)
                     );
-CREATE INDEX IF NOT EXISTS most_recent_news_lookup_ix ON news (language, type, created_at);
+CREATE INDEX IF NOT EXISTS most_recent_news_lookup_ix ON news (language, type, created_at DESC);
 -- news_viewed_by_users
 CREATE TABLE IF NOT EXISTS news_viewed_by_users (
                    created_at TIMESTAMP NOT NULL,

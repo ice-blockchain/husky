@@ -67,7 +67,7 @@ func (r *repository) getNewsByPK(ctx context.Context, newsID, language string) (
 	if ctx.Err() != nil {
 		return nil, errors.Wrap(ctx.Err(), "context failed")
 	}
-	sql := `SELECT string_agg(t.news_tag, ',') AS tags,
+	sql := `SELECT array_agg(t.news_tag) filter (where t.news_tag is not null) AS tags,
 				   n.* 
 			FROM news n
 			      LEFT JOIN news_tags_per_news t
@@ -75,7 +75,7 @@ func (r *repository) getNewsByPK(ctx context.Context, newsID, language string) (
 			      		AND t.news_id  = n.id
 			WHERE n.language = $1
 			 		AND n.id = $2
-			GROUP BY n.created_at, n.updated_at, n.notification_channels, n.id, n.type, n.language, t.created_at
+			GROUP BY n.id, n.language, t.created_at
             ORDER BY t.created_at`
 	result, err := storage.Get[TaggedNews](ctx, r.db, sql, language, newsID)
 	if err != nil {

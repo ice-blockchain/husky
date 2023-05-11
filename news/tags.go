@@ -41,7 +41,7 @@ func (r *repository) addNewsTags(ctx context.Context, news ...*TaggedNews) error
 		errs = append(errs, err)
 	}
 
-	return errors.Wrapf(multierror.Append(nil, errs...).ErrorOrNil(), "failed to insert atleast one tag from news:%#v", news)
+	return errors.Wrapf(multierror.Append(nil, errs...).ErrorOrNil(), "failed to insert at least one tag from news:%#v", news)
 }
 
 func (r *repository) insertTag(ctx context.Context, nws *TaggedNews, tag Tag) error {
