@@ -3,9 +3,9 @@
 -- users
 CREATE TABLE IF NOT EXISTS users  (
                     last_ping_cooldown_ended_at             TIMESTAMP,
-                    disabled_push_notification_domains      TEXT,
-                    disabled_email_notification_domains     TEXT,
-                    disabled_sms_notification_domains       TEXT,
+                    disabled_push_notification_domains      TEXT[],
+                    disabled_email_notification_domains     TEXT[],
+                    disabled_sms_notification_domains       TEXT[],
                     phone_number                            TEXT,
                     email                                   TEXT,
                     first_name                              TEXT,

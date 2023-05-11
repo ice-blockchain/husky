@@ -82,23 +82,19 @@ type (
 	}
 )
 
-func (r *repository) getPushNotificationTokens( //nolint:funlen // .
+func (r *repository) getPushNotificationTokens(
 	ctx context.Context, domain NotificationDomain, userID string,
 ) (*pushNotificationTokens, error) {
 	if ctx.Err() != nil {
 		return nil, errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
-	sql := fmt.Sprintf(`SELECT string_agg(dm.push_notification_token, ',') AS push_notification_tokens, 
+	sql := fmt.Sprintf(`SELECT array_agg(dm.push_notification_token) filter (where dm.push_notification_token is not null)  AS push_notification_tokens, 
 							   u.language,
 							   u.user_id
 						FROM users u
 							 LEFT JOIN device_metadata dm
 									ON ( u.disabled_push_notification_domains IS NULL 
-										OR (
-											POSITION('%[1]v' IN u.disabled_push_notification_domains) = 0
-								   			AND 
-								   			POSITION('%[2]v' IN u.disabled_push_notification_domains) = 0
-								   		   )
+										OR NOT (u.disabled_push_notification_domains @> ARRAY['%[1]v','%[2]v'] )
 								   	   )
 								   AND dm.user_id = u.user_id
 								   AND dm.push_notification_token IS NOT NULL 
@@ -139,27 +135,26 @@ func (r *repository) sendPushNotification(ctx context.Context, pn *pushNotificat
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
-	err := storage.DoInTransaction(ctx, r.db, func(conn storage.QueryExecer) error {
-		if err := r.insertSentNotification(ctx, conn, pn.sn); err != nil {
-			return errors.Wrapf(err, "failed to insert %#v", pn.sn)
-		}
-		responder := make(chan error, 1)
-		defer close(responder)
-		r.pushNotificationsClient.Send(ctx, pn.pn, responder)
-		if err := <-responder; err != nil {
-			if errors.Is(err, push.ErrInvalidDeviceToken) {
-				return push.ErrInvalidDeviceToken
-			}
+	if err := r.insertSentNotification(ctx, pn.sn); err != nil {
+		return errors.Wrapf(err, "failed to insert %#v", pn.sn)
+	}
+	responder := make(chan error, 1)
+	defer close(responder)
+	r.pushNotificationsClient.Send(ctx, pn.pn, responder)
+	if err := <-responder; err != nil {
+		var cErr error
+		if errors.Is(err, push.ErrInvalidDeviceToken) {
+			cErr = r.clearInvalidPushNotificationToken(ctx, pn.sn.UserID, pn.pn.Target)
 		}
 
-		return nil
-	})
-	if err != nil && errors.Is(err, push.ErrInvalidDeviceToken) {
-		return errors.Wrapf(multierror.Append(err, r.clearInvalidPushNotificationToken(ctx, pn.sn.UserID, pn.pn.Target)).ErrorOrNil(),
-			"errInvalidDeviceToken handling failed")
+		return multierror.Append( //nolint:wrapcheck // Not needed.
+			errors.Wrapf(cErr, "failed to clearInvalidPushNotificationToken for userID:%#v, push token:%#v", pn.sn.UserID, pn.pn.Target),
+			errors.Wrapf(err, "failed to send push notification:%#v, desired to be sent:%#v", pn.pn, pn.sn),
+			errors.Wrapf(r.deleteSentNotification(ctx, pn.sn), "failed to delete SENT_NOTIFICATIONS as a rollback for %#v", pn.sn),
+		).ErrorOrNil()
 	}
 
-	return errors.Wrapf(err, "transaction rollback")
+	return nil
 }
 
 func (r *repository) clearInvalidPushNotificationToken(ctx context.Context, userID string, token push.DeviceToken) error {
@@ -198,11 +193,16 @@ func (r *repository) broadcastPushNotification(ctx context.Context, bpn *broadca
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
 
-	return errors.Wrapf(storage.DoInTransaction(ctx, r.db, func(conn storage.QueryExecer) error {
-		if err := r.insertSentAnnouncement(ctx, conn, bpn.sa); err != nil {
-			return errors.Wrapf(err, "failed to insert %#v", bpn.sa)
-		}
+	if err := r.insertSentAnnouncement(ctx, bpn.sa); err != nil {
+		return errors.Wrapf(err, "failed to insert %#v", bpn.sa)
+	}
 
-		return errors.Wrapf(r.pushNotificationsClient.Broadcast(ctx, bpn.pn), "failed to broadcast push notification:%#v, desired to be sent:%#v", bpn.pn, bpn.sa)
-	}), "transaction rollback")
+	if err := r.pushNotificationsClient.Broadcast(ctx, bpn.pn); err != nil {
+		return multierror.Append(
+			errors.Wrapf(err, "failed to broadcast push notification:%#v, desired to be sent:%#v", bpn.pn, bpn.sa),
+			errors.Wrapf(r.deleteSentAnnouncement(ctx, bpn.sa), "failed to delete SENT_ANNOUNCEMENTS as a rollback for %#v", bpn.sa),
+		)
+	}
+
+	return nil
 }

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 
 	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
@@ -30,18 +31,22 @@ func (r *repository) sendEmailNotification(ctx context.Context, en *emailNotific
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
 
-	return errors.Wrapf(storage.DoInTransaction(ctx, r.db, func(conn storage.QueryExecer) error {
-		if err := r.insertSentNotification(ctx, conn, en.sn); err != nil {
-			return errors.Wrapf(err, "failed to insert %#v", en.sn)
-		}
-		en.en.From.Email = "no-reply@ice.io"
-		if en.en.From.Name = internationalizedEmailDisplayNames[en.sn.Language]; en.en.From.Name == "" {
-			en.en.From.Name = internationalizedEmailDisplayNames["en"]
-		}
+	if err := r.insertSentNotification(ctx, en.sn); err != nil {
+		return errors.Wrapf(err, "failed to insert %#v", en.sn)
+	}
+	en.en.From.Email = "no-reply@ice.io"
+	if en.en.From.Name = internationalizedEmailDisplayNames[en.sn.Language]; en.en.From.Name == "" {
+		en.en.From.Name = internationalizedEmailDisplayNames["en"]
+	}
 
-		return errors.Wrapf(r.emailClient.Send(ctx, en.en, email.Participant{Name: en.displayName, Email: en.sn.NotificationChannelValue}),
-			"failed to send email notification:%#v, desired to be sent:%#v", en.en, en.sn)
-	}), "transaction rollback")
+	if err := r.emailClient.Send(ctx, en.en, email.Participant{Name: en.displayName, Email: en.sn.NotificationChannelValue}); err != nil {
+		return multierror.Append(
+			errors.Wrapf(err, "failed to send email notification:%#v, desired to be sent:%#v", en.en, en.sn),
+			errors.Wrapf(r.deleteSentNotification(ctx, en.sn), "failed to delete SENT_NOTIFICATIONS as a rollback for %#v", en.sn),
+		)
+	}
+
+	return nil
 }
 
 func (r *repository) getEmailNotificationParams( //nolint:funlen,revive // .
@@ -52,11 +57,8 @@ func (r *repository) getEmailNotificationParams( //nolint:funlen,revive // .
 	}
 	sql := fmt.Sprintf(`SELECT u.username AS display_name, 
 							   (CASE WHEN (u.disabled_email_notification_domains IS NULL 
-												OR (
-													POSITION('%[1]v' IN u.disabled_email_notification_domains) = 0
-													AND 
-													POSITION('%[2]v' IN u.disabled_email_notification_domains) = 0
-												   ))
+												OR NOT (u.disabled_email_notification_domains @> ARRAY['%[1]v','%[2]v'])
+										  )
 							    		THEN u.email 
 							    		ELSE '' 
 								END) AS email, 
@@ -64,9 +66,9 @@ func (r *repository) getEmailNotificationParams( //nolint:funlen,revive // .
 							   u.user_id,
 							   ( ( u.disabled_push_notification_domains IS NOT NULL 
 								   AND (
-										POSITION('%[1]v' IN u.disabled_push_notification_domains) > 0
+										'%[1]v' = ANY(u.disabled_push_notification_domains)
 										OR 
-										POSITION('%[2]v' IN u.disabled_push_notification_domains) > 0
+										'%[2]v' = ANY(u.disabled_push_notification_domains)
 									   )
 								 ) 
 								 OR

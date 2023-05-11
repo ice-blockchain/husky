@@ -235,7 +235,7 @@ func executeConcurrently(fs ...func() error) error {
 	return errors.Wrap(multierror.Append(nil, errs...).ErrorOrNil(), "at least one execution failed")
 }
 
-func (*repository) insertSentNotification(ctx context.Context, conn storage.Execer, sn *sentNotification) error {
+func (r *repository) insertSentNotification(ctx context.Context, sn *sentNotification) error {
 	sql := `INSERT INTO sent_notifications (
                                 SENT_AT,
                                 LANGUAGE,
@@ -246,7 +246,7 @@ func (*repository) insertSentNotification(ctx context.Context, conn storage.Exec
                                 NOTIFICATION_CHANNEL_VALUE
         	) VALUES ($1,$2,$3,$4,$5,$6,$7);`
 
-	_, err := storage.Exec(ctx, conn, sql,
+	_, err := storage.Exec(ctx, r.db, sql,
 		sn.SentAt.Time,
 		sn.Language,
 		sn.UserID,
@@ -259,13 +259,51 @@ func (*repository) insertSentNotification(ctx context.Context, conn storage.Exec
 	return errors.Wrapf(err, "failed to insert sent notification %#v", sn)
 }
 
-func (*repository) insertSentAnnouncement(ctx context.Context, conn storage.Execer, sa *sentAnnouncement) error {
+func (r *repository) deleteSentNotification(ctx context.Context, sn *sentNotification) error {
+	sql := `DELETE FROM sent_notifications 
+			WHERE 
+			    user_id = $1 AND
+			    uniqueness = $2 AND
+			    notification_type = $3 AND
+			    notification_channel = $4 AND
+			    notification_channel_value = $5;`
+
+	_, err := storage.Exec(ctx, r.db, sql,
+		sn.UserID,
+		sn.Uniqueness,
+		sn.NotificationType,
+		sn.NotificationChannel,
+		sn.NotificationChannelValue,
+	)
+
+	return errors.Wrapf(err, "failed to insert sent notification %#v", sn)
+}
+
+func (r *repository) insertSentAnnouncement(ctx context.Context, sa *sentAnnouncement) error {
 	sql := `INSERT INTO sent_announcements (SENT_AT, LANGUAGE, UNIQUENESS, NOTIFICATION_TYPE, NOTIFICATION_CHANNEL, NOTIFICATION_CHANNEL_VALUE)
             VALUES ($1,$2,$3,$4,$5,$6);`
 
-	_, err := storage.Exec(ctx, conn, sql,
+	_, err := storage.Exec(ctx, r.db, sql,
 		sa.SentAt.Time,
 		sa.Language,
+		sa.Uniqueness,
+		sa.NotificationType,
+		sa.NotificationChannel,
+		sa.NotificationChannelValue,
+	)
+
+	return errors.Wrapf(err, "failed to insert sent announcement %#v", sa)
+}
+
+func (r *repository) deleteSentAnnouncement(ctx context.Context, sa *sentAnnouncement) error {
+	sql := `DELETE FROM sent_announcements
+            WHERE 
+                uniqueness = $1 AND
+			    notification_type = $2 AND
+			    notification_channel = $3 AND
+			    notification_channel_value = $4;`
+
+	_, err := storage.Exec(ctx, r.db, sql,
 		sa.Uniqueness,
 		sa.NotificationType,
 		sa.NotificationChannel,

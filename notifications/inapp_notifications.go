@@ -5,9 +5,9 @@ package notifications
 import (
 	"context"
 
+	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 
-	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/notifications/inapp"
 )
 
@@ -27,14 +27,18 @@ func (r *repository) sendInAppNotification(ctx context.Context, in *inAppNotific
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
 
-	return errors.Wrapf(storage.DoInTransaction(ctx, r.db, func(conn storage.QueryExecer) error {
-		if err := r.insertSentNotification(ctx, conn, in.sn); err != nil {
-			return errors.Wrapf(err, "failed to insert %#v", in.sn)
-		}
+	if err := r.insertSentNotification(ctx, in.sn); err != nil {
+		return errors.Wrapf(err, "failed to insert %#v", in.sn)
+	}
 
-		return errors.Wrapf(r.personalInAppFeed.Send(ctx, in.in, in.sn.UserID),
-			"failed to send inApp notification:%#v, desired to be sent:%#v", in.in, in.sn)
-	}), "transaction rollback")
+	if err := r.personalInAppFeed.Send(ctx, in.in, in.sn.UserID); err != nil {
+		return multierror.Append(
+			errors.Wrapf(err, "failed to send inApp notification:%#v, desired to be sent:%#v", in.in, in.sn),
+			errors.Wrapf(r.deleteSentNotification(ctx, in.sn), "failed to delete SENT_NOTIFICATIONS as a rollback for %#v", in.sn),
+		)
+	}
+
+	return nil
 }
 
 func (r *repository) broadcastInAppNotification(ctx context.Context, bin *broadcastInAppNotification) error {
@@ -42,14 +46,18 @@ func (r *repository) broadcastInAppNotification(ctx context.Context, bin *broadc
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
 
-	return errors.Wrapf(storage.DoInTransaction(ctx, r.db, func(conn storage.QueryExecer) error {
-		if err := r.insertSentAnnouncement(ctx, conn, bin.sa); err != nil {
-			return errors.Wrapf(err, "failed to insert %#v", bin.sa)
-		}
+	if err := r.insertSentAnnouncement(ctx, bin.sa); err != nil {
+		return errors.Wrapf(err, "failed to insert %#v", bin.sa)
+	}
 
-		return errors.Wrapf(r.globalInAppFeed.Send(ctx, bin.in, bin.sa.NotificationChannelValue),
-			"failed to broadcast inApp notification:%#v, desired to be sent:%#v", bin.in, bin.sa)
-	}), "transaction rollback")
+	if err := r.globalInAppFeed.Send(ctx, bin.in, bin.sa.NotificationChannelValue); err != nil {
+		return multierror.Append(
+			errors.Wrapf(err, "failed to broadcast inApp notification:%#v, desired to be sent:%#v", bin.in, bin.sa),
+			errors.Wrapf(r.deleteSentAnnouncement(ctx, bin.sa), "failed to delete SENT_ANNOUNCEMENTS as a rollback for %#v", bin.sa),
+		)
+	}
+
+	return nil
 }
 
 func (r *repository) GenerateInAppNotificationsUserAuthToken(ctx context.Context, userID string) (*InAppNotificationsUserAuthToken, error) {

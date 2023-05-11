@@ -213,8 +213,8 @@ func (r *repository) ToggleNotificationChannelDomain( //nolint:funlen,gocognit,g
 	}
 	valuesForUpdate = &sanitizedDisabledDomains
 	sql := fmt.Sprintf(`UPDATE users SET %v where user_id = $1`, fieldForUpdate)
-	if rowsUpdated, tErr := storage.Exec(ctx, r.db, sql, append([]any{userID}, valuesForUpdate)...); tErr != nil {
-		if rowsUpdated == 0 || storage.IsErr(tErr, storage.ErrNotFound) {
+	if rowsUpdated, tErr := storage.Exec(ctx, r.db, sql, append([]any{userID}, valuesForUpdate)...); rowsUpdated == 0 || tErr != nil {
+		if rowsUpdated == 0 && tErr == nil {
 			tErr = ErrRelationNotFound
 		}
 
@@ -347,7 +347,7 @@ func (u *deviceMetadataTableSource) Process(ctx context.Context, msg *messagebro
 	return errors.Wrapf(err, "failed to upsert %#v", params...)
 }
 
-func (r *repository) PingUser(ctx context.Context, userID string) error { //nolint:funlen,gocognit,revive,gocyclo,cyclop // .
+func (r *repository) PingUser(ctx context.Context, userID string) error { //nolint:funlen,gocognit,revive // .
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected context deadline")
 	}
@@ -385,7 +385,7 @@ func (r *repository) PingUser(ctx context.Context, userID string) error { //noli
 		usr.ReferredBy,
 		lastPingedTime,
 	}
-	if rowsUpdated, sErr := storage.Exec(ctx, r.db, sql, params...); rowsUpdated == 0 || (sErr != nil && storage.IsErr(sErr, storage.ErrNotFound)) {
+	if rowsUpdated, sErr := storage.Exec(ctx, r.db, sql, params...); rowsUpdated == 0 && sErr == nil {
 		return r.PingUser(ctx, userID)
 	} else if sErr != nil {
 		return errors.Wrapf(sErr, "failed to update users to set last_ping_cooldown_ended_at params:%#v", params...)
@@ -396,7 +396,7 @@ func (r *repository) PingUser(ctx context.Context, userID string) error { //noli
 		params[0] = usr.LastPingCooldownEndedAt
 		params[3] = newPingCooldownEndsAt
 		rRowsUpdated, rErr := storage.Exec(ctx, r.db, sql, params...)
-		if rRowsUpdated == 0 || (rErr != nil && storage.IsErr(rErr, storage.ErrNotFound)) {
+		if rRowsUpdated == 0 && rErr == nil {
 			return r.PingUser(ctx, userID)
 		}
 

@@ -120,17 +120,13 @@ func (r *repository) getPushNotificationTokensForNewContactNotification(
 	if ctx.Err() != nil {
 		return nil, errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
-	sql := fmt.Sprintf(`SELECT STRING_AGG(dm.push_notification_token, ',') AS push_notification_tokens, 
+	sql := fmt.Sprintf(`SELECT array_agg(dm.push_notification_token) filter (where dm.push_notification_token is not null) AS push_notification_tokens, 
 							   u.language,
 							   u.user_id
 						FROM users u
 							 LEFT JOIN device_metadata dm
 									ON ( u.disabled_push_notification_domains IS NULL 
-										OR (
-											POSITION('%[1]v' IN u.disabled_push_notification_domains) = 0
-								   			AND 
-								   			POSITION('%[2]v' IN u.disabled_push_notification_domains) = 0
-								   		   )
+										OR NOT (u.disabled_push_notification_domains @> ARRAY['%[1]v', '%[2]v' ])
 								   	   )
 								   AND dm.user_id = u.user_id
 								   AND dm.push_notification_token IS NOT NULL 

@@ -193,7 +193,7 @@ type (
 		ProfilePictureName               string                          `json:"profilePictureName,omitempty"`
 		ReferredBy                       string                          `json:"referredBy,omitempty"`
 		PhoneNumberHash                  string                          `json:"phoneNumberHash,omitempty"`
-		AgendaPhoneNumberHashes          string                          `json:"agendaPhoneNumberHashes,omitempty"`
+		AgendaPhoneNumberHashes          *string                         `json:"agendaPhoneNumberHashes,omitempty"`
 		Language                         string                          `json:"language,omitempty"`
 	}
 	userTableSource struct {
