@@ -421,6 +421,8 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "API that handles everything related to read-only operations for notifying users about anything worthwhile.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
+	LeftDelim:        "{{",
+	RightDelim:       "}}",
 }
 
 func init() {
