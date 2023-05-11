@@ -13,7 +13,7 @@ import (
 	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 )
 
-func (s *contactsTableSource) Process(ctx context.Context, msg *messagebroker.Message) error {
+func (s *agendaContactsSource) Process(ctx context.Context, msg *messagebroker.Message) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline while processing message")
 	}
@@ -28,7 +28,7 @@ func (s *contactsTableSource) Process(ctx context.Context, msg *messagebroker.Me
 		return errors.Wrapf(err, "can't upsert contacts for userID:%v", msg.Key)
 	}
 
-	return errors.Wrapf(s.sendNewContactNotification(ctx, contact), "failed to sendNewContactNotification for:%#v", contact.ContactUserID)
+	return errors.Wrapf(s.sendNewAgendaContactNotification(ctx, contact), "failed to sendNewContactNotification for:%#v", contact.ContactUserID)
 }
 
 func (r *repository) appendContactUserID(ctx context.Context, contact *users.Contact) error {

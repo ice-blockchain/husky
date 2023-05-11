@@ -226,7 +226,7 @@ type (
 	enabledRolesSource struct {
 		*processor
 	}
-	contactsTableSource struct {
+	agendaContactsSource struct {
 		*processor
 	}
 	repository struct {
