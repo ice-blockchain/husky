@@ -61,9 +61,5 @@ func (r *repository) broadcastInAppNotification(ctx context.Context, bin *broadc
 }
 
 func (r *repository) GenerateInAppNotificationsUserAuthToken(ctx context.Context, userID string) (*InAppNotificationsUserAuthToken, error) {
-	if true {
-		return &InAppNotificationsUserAuthToken{}, nil
-	}
-
 	return r.personalInAppFeed.CreateUserToken(ctx, userID) //nolint:wrapcheck // No need, we can just proxy it.
 }

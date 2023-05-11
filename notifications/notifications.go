@@ -18,6 +18,7 @@ import (
 	"github.com/ice-blockchain/wintr/email"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/multimedia/picture"
+	"github.com/ice-blockchain/wintr/notifications/inapp"
 	"github.com/ice-blockchain/wintr/notifications/push"
 	"github.com/ice-blockchain/wintr/time"
 )
@@ -53,10 +54,8 @@ func StartProcessor(ctx context.Context, cancel context.CancelFunc) Processor { 
 		pushNotificationsClient: push.New(applicationYamlKey),
 		pictureClient:           picture.New(applicationYamlKey),
 		emailClient:             email.New(applicationYamlKey),
-		/*
-			personalInAppFeed:       inapp.New(applicationYamlKey, "notifications"),
-			globalInAppFeed:         inapp.New(applicationYamlKey, "announcements"),
-		*/
+		personalInAppFeed:       inapp.New(applicationYamlKey, "notifications"),
+		globalInAppFeed:         inapp.New(applicationYamlKey, "announcements"),
 	}}
 	//nolint:contextcheck // It's intended. Cuz we want to close everything gracefully.
 	mbConsumer = messagebroker.MustConnectAndStartConsuming(context.Background(), cancel, applicationYamlKey,

@@ -4,7 +4,6 @@ package main
 
 import (
 	"context"
-	"strings"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
@@ -44,9 +43,6 @@ func (s *service) RegisterRoutes(router *server.Router) {
 }
 
 func (s *service) Init(ctx context.Context, cancel context.CancelFunc) {
-	if !strings.HasPrefix(s.cfg.Host, "staging.") {
-		return
-	}
 	s.newsRepository = news.New(ctx, cancel)
 	s.notificationsRepository = notifications.New(ctx, cancel)
 }
@@ -54,9 +50,6 @@ func (s *service) Init(ctx context.Context, cancel context.CancelFunc) {
 func (s *service) Close(ctx context.Context) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "could not close service because context ended")
-	}
-	if !strings.HasPrefix(s.cfg.Host, "staging.") {
-		return nil
 	}
 
 	return multierror.Append( //nolint:wrapcheck // .
@@ -67,9 +60,6 @@ func (s *service) Close(ctx context.Context) error {
 
 func (s *service) CheckHealth(ctx context.Context) error {
 	log.Debug("checking health...", "package", "news")
-	if !strings.HasPrefix(s.cfg.Host, "staging.") {
-		return nil
-	}
 	if _, err := s.newsRepository.GetNews(ctx, news.FeaturedNewsType, "en", 1, 0); err != nil {
 		return errors.Wrap(err, "failed to get featured news")
 	}
