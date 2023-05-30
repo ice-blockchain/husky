@@ -193,8 +193,8 @@ type (
 		ProfilePictureName               string                          `json:"profilePictureName,omitempty"`
 		ReferredBy                       string                          `json:"referredBy,omitempty"`
 		PhoneNumberHash                  string                          `json:"phoneNumberHash,omitempty"`
-		AgendaPhoneNumberHashes          *string                         `json:"agendaPhoneNumberHashes,omitempty"`
 		Language                         string                          `json:"language,omitempty"`
+		AgendaContactUserIDs             []string                        `json:"agendaContactUserIDs,omitempty" db:"agenda_contact_user_ids"`
 	}
 	userTableSource struct {
 		*processor
@@ -224,6 +224,9 @@ type (
 		*processor
 	}
 	enabledRolesSource struct {
+		*processor
+	}
+	agendaContactsSource struct {
 		*processor
 	}
 	repository struct {

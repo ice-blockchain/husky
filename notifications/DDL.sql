@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS users  (
                     disabled_push_notification_domains      TEXT[],
                     disabled_email_notification_domains     TEXT[],
                     disabled_sms_notification_domains       TEXT[],
+                    agenda_contact_user_ids                 TEXT[],
                     phone_number                            TEXT,
                     email                                   TEXT,
                     first_name                              TEXT,
@@ -15,10 +16,8 @@ CREATE TABLE IF NOT EXISTS users  (
                     profile_picture_name                    TEXT,
                     referred_by                             TEXT,
                     phone_number_hash                       TEXT,
-                    agenda_phone_number_hashes              TEXT,
                     language                                TEXT NOT NULL default 'en'
                   );
-CREATE INDEX IF NOT EXISTS users_agenda_phone_number_hashes_ix ON users (agenda_phone_number_hashes);
 --************************************************************************************************************************************
 -- sent_notifications
 CREATE TABLE IF NOT EXISTS sent_notifications  (
