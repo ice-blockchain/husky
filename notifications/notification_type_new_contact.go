@@ -9,63 +9,58 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ice-blockchain/eskimo/users"
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/notifications/inapp"
 	"github.com/ice-blockchain/wintr/notifications/push"
 	"github.com/ice-blockchain/wintr/time"
 )
 
-func (r *repository) sendNewContactNotification(ctx context.Context, us *users.UserSnapshot) error { //nolint:funlen,gocognit,gocyclo,revive,cyclop // .
+func (r *repository) sendNewAgendaContactNotification(ctx context.Context, contact *users.Contact) error { //nolint:funlen,gocognit // .
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
-	if us.User == nil ||
-		us.User.PhoneNumberHash == "" ||
-		us.User.Username == "" ||
-		us.User.Username == us.User.ID ||
-		us.User.ReferredBy == "" ||
-		us.User.ReferredBy == us.User.ID ||
-		us.User.PhoneNumberHash == us.User.ID ||
-		(us.Before != nil && us.Before.PhoneNumberHash != "" && us.Before.PhoneNumberHash != us.User.ID &&
-			us.Before.ReferredBy != us.User.ID && us.Before.ReferredBy != "") {
-		return nil
-	}
-	tokens, err := r.getPushNotificationTokensForNewContactNotification(ctx, us.User.PhoneNumberHash)
+	tokens, err := r.getPushNotificationTokensForNewContactNotification(ctx, contact.UserID, contact.ContactUserID)
 	if err != nil || len(tokens) == 0 {
 		return err
+	}
+	joinedUsr, err := r.getUserByID(ctx, contact.ContactUserID)
+	if err != nil {
+		return errors.Wrapf(err, "failed to getUserByID for userID:%v", contact.UserID)
 	}
 	const (
 		actionName = "contact_joined_ice"
 	)
 	now := time.Now()
-	data := struct{ Username string }{Username: fmt.Sprintf("@%v", us.User.Username)}
+	data := struct{ Username string }{Username: fmt.Sprintf("@%v", joinedUsr.Username)}
+	profilePictureURL := r.pictureClient.DownloadURL(joinedUsr.ProfilePictureName)
 	pn, in := make([]*pushNotification, 0, len(tokens)), make([]*inAppNotification, 0, len(tokens))
 	for _, token := range tokens {
-		deeplink := fmt.Sprintf("%v://profile?userId=%v", r.cfg.DeeplinkScheme, us.User.ID)
+		deeplink := fmt.Sprintf("%v://profile?userId=%v", r.cfg.DeeplinkScheme, contact.ContactUserID)
 		in = append(in, &inAppNotification{
 			in: &inapp.Parcel{
 				Time:        now,
-				ReferenceID: fmt.Sprintf("%v:userId:%v", actionName, us.User.ID),
+				ReferenceID: fmt.Sprintf("%v:userId:%v", actionName, contact.ContactUserID),
 				Data: map[string]any{
-					"username": us.User.Username,
+					"username": joinedUsr.Username,
 					"deeplink": deeplink,
-					"imageUrl": us.User.ProfilePictureURL,
+					"imageUrl": profilePictureURL,
 				},
 				Action: actionName,
 				Actor: inapp.ID{
 					Type:  "userId",
-					Value: us.User.ID,
+					Value: contact.ContactUserID,
 				},
 				Subject: inapp.ID{
 					Type:  "userId",
-					Value: us.User.ID,
+					Value: contact.ContactUserID,
 				},
 			},
 			sn: &sentNotification{
 				SentAt: now,
 				sentNotificationPK: sentNotificationPK{
-					UserID:              token.UserID,
-					Uniqueness:          us.User.ID,
+					UserID:              contact.UserID,
+					Uniqueness:          contact.ContactUserID,
 					NotificationType:    NewContactNotificationType,
 					NotificationChannel: InAppNotificationChannel,
 				},
@@ -87,14 +82,14 @@ func (r *repository) sendNewContactNotification(ctx context.Context, us *users.U
 					Target:   deviceToken,
 					Title:    tmpl.getTitle(data),
 					Body:     tmpl.getBody(nil),
-					ImageURL: us.User.ProfilePictureURL,
+					ImageURL: profilePictureURL,
 				},
 				sn: &sentNotification{
 					SentAt:   now,
 					Language: token.Language,
 					sentNotificationPK: sentNotificationPK{
-						UserID:                   token.UserID,
-						Uniqueness:               us.User.ID,
+						UserID:                   contact.UserID,
+						Uniqueness:               contact.ContactUserID,
 						NotificationType:         NewContactNotificationType,
 						NotificationChannel:      PushNotificationChannel,
 						NotificationChannelValue: string(deviceToken),
@@ -113,35 +108,30 @@ func (r *repository) sendNewContactNotification(ctx context.Context, us *users.U
 	}), "failed to executeConcurrently")
 }
 
-func (r *repository) getPushNotificationTokensForNewContactNotification( //nolint:funlen // .
-	ctx context.Context, phoneNumberHash string,
+func (r *repository) getPushNotificationTokensForNewContactNotification(
+	ctx context.Context, userID, contactID string,
 ) ([]*pushNotificationTokens, error) {
 	if ctx.Err() != nil {
 		return nil, errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
-	sql := fmt.Sprintf(`SELECT GROUP_CONCAT(dm.push_notification_token) AS push_notification_tokens, 
+	sql := fmt.Sprintf(`SELECT array_agg(dm.push_notification_token) filter (where dm.push_notification_token is not null) AS push_notification_tokens, 
 							   u.language,
 							   u.user_id
 						FROM users u
 							 LEFT JOIN device_metadata dm
 									ON ( u.disabled_push_notification_domains IS NULL 
-										OR (
-											POSITION('%[1]v', u.disabled_push_notification_domains) == 0
-								   			AND 
-								   			POSITION('%[2]v', u.disabled_push_notification_domains) == 0
-								   		   )
+										OR NOT (u.disabled_push_notification_domains @> ARRAY['%[1]v', '%[2]v' ])
 								   	   )
 								   AND dm.user_id = u.user_id
 								   AND dm.push_notification_token IS NOT NULL 
 								   AND dm.push_notification_token != ''
-						WHERE u.agenda_phone_number_hashes IS NOT NULL
-						  AND POSITION(:phone_number_hash, u.agenda_phone_number_hashes) != 0
+						WHERE u.user_id = $1
+							  AND $2 = ANY(u.agenda_contact_user_ids)
 						GROUP BY u.user_id`, MicroCommunityNotificationDomain, AllNotificationDomain)
-	params := make(map[string]any, 1)
-	params["phone_number_hash"] = phoneNumberHash
-	resp := make([]*pushNotificationTokens, 0)
-	if err := r.db.PrepareExecuteTyped(sql, params, &resp); err != nil {
-		return nil, errors.Wrapf(err, "failed to select for push notification tokens for `%v`, params:%#v", NewContactNotificationType, params)
+
+	resp, err := storage.Select[pushNotificationTokens](ctx, r.db, sql, userID, contactID)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to select for push notification tokens for `%v`, userID:%v", NewContactNotificationType, userID)
 	}
 
 	return resp, nil

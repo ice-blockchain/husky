@@ -4,7 +4,6 @@ package main
 
 import (
 	"context"
-	"strings"
 
 	"github.com/pkg/errors"
 
@@ -40,11 +39,6 @@ func (s *service) GetNotificationChannelToggles( //nolint:gocritic // False nega
 ) (*server.Response[[]*notifications.NotificationChannelToggle], *server.Response[server.ErrorResponse]) {
 	if req.Data.NotificationChannel != notifications.PushNotificationChannel && req.Data.NotificationChannel != notifications.EmailNotificationChannel {
 		return nil, server.UnprocessableEntity(errors.Errorf("invalid notificationChannel `%v`", req.Data.NotificationChannel), invalidPropertiesErrorCode)
-	}
-	if !strings.HasPrefix(s.cfg.Host, "staging.") {
-		resp := []*notifications.NotificationChannelToggle{}
-
-		return server.OK(&resp), nil
 	}
 	resp, err := s.notificationsRepository.GetNotificationChannelToggles(ctx, req.Data.NotificationChannel, req.AuthenticatedUser.UserID)
 	if err != nil {

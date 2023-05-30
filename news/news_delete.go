@@ -7,7 +7,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/ice-blockchain/wintr/connectors/storage"
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 )
 
 func (r *repository) DeleteNews(ctx context.Context, newsID, language string) error {
@@ -16,18 +16,15 @@ func (r *repository) DeleteNews(ctx context.Context, newsID, language string) er
 	}
 	gNews, err := r.getNewsByPK(ctx, newsID, language)
 	if err != nil {
-		if errors.Is(err, storage.ErrNotFound) {
+		if storage.IsErr(err, storage.ErrNotFound) {
 			err = ErrNotFound
 		}
 
 		return errors.Wrapf(err, "failed to get news for pk(newID:%v,language:%v)", newsID, language)
 	}
-	sql := `DELETE FROM news WHERE language = :language AND id = :id`
-	args := make(map[string]any, 1+1)
-	args["id"] = newsID
-	args["language"] = language
-	if err = storage.CheckSQLDMLErr(r.db.PrepareExecute(sql, args)); err != nil {
-		return errors.Wrapf(err, "failed to delete news by (newsID:%v,language:%v)", newsID, language)
+	sql := `DELETE FROM news WHERE language = $1 AND id = $2`
+	if _, tErr := storage.Exec(ctx, r.db, sql, language, newsID); tErr != nil {
+		return errors.Wrapf(tErr, "failed to delete news by (newsID:%v,language:%v)", newsID, language)
 	}
 	gNews.ImageURL = r.pictureClient.DownloadURL(gNews.ImageURL)
 	ss := &TaggedNewsSnapshot{Before: gNews}

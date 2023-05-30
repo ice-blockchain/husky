@@ -14,7 +14,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ice-blockchain/eskimo/users"
-	"github.com/ice-blockchain/wintr/connectors/storage"
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/notifications/push"
 	"github.com/ice-blockchain/wintr/time"
@@ -77,54 +77,43 @@ func loadPushNotificationTranslationTemplates() {
 
 type (
 	pushNotificationTokens struct {
-		_msgpack               struct{} `msgpack:",asArray"` //nolint:unused,tagliatelle,revive,nosnakecase // To insert we need asArray
 		PushNotificationTokens *users.Enum[push.DeviceToken]
 		Language, UserID       string
 	}
 )
 
-func (r *repository) getPushNotificationTokens( //nolint:funlen // .
+func (r *repository) getPushNotificationTokens(
 	ctx context.Context, domain NotificationDomain, userID string,
 ) (*pushNotificationTokens, error) {
 	if ctx.Err() != nil {
 		return nil, errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
-	sql := fmt.Sprintf(`SELECT GROUP_CONCAT(dm.push_notification_token) AS push_notification_tokens, 
+	sql := fmt.Sprintf(`SELECT array_agg(dm.push_notification_token) filter (where dm.push_notification_token is not null)  AS push_notification_tokens, 
 							   u.language,
 							   u.user_id
 						FROM users u
 							 LEFT JOIN device_metadata dm
 									ON ( u.disabled_push_notification_domains IS NULL 
-										OR (
-											POSITION('%[1]v', u.disabled_push_notification_domains) == 0
-								   			AND 
-								   			POSITION('%[2]v', u.disabled_push_notification_domains) == 0
-								   		   )
+										OR NOT (u.disabled_push_notification_domains @> ARRAY['%[1]v','%[2]v'] )
 								   	   )
 								   AND dm.user_id = u.user_id
 								   AND dm.push_notification_token IS NOT NULL 
 								   AND dm.push_notification_token != ''
-						WHERE u.user_id = :user_id`, domain, AllNotificationDomain)
-	params := make(map[string]any, 1)
-	params["user_id"] = userID
-	resp := make([]*pushNotificationTokens, 0, 1)
-	if err := r.db.PrepareExecuteTyped(sql, params, &resp); err != nil {
-		return nil, errors.Wrapf(err, "failed to select for push notification tokens for `%v`, params:%#v", domain, params)
+						WHERE u.user_id = $1
+						GROUP BY u.user_id`, domain, AllNotificationDomain)
+	resp, err := storage.Get[pushNotificationTokens](ctx, r.db, sql, userID)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to select for push notification tokens for `%v`, userID:%#v", domain, userID)
 	}
-	if len(resp) == 0 {
-		return nil, errors.Wrapf(ErrNotFound, "user not found")
-	}
-	if resp[0].PushNotificationTokens == nil || len(*resp[0].PushNotificationTokens) == 0 {
+	if resp.PushNotificationTokens == nil || len(*resp.PushNotificationTokens) == 0 {
 		return nil, nil //nolint:nilnil // .
 	}
 
-	return resp[0], nil
+	return resp, nil
 }
 
 type (
 	sentNotificationPK struct {
-		//nolint:unused,revive,tagliatelle,nosnakecase // Because it is used by the msgpack library for marshalling/unmarshalling.
-		_msgpack                 struct{}            `msgpack:",asArray"`
 		UserID                   string              `json:"userId,omitempty" example:"edfd8c02-75e0-4687-9ac2-1ce4723865c4"`
 		Uniqueness               string              `json:"uniqueness,omitempty" example:"anything"`
 		NotificationType         NotificationType    `json:"notificationType,omitempty" example:"adoption_changed"`
@@ -132,7 +121,6 @@ type (
 		NotificationChannelValue string              `json:"notificationChannelValue,omitempty" example:"jdoe@example.com"`
 	}
 	sentNotification struct {
-		_msgpack struct{}   `msgpack:",asArray"` //nolint:unused,tagliatelle,revive,nosnakecase // To insert we need asArray
 		SentAt   *time.Time `json:"sentAt,omitempty" example:"2022-01-03T16:20:52.156534Z"`
 		Language string     `json:"language,omitempty" example:"en"`
 		sentNotificationPK
@@ -147,7 +135,7 @@ func (r *repository) sendPushNotification(ctx context.Context, pn *pushNotificat
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
-	if err := storage.CheckNoSQLDMLErr(r.db.InsertTyped("SENT_NOTIFICATIONS", pn.sn, &[]*sentNotification{})); err != nil {
+	if err := r.insertSentNotification(ctx, pn.sn); err != nil {
 		return errors.Wrapf(err, "failed to insert %#v", pn.sn)
 	}
 	responder := make(chan error, 1)
@@ -162,8 +150,7 @@ func (r *repository) sendPushNotification(ctx context.Context, pn *pushNotificat
 		return multierror.Append( //nolint:wrapcheck // Not needed.
 			errors.Wrapf(cErr, "failed to clearInvalidPushNotificationToken for userID:%#v, push token:%#v", pn.sn.UserID, pn.pn.Target),
 			errors.Wrapf(err, "failed to send push notification:%#v, desired to be sent:%#v", pn.pn, pn.sn),
-			errors.Wrapf(storage.CheckNoSQLDMLErr(r.db.DeleteTyped("SENT_NOTIFICATIONS", "pk_unnamed_SENT_NOTIFICATIONS_1", &pn.sn.sentNotificationPK, &[]*sentNotification{})), //nolint:lll // .
-				"failed to delete SENT_NOTIFICATIONS as a rollback for %#v", pn.sn),
+			errors.Wrapf(r.deleteSentNotification(ctx, pn.sn), "failed to delete SENT_NOTIFICATIONS as a rollback for %#v", pn.sn),
 		).ErrorOrNil()
 	}
 
@@ -176,26 +163,21 @@ func (r *repository) clearInvalidPushNotificationToken(ctx context.Context, user
 	}
 	sql := `UPDATE device_metadata
 			SET push_notification_token = null
-			WHERE user_id = :user_id
-			  AND push_notification_token = :push_notification_token`
-	params := make(map[string]any, 1+1)
-	params["user_id"] = userID
-	params["push_notification_token"] = token
+			WHERE user_id = $1
+			  AND push_notification_token = $2`
+	_, err := storage.Exec(ctx, r.db, sql, userID, token)
 
-	return errors.Wrapf(storage.CheckSQLDMLErr(r.db.PrepareExecute(sql, params)), "failed to update push_notification_token to empty for params:%#v", params)
+	return errors.Wrapf(err, "failed to update push_notification_token to empty for userID:%v and token %v", userID, token)
 }
 
 type (
 	sentAnnouncementPK struct {
-		//nolint:unused,revive,tagliatelle,nosnakecase // Because it is used by the msgpack library for marshalling/unmarshalling.
-		_msgpack                 struct{}            `msgpack:",asArray"`
 		Uniqueness               string              `json:"uniqueness,omitempty" example:"anything"`
 		NotificationType         NotificationType    `json:"notificationType,omitempty" example:"adoption_changed"`
 		NotificationChannel      NotificationChannel `json:"notificationChannel,omitempty" example:"email"`
 		NotificationChannelValue string              `json:"notificationChannelValue,omitempty" example:"jdoe@example.com"`
 	}
 	sentAnnouncement struct {
-		_msgpack struct{}   `msgpack:",asArray"` //nolint:unused,tagliatelle,revive,nosnakecase // To insert we need asArray
 		SentAt   *time.Time `json:"sentAt,omitempty" example:"2022-01-03T16:20:52.156534Z"`
 		Language string     `json:"language,omitempty" example:"en"`
 		sentAnnouncementPK
@@ -210,14 +192,15 @@ func (r *repository) broadcastPushNotification(ctx context.Context, bpn *broadca
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
-	if err := storage.CheckNoSQLDMLErr(r.db.InsertTyped("SENT_ANNOUNCEMENTS", bpn.sa, &[]*sentAnnouncement{})); err != nil {
+
+	if err := r.insertSentAnnouncement(ctx, bpn.sa); err != nil {
 		return errors.Wrapf(err, "failed to insert %#v", bpn.sa)
 	}
+
 	if err := r.pushNotificationsClient.Broadcast(ctx, bpn.pn); err != nil {
-		return multierror.Append( //nolint:wrapcheck // Not needed.
+		return multierror.Append( //nolint:wrapcheck // .
 			errors.Wrapf(err, "failed to broadcast push notification:%#v, desired to be sent:%#v", bpn.pn, bpn.sa),
-			errors.Wrapf(storage.CheckNoSQLDMLErr(r.db.DeleteTyped("SENT_ANNOUNCEMENTS", "pk_unnamed_SENT_ANNOUNCEMENTS_1", &bpn.sa.sentAnnouncementPK, &[]*sentAnnouncement{})), //nolint:lll // .
-				"failed to delete SENT_ANNOUNCEMENTS as a rollback for %#v", bpn.sa),
+			errors.Wrapf(r.deleteSentAnnouncement(ctx, bpn.sa), "failed to delete SENT_ANNOUNCEMENTS as a rollback for %#v", bpn.sa),
 		).ErrorOrNil()
 	}
 

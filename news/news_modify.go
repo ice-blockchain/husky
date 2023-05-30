@@ -4,16 +4,16 @@ package news
 
 import (
 	"context"
+	"fmt"
+	"log"
 	"mime/multipart"
 
 	"github.com/goccy/go-json"
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 
-	"github.com/ice-blockchain/go-tarantool-client"
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
-	"github.com/ice-blockchain/wintr/connectors/storage"
-	"github.com/ice-blockchain/wintr/log"
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/terror"
 	"github.com/ice-blockchain/wintr/time"
 )
@@ -65,38 +65,45 @@ func (r *repository) updateNews(ctx context.Context, news *TaggedNews) error { /
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "context failed")
 	}
-	sql := "UPDATE NEWS set UPDATED_AT = :updatedAt"
-	params := make(map[string]any)
-	params["id"] = news.ID
-	params["language"] = news.Language
-	params["updatedAt"] = news.UpdatedAt
+	var args []any
+	fieldIndex := 1
+	args = append(args, news.UpdatedAt.Time)
+	sql := fmt.Sprintf("UPDATE NEWS set UPDATED_AT = $%v", fieldIndex)
+	fieldIndex++
 	if news.Type != "" {
-		params["type"] = news.Type
-		sql += ", TYPE = :type"
+		args = append(args, news.Type)
+		sql += fmt.Sprintf(", TYPE = $%v", fieldIndex)
+		fieldIndex++
 	}
 	if news.Title != "" {
-		params["title"] = news.Title
-		sql += ", TITLE = :title"
+		sql += fmt.Sprintf(", TITLE = $%v", fieldIndex)
+		args = append(args, news.Title)
+		fieldIndex++
 	}
 	if news.ImageURL != "" {
-		params["image_url"] = news.ImageURL
-		sql += ", IMAGE_URL = :image_url"
+		args = append(args, news.ImageURL)
+		sql += fmt.Sprintf(", IMAGE_URL = $%v", fieldIndex)
+		fieldIndex++
 	}
 	if news.URL != "" {
-		params["url"] = news.URL
-		sql += ", URL = :url"
+		args = append(args, news.URL)
+		sql += fmt.Sprintf(", URL = $%v", fieldIndex)
+		fieldIndex++
 	}
-	sql += " WHERE ID = :id AND LANGUAGE = :language"
+	args = append(args, news.ID, news.Language)
+	sql += fmt.Sprintf(" WHERE ID = $%v AND LANGUAGE = $%v", fieldIndex, fieldIndex+1)
+	fieldIndex += 2
 	if lu := lastUpdatedAt(ctx); lu != nil {
-		params["lastUpdatedAt"] = lu
-		sql += " AND UPDATED_AT = :lastUpdatedAt"
+		args = append(args, lu.Time)
+		sql += fmt.Sprintf(" AND UPDATED_AT = $%v", fieldIndex)
 	}
-	if err := storage.CheckSQLDMLErr(r.db.PrepareExecute(sql, params)); err != nil {
-		if err = detectAndParseDuplicateDatabaseError(err); errors.Is(err, storage.ErrNotFound) {
-			err = ErrRaceCondition
+	if rowsUpdated, err := storage.Exec(ctx, r.db, sql, args...); rowsUpdated == 0 || err != nil {
+		if rowsUpdated == 0 && err == nil {
+			return errors.Wrapf(ErrRaceCondition, "failed to update news:%#v", news)
 		}
+		tErr := detectAndParseDuplicateDatabaseError(err)
 
-		return errors.Wrapf(err, "failed to update news:%#v", news)
+		return errors.Wrapf(tErr, "failed to update news:%#v", news)
 	}
 
 	return nil
@@ -121,7 +128,7 @@ func (n *TaggedNews) override(news *TaggedNews) *TaggedNews {
 	return nws
 }
 
-func (r *repository) IncrementViews(ctx context.Context, newsID, language string) error { //nolint:funlen // A lot of negative flow handling.
+func (r *repository) IncrementViews(ctx context.Context, newsID, language string) error { //nolint:funlen,gocognit // A lot of negative flow handling.
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), " context failed")
 	}
@@ -131,13 +138,14 @@ func (r *repository) IncrementViews(ctx context.Context, newsID, language string
 		Language:  language,
 		UserID:    requestingUserID(ctx),
 	}
-	if err := storage.CheckNoSQLDMLErr(r.db.InsertTyped("NEWS_VIEWED_BY_USERS", tuple, &[]*ViewedNews{})); err != nil {
+	args := []any{tuple.CreatedAt.Time, tuple.NewsID, tuple.Language, tuple.UserID}
+	sql := `INSERT INTO NEWS_VIEWED_BY_USERS (created_at, news_id, language, user_id) VALUES($1, $2, $3, $4)`
+	if _, err := storage.Exec(ctx, r.db, sql, args...); err != nil {
 		return errors.Wrapf(err, "failed to insert NEWS_VIEWED_BY_USERS %#v", tuple)
 	}
-	ops := append(make([]tarantool.Op, 0, 1), tarantool.Op{Op: "+", Field: 9, Arg: uint64(1)}) //nolint:gomnd // That's the `views` column index.
-	result := make([]*News, 0, 1)
-	if err := storage.CheckNoSQLDMLErr(r.db.UpdateTyped("NEWS", "pk_unnamed_NEWS_2", []any{language, newsID}, ops, &result)); err != nil || len(result) == 0 || result[0].ID == "" { //nolint:lll,revive // .
-		if err == nil {
+	sql = `UPDATE news SET views = views + 1 WHERE language = $1 AND id = $2`
+	if rowsUpdated, err := storage.Exec(ctx, r.db, sql, language, newsID); rowsUpdated == 0 || err != nil {
+		if rowsUpdated == 0 && err == nil {
 			err = ErrNotFound
 		}
 
@@ -145,12 +153,13 @@ func (r *repository) IncrementViews(ctx context.Context, newsID, language string
 	}
 	if err := r.sendNewsViewedMessage(ctx, tuple); err != nil {
 		bErr := errors.Wrapf(err, "failed to sendNewsViewedMessage for %#v", tuple)
-		ops = append(make([]tarantool.Op, 0, 1), tarantool.Op{Op: "-", Field: 9, Arg: uint64(1)}) //nolint:gomnd // That's the `views` column index.
-		if err = storage.CheckNoSQLDMLErr(r.db.UpdateTyped("NEWS", "pk_unnamed_NEWS_2", []any{language, newsID}, ops, &[]*News{})); err != nil {
-			return multierror.Append(bErr, errors.Wrapf(err, "[rollback]failed to decrement news views count for newsId:%v,language:%v", newsID, language)).ErrorOrNil() //nolint:lll,wrapcheck // .
+		sql = `UPDATE news SET views = GREATEST(views - 1, 0) WHERE language = $1 AND id = $2`
+		if _, rErr := storage.Exec(ctx, r.db, sql, language, newsID); rErr != nil {
+			return multierror.Append(bErr, errors.Wrapf(rErr, "[rollback]failed to decrement news views count for newsId:%v,language:%v", newsID, language)).ErrorOrNil() //nolint:lll,wrapcheck // .
 		}
-		if err = storage.CheckNoSQLDMLErr(r.db.DeleteTyped("NEWS_VIEWED_BY_USERS", "pk_unnamed_NEWS_VIEWED_BY_USERS_1", []any{language, tuple.NewsID, tuple.UserID}, &[]*ViewedNews{})); err != nil { //nolint:lll // .
-			return multierror.Append(bErr, errors.Wrapf(err, "[rollback]failed to delete NEWS_VIEWED_BY_USERS%#v", tuple)).ErrorOrNil() //nolint:wrapcheck // .
+		sql = `DELETE FROM NEWS_VIEWED_BY_USERS WHERE language = $1 AND news_id = $2`
+		if _, rErr := storage.Exec(ctx, r.db, sql, language, newsID); rErr != nil {
+			return multierror.Append(bErr, errors.Wrapf(rErr, "[rollback]failed to delete NEWS_VIEWED_BY_USERS%#v", tuple)).ErrorOrNil() //nolint:wrapcheck // .
 		}
 
 		return bErr
@@ -178,15 +187,14 @@ func (r *repository) sendNewsViewedMessage(ctx context.Context, vn *ViewedNews) 
 }
 
 func detectAndParseDuplicateDatabaseError(err error) error {
-	if tErr := terror.As(err); tErr != nil && errors.Is(err, storage.ErrDuplicate) {
+	if storage.IsErr(err, storage.ErrDuplicate) {
 		field := ""
-		switch tErr.Data[storage.IndexName] {
-		case "unique_unnamed_NEWS_1":
+		if storage.IsErr(err, storage.ErrDuplicate, "url") { //nolint:gocritic // Switch case not possible.
 			field = "url"
-		case "pk_unnamed_NEWS_2":
-			field = "language"
-		default:
-			log.Panic("unexpected indexName `%v` for news space", tErr.Data[storage.IndexName])
+		} else if storage.IsErr(err, storage.ErrDuplicate, "pk") {
+			field = "id"
+		} else {
+			log.Panic("unexpected duplicate for news space")
 		}
 
 		return terror.New(storage.ErrDuplicate, map[string]any{"field": field})

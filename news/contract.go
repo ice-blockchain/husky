@@ -11,10 +11,9 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ice-blockchain/eskimo/users"
-	"github.com/ice-blockchain/go-tarantool-client"
 	"github.com/ice-blockchain/husky/notifications"
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
-	"github.com/ice-blockchain/wintr/connectors/storage"
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/multimedia/picture"
 	"github.com/ice-blockchain/wintr/time"
 )
@@ -46,7 +45,6 @@ type (
 		*News
 	}
 	News struct {
-		_msgpack  struct{}   `msgpack:",asArray"` //nolint:unused,tagliatelle,revive,nosnakecase // To insert we need asArray
 		CreatedAt *time.Time `json:"createdAt,omitempty" example:"2022-01-03T16:20:52.156534Z"`
 		UpdatedAt *time.Time `json:"updatedAt,omitempty" example:"2022-01-03T16:20:52.156534Z"`
 		*notifications.NotificationChannels
@@ -63,15 +61,13 @@ type (
 		Before *TaggedNews `json:"before,omitempty"`
 	}
 	ViewedNews struct {
-		_msgpack  struct{}   `msgpack:",asArray"` //nolint:unused,tagliatelle,revive,nosnakecase // To insert we need asArray
 		CreatedAt *time.Time `json:"createdAt,omitempty" example:"2022-01-03T16:20:52.156534Z"`
 		NewsID    string     `json:"newsId" example:"edfd8c02-75e0-4687-9ac2-1ce4723865c4"`
 		Language  string     `json:"language" example:"en"`
 		UserID    string     `json:"userId" example:"7bed2a2d-cb25-4b59-8e9b-93708630d8dc"`
 	}
 	UnreadNewsCount struct {
-		_msgpack struct{} `msgpack:",asArray"` //nolint:unused,tagliatelle,revive,nosnakecase // To insert we need asArray
-		Count    uint64   `json:"count" example:"1"`
+		Count uint64 `json:"count" example:"1"`
 	}
 	ReadRepository interface {
 		GetNews(ctx context.Context, newsType Type, language string, limit, offset uint64) ([]*PersonalNews, error)
@@ -105,7 +101,7 @@ const (
 
 // .
 var (
-	//go:embed DDL.lua
+	//go:embed DDL.sql
 	ddl string
 )
 
@@ -114,7 +110,7 @@ type (
 	repository struct {
 		cfg           *config
 		shutdown      func() error
-		db            tarantool.Connector
+		db            *storage.DB
 		mb            messagebroker.Client
 		pictureClient picture.Client
 	}

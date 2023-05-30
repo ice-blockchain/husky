@@ -17,7 +17,7 @@ import (
 	"github.com/ice-blockchain/eskimo/users"
 	"github.com/ice-blockchain/husky/news"
 	"github.com/ice-blockchain/husky/notifications"
-	"github.com/ice-blockchain/wintr/connectors/storage"
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/server"
 	"github.com/ice-blockchain/wintr/terror"
 )

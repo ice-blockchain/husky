@@ -6,15 +6,15 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	stdlibtime "time"
 
 	"github.com/goccy/go-json"
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 
 	"github.com/ice-blockchain/eskimo/users"
-	"github.com/ice-blockchain/go-tarantool-client"
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
-	"github.com/ice-blockchain/wintr/connectors/storage"
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/time"
 )
@@ -28,7 +28,7 @@ func (r *repository) GetNotificationChannelToggles( //nolint:funlen,gocognit,goc
 	resp = r.defaultNotificationChannelToggles(channel)
 	usr, err := r.getUserByID(ctx, userID)
 	if err != nil {
-		if errors.Is(err, ErrNotFound) {
+		if storage.IsErr(err, ErrNotFound) {
 			return resp, nil
 		}
 
@@ -79,7 +79,7 @@ func (*repository) defaultNotificationChannelToggles(channel NotificationChannel
 	return resp
 }
 
-func (r *repository) ToggleNotificationChannelDomain( //nolint:funlen,gocognit,gocyclo,revive,cyclop,maintidx // .
+func (r *repository) ToggleNotificationChannelDomain( //nolint:funlen,gocognit,gocyclo,revive,cyclop // .
 	ctx context.Context, channel NotificationChannel, domain NotificationDomain, enabled bool, userID string,
 ) error {
 	if ctx.Err() != nil {
@@ -87,22 +87,23 @@ func (r *repository) ToggleNotificationChannelDomain( //nolint:funlen,gocognit,g
 	}
 	usr, err := r.getUserByID(ctx, userID)
 	if err != nil {
-		if errors.Is(err, ErrNotFound) {
+		if storage.IsErr(err, ErrNotFound) {
 			err = ErrRelationNotFound
 		}
 
 		return errors.Wrapf(err, "failed to get user by id:%v ", userID)
 	}
-	op := tarantool.Op{Op: "="}
+	fieldForUpdate := ""
+	var valuesForUpdate *users.Enum[NotificationDomain]
 	switch channel { //nolint:exhaustive // We don't care about the rest.
 	case EmailNotificationChannel: //nolint:dupl // .
-		op.Field = 2
+		fieldForUpdate = "disabled_email_notification_domains = $2"
 		if enabled && domain != DisableAllNotificationDomain { //nolint:nestif // .
 			if usr.DisabledEmailNotificationDomains != nil && len(*usr.DisabledEmailNotificationDomains) > 0 {
 				for i, disabledDomain := range *usr.DisabledEmailNotificationDomains {
 					if domain == disabledDomain {
 						(*usr.DisabledEmailNotificationDomains)[i] = ""
-						op.Arg = usr.DisabledEmailNotificationDomains
+						valuesForUpdate = usr.DisabledEmailNotificationDomains
 
 						break
 					}
@@ -114,7 +115,7 @@ func (r *repository) ToggleNotificationChannelDomain( //nolint:funlen,gocognit,g
 				for i, disabledDomain := range *usr.DisabledEmailNotificationDomains {
 					if !enabled && domain == DisableAllNotificationDomain && disabledDomain == AllNotificationDomain {
 						(*usr.DisabledEmailNotificationDomains)[i] = ""
-						op.Arg = usr.DisabledEmailNotificationDomains
+						valuesForUpdate = usr.DisabledEmailNotificationDomains
 						alreadyThere = true
 
 						break
@@ -131,7 +132,7 @@ func (r *repository) ToggleNotificationChannelDomain( //nolint:funlen,gocognit,g
 						actualDomain = AllNotificationDomain
 					}
 					*usr.DisabledEmailNotificationDomains = append(*usr.DisabledEmailNotificationDomains, actualDomain)
-					op.Arg = usr.DisabledEmailNotificationDomains
+					valuesForUpdate = usr.DisabledEmailNotificationDomains
 				}
 			} else {
 				if !enabled && domain == DisableAllNotificationDomain {
@@ -143,17 +144,17 @@ func (r *repository) ToggleNotificationChannelDomain( //nolint:funlen,gocognit,g
 				}
 				disabledDomains := append(make(users.Enum[NotificationDomain], 0, 1), actualDomain)
 				usr.DisabledEmailNotificationDomains = &disabledDomains
-				op.Arg = usr.DisabledEmailNotificationDomains
+				valuesForUpdate = usr.DisabledEmailNotificationDomains
 			}
 		}
 	case PushNotificationChannel: //nolint:dupl // .
-		op.Field = 1
+		fieldForUpdate = "disabled_push_notification_domains = $2"
 		if enabled && domain != DisableAllNotificationDomain { //nolint:nestif // .
 			if usr.DisabledPushNotificationDomains != nil && len(*usr.DisabledPushNotificationDomains) > 0 {
 				for i, disabledDomain := range *usr.DisabledPushNotificationDomains {
 					if domain == disabledDomain {
 						(*usr.DisabledPushNotificationDomains)[i] = ""
-						op.Arg = usr.DisabledPushNotificationDomains
+						valuesForUpdate = usr.DisabledPushNotificationDomains
 
 						break
 					}
@@ -165,7 +166,7 @@ func (r *repository) ToggleNotificationChannelDomain( //nolint:funlen,gocognit,g
 				for i, disabledDomain := range *usr.DisabledPushNotificationDomains {
 					if !enabled && domain == DisableAllNotificationDomain && disabledDomain == AllNotificationDomain {
 						(*usr.DisabledPushNotificationDomains)[i] = ""
-						op.Arg = usr.DisabledPushNotificationDomains
+						valuesForUpdate = usr.DisabledPushNotificationDomains
 						alreadyThere = true
 
 						break
@@ -182,7 +183,7 @@ func (r *repository) ToggleNotificationChannelDomain( //nolint:funlen,gocognit,g
 						actualDomain = AllNotificationDomain
 					}
 					*usr.DisabledPushNotificationDomains = append(*usr.DisabledPushNotificationDomains, actualDomain)
-					op.Arg = usr.DisabledPushNotificationDomains
+					valuesForUpdate = usr.DisabledPushNotificationDomains
 				}
 			} else {
 				if !enabled && domain == DisableAllNotificationDomain {
@@ -194,33 +195,30 @@ func (r *repository) ToggleNotificationChannelDomain( //nolint:funlen,gocognit,g
 				}
 				disabledDomains := append(make(users.Enum[NotificationDomain], 0, 1), actualDomain)
 				usr.DisabledPushNotificationDomains = &disabledDomains
-				op.Arg = usr.DisabledPushNotificationDomains
+				valuesForUpdate = usr.DisabledPushNotificationDomains
 			}
 		}
 	default:
 		log.Panic(fmt.Sprintf("channel `%v` not supported", channel))
 	}
-	if op.Arg == nil {
+	if valuesForUpdate == nil {
 		return nil
 	}
-	disabledDomains := *(op.Arg.(*users.Enum[NotificationDomain])) //nolint:forcetypeassert // We know for sure.
+	disabledDomains := *(valuesForUpdate)
 	sanitizedDisabledDomains := make(users.Enum[NotificationDomain], 0, len(disabledDomains))
 	for _, notificationDomain := range disabledDomains {
 		if notificationDomain != "" {
 			sanitizedDisabledDomains = append(sanitizedDisabledDomains, notificationDomain)
 		}
 	}
-	op.Arg = &sanitizedDisabledDomains
-	resp := make([]*user, 0, 1)
-	if err = storage.CheckNoSQLDMLErr(r.db.UpdateTyped("USERS", "pk_unnamed_USERS_1", tarantool.StringKey{S: userID}, append(make([]tarantool.Op, 0, 1), op), &resp)); err != nil { //nolint:lll // .
-		if errors.Is(err, storage.ErrNotFound) {
-			err = ErrRelationNotFound
+	valuesForUpdate = &sanitizedDisabledDomains
+	sql := fmt.Sprintf(`UPDATE users SET %v where user_id = $1`, fieldForUpdate)
+	if rowsUpdated, tErr := storage.Exec(ctx, r.db, sql, append([]any{userID}, valuesForUpdate)...); rowsUpdated == 0 || tErr != nil {
+		if rowsUpdated == 0 && tErr == nil {
+			tErr = ErrRelationNotFound
 		}
 
-		return errors.Wrapf(err, "failed to update users for userID:%v,ops:%#v", userID, op)
-	}
-	if len(resp) == 0 || resp[0].UserID == "" { //nolint:revive // Wrong.
-		return ErrRelationNotFound
+		return errors.Wrapf(tErr, "failed to update users for userID:%v,ops:%#v with values %#v", userID, fieldForUpdate, valuesForUpdate)
 	}
 
 	return nil
@@ -247,65 +245,69 @@ func (s *userTableSource) Process(ctx context.Context, msg *messagebroker.Messag
 		return errors.Wrapf(err, "failed to upsert:%#v", snapshot)
 	}
 
-	return multierror.Append(nil, //nolint:wrapcheck // Not needed.
-		errors.Wrapf(s.sendNewReferralNotification(ctx, snapshot), "failed to sendNewReferralNotification for :%#v", snapshot),
-		errors.Wrapf(s.sendNewContactNotification(ctx, snapshot), "failed to sendNewContactNotification for :%#v", snapshot),
-	).ErrorOrNil()
+	return errors.Wrapf(s.sendNewReferralNotification(ctx, snapshot), "failed to sendNewReferralNotification for :%#v", snapshot)
 }
 
-func (s *userTableSource) upsertUser(ctx context.Context, us *users.UserSnapshot) error {
+func (s *userTableSource) upsertUser(ctx context.Context, us *users.UserSnapshot) error { //nolint:funlen // Big SQL.
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "context failed")
 	}
-	insertTuple := &user{
-		PhoneNumber:             us.PhoneNumber,
-		Email:                   us.Email,
-		FirstName:               us.FirstName,
-		LastName:                us.LastName,
-		UserID:                  us.ID,
-		Username:                us.Username,
-		ProfilePictureName:      s.pictureClient.StripDownloadURL(strings.Replace(us.ProfilePictureURL, "profile/", "", 1)),
-		ReferredBy:              us.ReferredBy,
-		PhoneNumberHash:         us.PhoneNumberHash,
-		AgendaPhoneNumberHashes: us.AgendaPhoneNumberHashes,
-		Language:                us.Language,
-	}
-	//nolint:gomnd // Those are the field indices.
-	ops := append(make([]tarantool.Op, 0, 10),
-		tarantool.Op{Op: "=", Field: 4, Arg: us.PhoneNumber},
-		tarantool.Op{Op: "=", Field: 5, Arg: us.Email},
-		tarantool.Op{Op: "=", Field: 6, Arg: us.FirstName},
-		tarantool.Op{Op: "=", Field: 7, Arg: us.LastName},
-		tarantool.Op{Op: "=", Field: 9, Arg: us.Username},
-		tarantool.Op{Op: "=", Field: 10, Arg: s.pictureClient.StripDownloadURL(strings.Replace(us.ProfilePictureURL, "profile/", "", 1))},
-		tarantool.Op{Op: "=", Field: 11, Arg: us.ReferredBy},
-		tarantool.Op{Op: "=", Field: 12, Arg: us.PhoneNumberHash},
-		tarantool.Op{Op: "=", Field: 13, Arg: us.AgendaPhoneNumberHashes},
-		tarantool.Op{Op: "=", Field: 14, Arg: us.Language})
+	sql := `INSERT INTO USERS (
+                   PHONE_NUMBER,
+                   EMAIL,
+                   FIRST_NAME,
+                   LAST_NAME, 
+                   USERNAME,
+                   PROFILE_PICTURE_NAME,
+                   REFERRED_BY,
+                   PHONE_NUMBER_HASH,
+                   LANGUAGE,
+                   USER_ID
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+    ON CONFLICT(user_id)
+      DO UPDATE
+      	SET        PHONE_NUMBER = EXCLUDED.PHONE_NUMBER,
+                   EMAIL = EXCLUDED.EMAIL,
+                   FIRST_NAME = EXCLUDED.FIRST_NAME,
+                   LAST_NAME = EXCLUDED.LAST_NAME,
+                   USERNAME = EXCLUDED.USERNAME,
+                   PROFILE_PICTURE_NAME = EXCLUDED.PROFILE_PICTURE_NAME,
+                   REFERRED_BY = EXCLUDED.REFERRED_BY,
+                   PHONE_NUMBER_HASH = EXCLUDED.PHONE_NUMBER_HASH,
+                   LANGUAGE = EXCLUDED.LANGUAGE`
+	_, err := storage.Exec(ctx, s.db, sql,
+		us.PhoneNumber,
+		us.Email,
+		us.FirstName,
+		us.LastName,
+		us.Username,
+		s.pictureClient.StripDownloadURL(strings.Replace(us.ProfilePictureURL, "profile/", "", 1)),
+		us.ReferredBy,
+		us.PhoneNumberHash,
+		us.Language,
+		us.ID,
+	)
 
-	return errors.Wrapf(storage.CheckNoSQLDMLErr(s.db.UpsertTyped("USERS", insertTuple, ops, &[]*user{})), "failed to upsert %#v", us)
+	return errors.Wrapf(err, "failed to upsert %#v", us)
 }
 
 func (s *userTableSource) deleteUser(ctx context.Context, us *users.UserSnapshot) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "context failed")
 	}
-	sql := `DELETE FROM users WHERE user_id = :user_id`
-	params := map[string]any{"user_id": us.Before.ID}
+	sql := `DELETE FROM users WHERE user_id = $1`
+	_, err := storage.Exec(ctx, s.db, sql, us.Before.ID)
 
-	return errors.Wrapf(storage.CheckSQLDMLErr(s.db.PrepareExecute(sql, params)), "failed to delete user:%#v", us)
+	return errors.Wrapf(err, "failed to delete user:%#v", us)
 }
 
 func (r *repository) getUserByID(ctx context.Context, userID string) (*user, error) {
 	if ctx.Err() != nil {
 		return nil, errors.Wrap(ctx.Err(), "context failed")
 	}
-	usr := new(user)
-	if err := r.db.GetTyped("USERS", "pk_unnamed_USERS_1", tarantool.StringKey{S: userID}, usr); err != nil {
+	usr, err := storage.Get[user](ctx, r.db, `SELECT * FROM users WHERE user_id = $1`, userID)
+	if err != nil {
 		return nil, errors.Wrapf(err, "failed to get user by id: %#v", userID)
-	}
-	if usr.UserID == "" {
-		return nil, storage.ErrNotFound
 	}
 
 	return usr, nil
@@ -326,19 +328,17 @@ func (u *deviceMetadataTableSource) Process(ctx context.Context, msg *messagebro
 		(snapshot.Before != nil && snapshot.Before.PushNotificationToken == snapshot.DeviceMetadata.PushNotificationToken) {
 		return nil
 	}
-	type deviceMetadata struct {
-		_msgpack struct{} `msgpack:",asArray"` //nolint:unused,tagliatelle,revive,nosnakecase // .
-		users.DeviceID
-		PushNotificationToken string
+	sql := `INSERT INTO device_metadata (USER_ID, DEVICE_UNIQUE_ID, PUSH_NOTIFICATION_TOKEN) VALUES ($1, $2, $3)
+			ON CONFLICT(USER_ID, DEVICE_UNIQUE_ID) DO UPDATE
+			SET PUSH_NOTIFICATION_TOKEN = EXCLUDED.PUSH_NOTIFICATION_TOKEN`
+	params := []any{
+		snapshot.ID.UserID,
+		snapshot.ID.DeviceUniqueID,
+		snapshot.PushNotificationToken,
 	}
-	insertTuple := deviceMetadata{
-		DeviceID:              snapshot.ID,
-		PushNotificationToken: snapshot.PushNotificationToken,
-	}
-	ops := append(make([]tarantool.Op, 0, 1), tarantool.Op{Op: "=", Field: 2, Arg: snapshot.PushNotificationToken}) //nolint:gomnd // Field index.
+	_, err := storage.Exec(ctx, u.db, sql, params...)
 
-	return errors.Wrapf(storage.CheckNoSQLDMLErr(u.db.UpsertTyped("DEVICE_METADATA", insertTuple, ops, &[]*deviceMetadata{})),
-		"failed to upsert %#v", insertTuple)
+	return errors.Wrapf(err, "failed to upsert %#v", params...)
 }
 
 func (r *repository) PingUser(ctx context.Context, userID string) error { //nolint:funlen,gocognit,revive // .
@@ -364,36 +364,39 @@ func (r *repository) PingUser(ctx context.Context, userID string) error { //noli
 	if usr.LastPingCooldownEndedAt != nil && usr.LastPingCooldownEndedAt.After(*now.Time) {
 		return ErrDuplicate
 	}
+	var lastPingedTime *stdlibtime.Time
+	if usr.LastPingCooldownEndedAt != nil {
+		lastPingedTime = usr.LastPingCooldownEndedAt.Time
+	}
 	sql := `UPDATE users 
-			   SET last_ping_cooldown_ended_at = :now_nanos
-		    WHERE user_id = :user_id
-			  AND referred_by = :referred_by
-			  AND IFNULL(last_ping_cooldown_ended_at, 0) = IFNULL(:last_ping_cooldown_ended_at, 0)`
-	params := make(map[string]any, 1+1+1+1)
-	params["user_id"] = userID
-	params["referred_by"] = usr.ReferredBy
-	params["now_nanos"] = newPingCooldownEndsAt
-	params["last_ping_cooldown_ended_at"] = usr.LastPingCooldownEndedAt
-	if err = storage.CheckSQLDMLErr(r.db.PrepareExecute(sql, params)); err != nil {
-		if errors.Is(err, storage.ErrNotFound) {
-			return r.PingUser(ctx, userID)
-		}
-
-		return errors.Wrapf(err, "failed to update users to set last_ping_cooldown_ended_at params:%#v", params)
+			   SET last_ping_cooldown_ended_at = $1
+		    WHERE user_id = $2
+			  AND referred_by = $3
+			  AND COALESCE(last_ping_cooldown_ended_at, to_timestamp(0)) = COALESCE($4, to_timestamp(0))`
+	params := []any{
+		newPingCooldownEndsAt.Time,
+		userID,
+		usr.ReferredBy,
+		lastPingedTime,
+	}
+	if rowsUpdated, sErr := storage.Exec(ctx, r.db, sql, params...); rowsUpdated == 0 && sErr == nil {
+		return r.PingUser(ctx, userID)
+	} else if sErr != nil {
+		return errors.Wrapf(sErr, "failed to update users to set last_ping_cooldown_ended_at params:%#v", params...)
 	}
 	up := &UserPing{UserID: userID, PingedBy: reqUserID, LastPingCooldownEndedAt: newPingCooldownEndsAt}
 
 	if err = r.sendUserPingMessage(ctx, up); err != nil {
-		params["now_nanos"] = usr.LastPingCooldownEndedAt
-		params["last_ping_cooldown_ended_at"] = newPingCooldownEndsAt
-		rErr := storage.CheckSQLDMLErr(r.db.PrepareExecute(sql, params))
-		if rErr != nil && errors.Is(rErr, storage.ErrNotFound) {
+		params[0] = usr.LastPingCooldownEndedAt
+		params[3] = newPingCooldownEndsAt
+		rRowsUpdated, rErr := storage.Exec(ctx, r.db, sql, params...)
+		if rRowsUpdated == 0 && rErr == nil {
 			return r.PingUser(ctx, userID)
 		}
 
 		return multierror.Append( //nolint:wrapcheck // Not needed.
 			errors.Wrapf(err, "failed to sendUserPingMessage %#v", up),
-			errors.Wrapf(rErr, "[rollback] failed to update users to set last_ping_cooldown_ended_at params:%#v", params),
+			errors.Wrapf(rErr, "[rollback] failed to update users to set last_ping_cooldown_ended_at params:%#v", params...),
 		).ErrorOrNil()
 	}
 

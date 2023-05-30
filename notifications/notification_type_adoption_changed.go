@@ -19,7 +19,6 @@ import (
 
 type (
 	adoption struct {
-		_msgpack       struct{}       `msgpack:",asArray"` //nolint:unused,tagliatelle,revive,nosnakecase // To insert we need asArray
 		BaseMiningRate *coin.ICEFlake `json:"baseMiningRate,omitempty" example:"100000"`
 		Milestone      uint64         `json:"milestone,omitempty" example:"1"`
 	}

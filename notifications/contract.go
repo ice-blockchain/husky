@@ -11,9 +11,8 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ice-blockchain/eskimo/users"
-	"github.com/ice-blockchain/go-tarantool-client"
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
-	"github.com/ice-blockchain/wintr/connectors/storage"
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/email"
 	"github.com/ice-blockchain/wintr/multimedia/picture"
 	"github.com/ice-blockchain/wintr/notifications/inapp"
@@ -132,7 +131,6 @@ type (
 		Enabled bool               `json:"enabled" example:"true"`
 	}
 	UserPing struct {
-		_msgpack                struct{}   `msgpack:",asArray"` //nolint:unused,tagliatelle,revive,nosnakecase // To insert we need asArray
 		LastPingCooldownEndedAt *time.Time `json:"lastPingCooldownEndedAt,omitempty" example:"2022-01-03T16:20:52.156534Z"`
 		UserID                  string     `json:"userId,omitempty" example:"edfd8c02-75e0-4687-9ac2-1ce4723865c4"`
 		PingedBy                string     `json:"pingedBy,omitempty" example:"edfd8c02-75e0-4687-9ac2-1ce4723865c4"`
@@ -167,7 +165,7 @@ const (
 )
 
 var (
-	//go:embed DDL.lua
+	//go:embed DDL.sql
 	ddl string
 	//go:embed translations
 	translations embed.FS
@@ -182,7 +180,6 @@ var (
 type (
 	languageCode = string
 	user         struct {
-		_msgpack                         struct{}                        `msgpack:",asArray"` //nolint:unused,tagliatelle,revive,nosnakecase // .
 		LastPingCooldownEndedAt          *time.Time                      `json:"lastPingCooldownEndedAt,omitempty"`
 		DisabledPushNotificationDomains  *users.Enum[NotificationDomain] `json:"disabledPushNotificationDomains,omitempty"`
 		DisabledEmailNotificationDomains *users.Enum[NotificationDomain] `json:"disabledEmailNotificationDomains,omitempty"`
@@ -196,8 +193,8 @@ type (
 		ProfilePictureName               string                          `json:"profilePictureName,omitempty"`
 		ReferredBy                       string                          `json:"referredBy,omitempty"`
 		PhoneNumberHash                  string                          `json:"phoneNumberHash,omitempty"`
-		AgendaPhoneNumberHashes          string                          `json:"agendaPhoneNumberHashes,omitempty"`
 		Language                         string                          `json:"language,omitempty"`
+		AgendaContactUserIDs             []string                        `json:"agendaContactUserIDs,omitempty" db:"agenda_contact_user_ids"`
 	}
 	userTableSource struct {
 		*processor
@@ -229,10 +226,13 @@ type (
 	enabledRolesSource struct {
 		*processor
 	}
+	agendaContactsSource struct {
+		*processor
+	}
 	repository struct {
 		cfg                     *config
 		shutdown                func() error
-		db                      tarantool.Connector
+		db                      *storage.DB
 		mb                      messagebroker.Client
 		pushNotificationsClient push.Client
 		emailClient             email.Client

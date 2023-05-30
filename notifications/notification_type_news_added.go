@@ -19,7 +19,6 @@ import (
 
 type (
 	news struct {
-		_msgpack struct{} `msgpack:",asArray"` //nolint:unused,tagliatelle,revive,nosnakecase // To insert we need asArray
 		*NotificationChannels
 		ID       string `json:"id,omitempty" example:"did:ethr:0x4B73C58370AEfcEf86A6021afCDe5673511376B2"`
 		Language string `json:"language,omitempty" example:"en"`

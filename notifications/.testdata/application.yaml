@@ -9,11 +9,14 @@ notifications: &notifications
   pingCooldown: 1m
   wintr/multimedia/picture:
     urlDownload: https://ice-staging.b-cdn.net
-  db: &notificationsDatabase
-    urls:
-      - localhost:3504
-    user: admin
-    password: pass
+  wintr/connectors/storage/v2:
+    runDDL: true
+    primaryURL: postgresql://root:pass@localhost:5432/ice
+    credentials:
+      user: root
+      password: pass
+    replicaURLs:
+      - postgresql://root:pass@localhost:5432/ice
   messageBroker: &notificationsMessageBroker
     consumerGroup: husky-notifications-testing
     createTopics: true
@@ -65,6 +68,10 @@ notifications: &notifications
         partitions: 10
         replicationFactor: 1
         retention: 1000h
+      - name: contacts-table
+        partitions: 10
+        replicationFactor: 1
+        retention: 1000h
     consumingTopics:
       - name: users-table
       - name: user-device-metadata-table
@@ -76,6 +83,7 @@ notifications: &notifications
       - name: achieved-badges
       - name: completed-levels
       - name: enabled-roles
+      - name: contacts-table
     producingTopics:
       - name: analytics-set-attributes
       - name: analytics-track-action
