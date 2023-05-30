@@ -516,24 +516,12 @@ jobs:
           cmd: |
             cd secret-infrastructure
             yq e -i '.generic-service-chart.applicationImage.tag = strenv(APP_TAG)' helm/husky-pack/staging/common-values.yaml
-      - name: Update [production] application tag version in helm/husky-pack/production/common-values.yaml
-        uses: mikefarah/yq@master
-        with:
-          cmd: |
-            cd secret-infrastructure
-            yq e -i '.generic-service-chart.applicationImage.tag = strenv(APP_TAG)' helm/husky-pack/production/common-values.yaml
       - name: Update [staging] application tag version in helm/husky/staging/common-values.yaml
         uses: mikefarah/yq@master
         with:
           cmd: |
             cd secret-infrastructure
             yq e -i '.generic-service-chart.applicationImage.tag = strenv(APP_TAG)' helm/husky/staging/common-values.yaml
-      - name: Update [production] application tag version in helm/husky/production/common-values.yaml
-        uses: mikefarah/yq@master
-        with:
-          cmd: |
-            cd secret-infrastructure
-            yq e -i '.generic-service-chart.applicationImage.tag = strenv(APP_TAG)' helm/husky/production/common-values.yaml
       - name: Commit and Push Changes to Application Tag Version
         run: |
           cd secret-infrastructure
@@ -541,8 +529,6 @@ jobs:
           git config user.email ice-cicd-bot@ice.vip
           git add helm/husky/staging/common-values.yaml 
           git add helm/husky-pack/staging/common-values.yaml 
-          git add helm/husky/production/common-values.yaml
-          git add helm/husky-pack/production/common-values.yaml
           git commit -m "Updated 'husky' & 'husky-pack' tag version (${{env.APP_TAG}}) in application helm chart deployment manifests"
           git push --set-upstream origin master
       - name: Slack Notification For Success
