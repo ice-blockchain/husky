@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS users  (
                     disabled_push_notification_domains      TEXT[],
                     disabled_email_notification_domains     TEXT[],
                     disabled_sms_notification_domains       TEXT[],
+                    agenda_contact_user_ids                 TEXT[],
                     phone_number                            TEXT,
                     email                                   TEXT,
                     first_name                              TEXT,
@@ -15,7 +16,6 @@ CREATE TABLE IF NOT EXISTS users  (
                     profile_picture_name                    TEXT,
                     referred_by                             TEXT,
                     phone_number_hash                       TEXT,
-                    agenda_contact_user_ids                 TEXT[],
                     language                                TEXT NOT NULL default 'en'
                   );
 --************************************************************************************************************************************
