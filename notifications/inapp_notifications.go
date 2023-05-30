@@ -35,10 +35,10 @@ func (r *repository) sendInAppNotification(ctx context.Context, in *inAppNotific
 	}
 
 	if err := r.personalInAppFeed.Send(ctx, in.in, in.sn.UserID); err != nil {
-		return multierror.Append(
+		return multierror.Append( //nolint:wrapcheck // .
 			errors.Wrapf(err, "failed to send inApp notification:%#v, desired to be sent:%#v", in.in, in.sn),
 			errors.Wrapf(r.deleteSentNotification(ctx, in.sn), "failed to delete SENT_NOTIFICATIONS as a rollback for %#v", in.sn),
-		)
+		).ErrorOrNil()
 	}
 
 	return nil
@@ -57,10 +57,10 @@ func (r *repository) broadcastInAppNotification(ctx context.Context, bin *broadc
 	}
 
 	if err := r.globalInAppFeed.Send(ctx, bin.in, bin.sa.NotificationChannelValue); err != nil {
-		return multierror.Append(
+		return multierror.Append( //nolint:wrapcheck // .
 			errors.Wrapf(err, "failed to broadcast inApp notification:%#v, desired to be sent:%#v", bin.in, bin.sa),
 			errors.Wrapf(r.deleteSentAnnouncement(ctx, bin.sa), "failed to delete SENT_ANNOUNCEMENTS as a rollback for %#v", bin.sa),
-		)
+		).ErrorOrNil()
 	}
 
 	return nil

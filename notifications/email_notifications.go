@@ -40,10 +40,10 @@ func (r *repository) sendEmailNotification(ctx context.Context, en *emailNotific
 	}
 
 	if err := r.emailClient.Send(ctx, en.en, email.Participant{Name: en.displayName, Email: en.sn.NotificationChannelValue}); err != nil {
-		return multierror.Append(
+		return multierror.Append( //nolint:wrapcheck // .
 			errors.Wrapf(err, "failed to send email notification:%#v, desired to be sent:%#v", en.en, en.sn),
 			errors.Wrapf(r.deleteSentNotification(ctx, en.sn), "failed to delete SENT_NOTIFICATIONS as a rollback for %#v", en.sn),
-		)
+		).ErrorOrNil()
 	}
 
 	return nil

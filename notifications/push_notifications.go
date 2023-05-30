@@ -198,10 +198,10 @@ func (r *repository) broadcastPushNotification(ctx context.Context, bpn *broadca
 	}
 
 	if err := r.pushNotificationsClient.Broadcast(ctx, bpn.pn); err != nil {
-		return multierror.Append(
+		return multierror.Append( //nolint:wrapcheck // .
 			errors.Wrapf(err, "failed to broadcast push notification:%#v, desired to be sent:%#v", bpn.pn, bpn.sa),
 			errors.Wrapf(r.deleteSentAnnouncement(ctx, bpn.sa), "failed to delete SENT_ANNOUNCEMENTS as a rollback for %#v", bpn.sa),
-		)
+		).ErrorOrNil()
 	}
 
 	return nil
