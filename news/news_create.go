@@ -60,7 +60,7 @@ func (r *repository) insertNews(ctx context.Context, news []*TaggedNews) error {
 	}
 	sql := fmt.Sprintf(`INSERT INTO news (CREATED_AT, UPDATED_AT, NOTIFICATION_CHANNELS, ID, TYPE, LANGUAGE, TITLE, IMAGE_URL, URL) VALUES %v`, strings.Join(values, ",")) //nolint:lll // .
 	if _, err := storage.Exec(ctx, r.db, sql, args...); err != nil {
-		return errors.Wrapf(err, "failed to insert news %#v", news)
+		return errors.Wrapf(detectAndParseDuplicateDatabaseError(err), "failed to insert news %#v", news)
 	}
 
 	return nil

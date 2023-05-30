@@ -153,7 +153,7 @@ func (r *repository) IncrementViews(ctx context.Context, newsID, language string
 	}
 	if err := r.sendNewsViewedMessage(ctx, tuple); err != nil {
 		bErr := errors.Wrapf(err, "failed to sendNewsViewedMessage for %#v", tuple)
-		sql = `UPDATE news SET views = views - 1 WHERE language = $1 AND id = $2`
+		sql = `UPDATE news SET views = GREATEST(views - 1, 0) WHERE language = $1 AND id = $2`
 		if _, rErr := storage.Exec(ctx, r.db, sql, language, newsID); rErr != nil {
 			return multierror.Append(bErr, errors.Wrapf(rErr, "[rollback]failed to decrement news views count for newsId:%v,language:%v", newsID, language)).ErrorOrNil() //nolint:lll,wrapcheck // .
 		}

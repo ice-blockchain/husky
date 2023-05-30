@@ -26,6 +26,9 @@ func (r *repository) sendInAppNotification(ctx context.Context, in *inAppNotific
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
+	if true {
+		return nil
+	}
 
 	if err := r.insertSentNotification(ctx, in.sn); err != nil {
 		return errors.Wrapf(err, "failed to insert %#v", in.sn)
@@ -45,6 +48,9 @@ func (r *repository) broadcastInAppNotification(ctx context.Context, bin *broadc
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
+	if true {
+		return nil
+	}
 
 	if err := r.insertSentAnnouncement(ctx, bin.sa); err != nil {
 		return errors.Wrapf(err, "failed to insert %#v", bin.sa)
@@ -61,5 +67,9 @@ func (r *repository) broadcastInAppNotification(ctx context.Context, bin *broadc
 }
 
 func (r *repository) GenerateInAppNotificationsUserAuthToken(ctx context.Context, userID string) (*InAppNotificationsUserAuthToken, error) {
+	if true {
+		return &InAppNotificationsUserAuthToken{}, nil
+	}
+
 	return r.personalInAppFeed.CreateUserToken(ctx, userID) //nolint:wrapcheck // No need, we can just proxy it.
 }
