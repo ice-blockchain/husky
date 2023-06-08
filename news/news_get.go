@@ -11,22 +11,25 @@ import (
 	"github.com/ice-blockchain/wintr/time"
 )
 
-func (r *repository) GetNews(ctx context.Context, newsType Type, language string, limit, offset uint64) ([]*PersonalNews, error) {
+//nolint:revive // The alternative worse and requires to create one more struct.
+func (r *repository) GetNews(ctx context.Context, newsType Type, language string, limit, offset uint64, createdAfter *time.Time) ([]*PersonalNews, error) {
 	if ctx.Err() != nil {
 		return nil, errors.Wrap(ctx.Err(), "get news failed because context failed")
 	}
-	args := []any{requestingUserID(ctx), language, newsType, int64(limit), int64(offset)}
-	sql := `SELECT nvu.created_at IS NOT NULL as viewed,
+	args := []any{requestingUserID(ctx), language, newsType, createdAfter.Time, int64(limit), int64(offset)}
+	sql := `SELECT nvu.created_at IS NOT NULL AS viewed,
 							   n.*
 						FROM news n
 							LEFT JOIN news_viewed_by_users nvu 
 								   ON nvu.language = n.language
 								  AND nvu.news_id = n.id
 								  AND nvu.user_id = $1
-						WHERE n.language = $2 AND n.type = $3
+						WHERE n.language = $2
+							  AND n.type = $3
+							  AND n.created_at >= $4
 						ORDER BY nvu.created_at IS NULL DESC,
 								 n.created_at DESC
-						LIMIT $4 OFFSET $5`
+						LIMIT $5 OFFSET $6`
 	result, err := storage.Select[PersonalNews](ctx, r.db, sql, args...)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to get news for args:%#v", args...)

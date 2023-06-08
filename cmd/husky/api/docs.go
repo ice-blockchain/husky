@@ -68,6 +68,12 @@ const docTemplate = `{
                         "description": "Elements to skip before starting to look for",
                         "name": "offset",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Example ` + "`" + `2022-01-03T16:20:52.156534Z` + "`" + `. If unspecified, the creation date of the news articles will be ignored.",
+                        "name": "createdAfter",
+                        "in": "query"
                     }
                 ],
                 "responses": {

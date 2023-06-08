@@ -70,7 +70,7 @@ type (
 		Count uint64 `json:"count" example:"1"`
 	}
 	ReadRepository interface {
-		GetNews(ctx context.Context, newsType Type, language string, limit, offset uint64) ([]*PersonalNews, error)
+		GetNews(ctx context.Context, newsType Type, language string, limit, offset uint64, createdAfter *time.Time) ([]*PersonalNews, error)
 		GetUnreadNewsCount(ctx context.Context, language string, createdAfter *time.Time) (*UnreadNewsCount, error)
 	}
 	WriteRepository interface {
