@@ -309,7 +309,7 @@ func insertNews(db tarantool.Connector, taggedNews ...*news.TaggedNews) {
 
 func insertTag(db tarantool.Connector, createdAt *time.Time, language string, tag news.Tag) {
 	type newsTag struct {
-		_msgpack  struct{}   `msgpack:",asArray"` //nolint:unused,tagliatelle,revive,nosnakecase // To insert we need asArray
+		_msgpack  struct{}   `msgpack:",asArray"` //nolint:unused,tagliatelle,revive,nosnakecase,structcheck // To insert we need asArray
 		CreatedAt *time.Time `json:"createdAt,omitempty" example:"2022-01-03T16:20:52.156534Z"`
 		Language  string     `json:"language" example:"en"`
 		Value     string     `json:"value" example:"cats"`

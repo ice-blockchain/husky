@@ -54,7 +54,7 @@ type (
 		Title    string `json:"title,omitempty" example:"The importance of the blockchain technology"`
 		ImageURL string `json:"imageUrl,omitempty" example:"https://somewebsite.com/blockchain.jpg"`
 		URL      string `json:"url,omitempty" example:"https://somewebsite.com/blockchain"`
-		Views    uint64 `json:"views,omitempty" example:"123"`
+		Views    uint64 `json:"views" example:"123"`
 	}
 	TaggedNewsSnapshot struct {
 		*TaggedNews
