@@ -14,6 +14,7 @@ import (
 	appCfg "github.com/ice-blockchain/wintr/config"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/server"
+	"github.com/ice-blockchain/wintr/time"
 )
 
 // @title						Notifications API
@@ -60,7 +61,7 @@ func (s *service) Close(ctx context.Context) error {
 
 func (s *service) CheckHealth(ctx context.Context) error {
 	log.Debug("checking health...", "package", "news")
-	if _, err := s.newsRepository.GetNews(ctx, news.FeaturedNewsType, "en", 1, 0); err != nil {
+	if _, err := s.newsRepository.GetNews(ctx, news.FeaturedNewsType, "en", 1, 0, time.Now()); err != nil {
 		return errors.Wrap(err, "failed to get featured news")
 	}
 	log.Debug("checking health...", "package", "notifications")

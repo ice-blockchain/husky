@@ -15,10 +15,11 @@ type (
 	}
 	GetNewsArg struct {
 		// Default is `regular`.
-		Type     news.Type `form:"type" example:"regular" enums:"regular,featured"`
-		Language string    `uri:"language" example:"en" required:"true"`
-		Limit    uint64    `form:"limit" maximum:"1000" example:"10"` // 10 by default.
-		Offset   uint64    `form:"offset" example:"5"`
+		Type         news.Type `form:"type" example:"regular" enums:"regular,featured"`
+		CreatedAfter string    `form:"createdAfter" example:"2022-01-03T16:20:52.156534Z"`
+		Language     string    `uri:"language" example:"en" required:"true"`
+		Limit        uint64    `form:"limit" maximum:"1000" example:"10"` // 10 by default.
+		Offset       uint64    `form:"offset" example:"5"`
 	}
 	GetUnreadNewsCountArg struct {
 		CreatedAfter string `form:"createdAfter" example:"2022-01-03T16:20:52.156534Z"`

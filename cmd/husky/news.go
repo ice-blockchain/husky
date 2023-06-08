@@ -33,6 +33,7 @@ func (s *service) setupNewsRoutes(router *server.Router) {
 //	@Param			language		path		string	true	"the language of the news article"
 //	@Param			limit			query		uint64	false	"Limit of elements to return. Defaults to 10"
 //	@Param			offset			query		uint64	false	"Elements to skip before starting to look for"
+//	@Param			createdAfter	query		string	false	"Example `2022-01-03T16:20:52.156534Z`. If unspecified, the creation date of the news articles will be ignored."
 //	@Success		200				{array}		news.PersonalNews
 //	@Failure		400				{object}	server.ErrorResponse	"if validations fail"
 //	@Failure		401				{object}	server.ErrorResponse	"if not authorized"
@@ -40,10 +41,19 @@ func (s *service) setupNewsRoutes(router *server.Router) {
 //	@Failure		500				{object}	server.ErrorResponse
 //	@Failure		504				{object}	server.ErrorResponse	"if request times out"
 //	@Router			/news/{language} [GET].
-func (s *service) GetNews( //nolint:gocritic // False negative.
+func (s *service) GetNews( //nolint:gocritic,funlen // False negative.
 	ctx context.Context,
 	req *server.Request[GetNewsArg, []*news.PersonalNews],
 ) (*server.Response[[]*news.PersonalNews], *server.Response[server.ErrorResponse]) {
+	var createdAfter *time.Time
+	if req.Data.CreatedAfter == "" {
+		createdAfter = time.New(stdlibtime.Unix(0, 0).UTC())
+	} else {
+		createdAfter = new(time.Time)
+		if err := createdAfter.UnmarshalJSON(ctx, []byte(`"`+req.Data.CreatedAfter+`"`)); err != nil {
+			return nil, server.UnprocessableEntity(errors.Errorf("invalid createdAfter `%v`", req.Data.CreatedAfter), invalidPropertiesErrorCode)
+		}
+	}
 	if req.Data.Type == "" {
 		req.Data.Type = news.RegularNewsType
 	}
@@ -63,7 +73,7 @@ func (s *service) GetNews( //nolint:gocritic // False negative.
 	if req.Data.Type != news.RegularNewsType && req.Data.Type != news.FeaturedNewsType {
 		return nil, server.BadRequest(errors.Errorf("invalid type %v", req.Data.Type), invalidPropertiesErrorCode)
 	}
-	resp, err := s.newsRepository.GetNews(ctx, req.Data.Type, req.Data.Language, req.Data.Limit, req.Data.Offset)
+	resp, err := s.newsRepository.GetNews(ctx, req.Data.Type, req.Data.Language, req.Data.Limit, req.Data.Offset, createdAfter)
 	if err != nil {
 		return nil, server.Unexpected(errors.Wrapf(err, "failed to get news by %#v", req.Data))
 	}
