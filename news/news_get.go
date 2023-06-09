@@ -27,12 +27,14 @@ func (r *repository) GetNews(ctx context.Context, newsType Type, language string
 						WHERE n.language = $2
 							  AND n.type = $3
 							  AND n.created_at >= $4
-						ORDER BY nvu.created_at IS NULL DESC,
-								 n.created_at DESC
+						ORDER BY nvu.created_at IS NULL DESC, n.created_at DESC
 						LIMIT $5 OFFSET $6`
 	result, err := storage.Select[PersonalNews](ctx, r.db, sql, args...)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to get news for args:%#v", args...)
+	}
+	if result == nil {
+		return []*PersonalNews{}, nil
 	}
 	for _, elem := range result {
 		elem.NotificationChannels = nil
