@@ -9,11 +9,11 @@ require (
 	github.com/ice-blockchain/eskimo v1.117.0
 	github.com/ice-blockchain/go-tarantool-client v0.0.0-20230327200757-4fc71fa3f7bb
 	github.com/ice-blockchain/wintr v1.114.0
-	github.com/imroc/req/v3 v3.35.2
+	github.com/imroc/req/v3 v3.36.1
 	github.com/pkg/errors v0.9.1
 	github.com/swaggo/swag v1.16.1
 	github.com/testcontainers/testcontainers-go v0.20.1
-	golang.org/x/net v0.10.0
+	golang.org/x/net v0.11.0
 )
 
 require (
@@ -32,6 +32,7 @@ require (
 	github.com/MicahParks/keyfunc v1.9.0 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/Microsoft/hcsshim v0.10.0-rc.8 // indirect
+	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
@@ -45,6 +46,7 @@ require (
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
+	github.com/gaukas/godicttls v0.0.3 // indirect
 	github.com/georgysavva/scany/v2 v2.0.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-gonic/gin v1.9.1 // indirect
@@ -66,7 +68,7 @@ require (
 	github.com/google/pprof v0.0.0-20230602150820-91b7bce49751 // indirect
 	github.com/google/s2a-go v0.1.4 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.4 // indirect
-	github.com/googleapis/gax-go/v2 v2.10.0 // indirect
+	github.com/googleapis/gax-go/v2 v2.11.0 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
@@ -74,12 +76,12 @@ require (
 	github.com/ip2location/ip2location-go/v9 v9.6.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
-	github.com/jackc/pgx/v5 v5.3.1 // indirect
+	github.com/jackc/pgx/v5 v5.4.0 // indirect
 	github.com/jackc/puddle/v2 v2.2.0 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/klauspost/compress v1.16.5 // indirect
+	github.com/klauspost/compress v1.16.6 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.5 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
@@ -98,11 +100,12 @@ require (
 	github.com/opencontainers/image-spec v1.1.0-rc3 // indirect
 	github.com/opencontainers/runc v1.1.7 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
-	github.com/pierrec/lz4/v4 v4.1.17 // indirect
+	github.com/pierrec/lz4/v4 v4.1.18 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/quic-go/qtls-go1-19 v0.3.2 // indirect
 	github.com/quic-go/qtls-go1-20 v0.2.2 // indirect
 	github.com/quic-go/quic-go v0.35.1 // indirect
+	github.com/refraction-networking/utls v1.3.2 // indirect
 	github.com/rs/zerolog v1.29.1 // indirect
 	github.com/sendgrid/rest v2.6.9+incompatible // indirect
 	github.com/sendgrid/sendgrid-go v3.12.0+incompatible // indirect
@@ -124,17 +127,17 @@ require (
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	golang.org/x/arch v0.3.0 // indirect
-	golang.org/x/crypto v0.9.0 // indirect
+	golang.org/x/crypto v0.10.0 // indirect
 	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1 // indirect
-	golang.org/x/mod v0.10.0 // indirect
-	golang.org/x/oauth2 v0.8.0 // indirect
-	golang.org/x/sync v0.2.0 // indirect
-	golang.org/x/sys v0.8.0 // indirect
-	golang.org/x/text v0.9.0 // indirect
+	golang.org/x/mod v0.11.0 // indirect
+	golang.org/x/oauth2 v0.9.0 // indirect
+	golang.org/x/sync v0.3.0 // indirect
+	golang.org/x/sys v0.9.0 // indirect
+	golang.org/x/text v0.10.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.9.3 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
-	google.golang.org/api v0.126.0 // indirect
+	google.golang.org/api v0.127.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/appengine/v2 v2.0.3 // indirect
 	google.golang.org/genproto v0.0.0-20230530153820-e85fd2cbaebc // indirect
