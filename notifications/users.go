@@ -245,6 +245,12 @@ func (s *userTableSource) Process(ctx context.Context, msg *messagebroker.Messag
 		return errors.Wrapf(err, "failed to upsert:%#v", snapshot)
 	}
 
+	if s.completedRegistration(snapshot.User) != s.completedRegistration(snapshot.Before) {
+		if err := s.resendPostponedNotificationsForUserID(ctx, snapshot.ID); err != nil {
+			return errors.Wrapf(err, "failed to send postponed notifications:%#v", snapshot)
+		}
+	}
+
 	return errors.Wrapf(s.sendNewReferralNotification(ctx, snapshot), "failed to sendNewReferralNotification for :%#v", snapshot)
 }
 
@@ -262,8 +268,9 @@ func (s *userTableSource) upsertUser(ctx context.Context, us *users.UserSnapshot
                    REFERRED_BY,
                    PHONE_NUMBER_HASH,
                    LANGUAGE,
-                   USER_ID
-    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+                   USER_ID,
+                   COMPLETED_REGISTRATION_PROCESS
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10, $11)
     ON CONFLICT(user_id)
       DO UPDATE
       	SET        PHONE_NUMBER = EXCLUDED.PHONE_NUMBER,
@@ -274,7 +281,8 @@ func (s *userTableSource) upsertUser(ctx context.Context, us *users.UserSnapshot
                    PROFILE_PICTURE_NAME = EXCLUDED.PROFILE_PICTURE_NAME,
                    REFERRED_BY = EXCLUDED.REFERRED_BY,
                    PHONE_NUMBER_HASH = EXCLUDED.PHONE_NUMBER_HASH,
-                   LANGUAGE = EXCLUDED.LANGUAGE`
+                   LANGUAGE = EXCLUDED.LANGUAGE,
+                   COMPLETED_REGISTRATION_PROCESS = EXCLUDED.COMPLETED_REGISTRATION_PROCESS`
 	_, err := storage.Exec(ctx, s.db, sql,
 		us.PhoneNumber,
 		us.Email,
@@ -286,6 +294,7 @@ func (s *userTableSource) upsertUser(ctx context.Context, us *users.UserSnapshot
 		us.PhoneNumberHash,
 		us.Language,
 		us.ID,
+		s.completedRegistration(us.User),
 	)
 
 	return errors.Wrapf(err, "failed to upsert %#v", us)
@@ -299,6 +308,31 @@ func (s *userTableSource) deleteUser(ctx context.Context, us *users.UserSnapshot
 	_, err := storage.Exec(ctx, s.db, sql, us.Before.ID)
 
 	return errors.Wrapf(err, "failed to delete user:%#v", us)
+}
+
+func (*userTableSource) completedRegistration(us *users.User) bool {
+	if us == nil || us.ClientData == nil {
+		return false
+	}
+	completedRegistrationSteps, ok := (*us.ClientData)[registrationProcessFinalizedSteps]
+	if !ok {
+		return false
+	}
+	var completedRegistrationStepsSlice []any
+	if completedRegistrationStepsSlice, ok = completedRegistrationSteps.([]any); ok {
+		completedLastStep := false
+		for _, step := range completedRegistrationStepsSlice {
+			if val, isStr := step.(string); isStr && val == iceBonusStep {
+				completedLastStep = true
+
+				break
+			}
+		}
+
+		return completedLastStep
+	}
+
+	return false
 }
 
 func (r *repository) getUserByID(ctx context.Context, userID string) (*user, error) {

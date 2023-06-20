@@ -79,18 +79,31 @@ type (
 	pushNotificationTokens struct {
 		PushNotificationTokens *users.Enum[push.DeviceToken]
 		Language, UserID       string
+		Postpone               bool
 	}
 )
 
 func (r *repository) getPushNotificationTokens(
 	ctx context.Context, domain NotificationDomain, userID string,
 ) (*pushNotificationTokens, error) {
+	return r.getPushNotificationTokensOrPostpone(ctx, domain, "", userID)
+}
+
+//nolint:funlen // .
+func (r *repository) getPushNotificationTokensOrPostpone(
+	ctx context.Context, domain NotificationDomain, shouldPostponeSQL, userID string,
+) (pnt *pushNotificationTokens, err error) {
 	if ctx.Err() != nil {
 		return nil, errors.Wrap(ctx.Err(), "unexpected deadline")
+	}
+	postponeFormatted := ""
+	if len(shouldPostponeSQL) > 0 {
+		postponeFormatted = fmt.Sprintf(", %v as postpone", shouldPostponeSQL)
 	}
 	sql := fmt.Sprintf(`SELECT array_agg(dm.push_notification_token) filter (where dm.push_notification_token is not null)  AS push_notification_tokens, 
 							   u.language,
 							   u.user_id
+							   %[3]v
 						FROM users u
 							 LEFT JOIN device_metadata dm
 									ON ( u.disabled_push_notification_domains IS NULL 
@@ -100,7 +113,7 @@ func (r *repository) getPushNotificationTokens(
 								   AND dm.push_notification_token IS NOT NULL 
 								   AND dm.push_notification_token != ''
 						WHERE u.user_id = $1
-						GROUP BY u.user_id`, domain, AllNotificationDomain)
+						GROUP BY u.user_id`, domain, AllNotificationDomain, postponeFormatted)
 	resp, err := storage.Get[pushNotificationTokens](ctx, r.db, sql, userID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to select for push notification tokens for `%v`, userID:%#v", domain, userID)
@@ -126,14 +139,18 @@ type (
 		sentNotificationPK
 	}
 	pushNotification struct {
-		pn *push.Notification[push.DeviceToken]
-		sn *sentNotification
+		pn       *push.Notification[push.DeviceToken]
+		sn       *sentNotification
+		postpone bool
 	}
 )
 
 func (r *repository) sendPushNotification(ctx context.Context, pn *pushNotification) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
+	}
+	if pn.postpone {
+		return r.postponePushNotification(ctx, pn)
 	}
 	if err := r.insertSentNotification(ctx, pn.sn); err != nil {
 		return errors.Wrapf(err, "failed to insert %#v", pn.sn)
@@ -155,6 +172,69 @@ func (r *repository) sendPushNotification(ctx context.Context, pn *pushNotificat
 	}
 
 	return nil
+}
+
+func (r *repository) postponePushNotification(ctx context.Context, pn *pushNotification) error {
+	serializedPN, err := json.MarshalContext(ctx, pn.pn)
+	if err != nil {
+		return errors.Wrapf(err, "failed to serialize %#v", pn.pn)
+	}
+	sql := `INSERT INTO postponed_notifications (
+                                POSTPONED_AT,
+                                LANGUAGE,
+                                USER_ID,
+                                UNIQUENESS,
+                                NOTIFICATION_TYPE,
+                                NOTIFICATION_CHANNEL,
+                                NOTIFICATION_CHANNEL_VALUE,
+                                NOTIFICATION_DATA
+        	) VALUES ($1,$2,$3,$4,$5,$6,$7, $8);`
+
+	_, err = storage.Exec(ctx, r.db, sql,
+		pn.sn.SentAt.Time,
+		pn.sn.Language,
+		pn.sn.UserID,
+		pn.sn.Uniqueness,
+		pn.sn.NotificationType,
+		pn.sn.NotificationChannel,
+		pn.sn.NotificationChannelValue,
+		serializedPN,
+	)
+
+	return errors.Wrapf(err, "failed to insert postponed notification %#v", pn)
+}
+
+func (r *repository) resendPostponedNotificationsForUserID(ctx context.Context, userID string) error {
+	if ctx.Err() != nil {
+		return errors.Wrap(ctx.Err(), "[resendPostponedNotificationsForUserID] unexpected deadline")
+	}
+	notifications, err := storage.ExecMany[postponedNotification](ctx, r.db, `DELETE FROM postponed_notifications WHERE user_id = $1 RETURNING *`, userID)
+	if err != nil {
+		return errors.Wrapf(err, "failed to get postponed notifications for userID:%v", userID)
+	}
+	pn := make([]*pushNotification, 0, len(notifications))
+	for _, notification := range notifications {
+		var decodedPN push.Notification[push.DeviceToken]
+		if err = json.UnmarshalContext(ctx, []byte(notification.NotificationData), &decodedPN); err != nil {
+			return errors.Wrapf(err, "failed to decerialize notification data for userID:%v %v", userID, notification.NotificationData)
+		}
+		pn = append(pn, &pushNotification{
+			sn: &sentNotification{
+				SentAt:             notification.PostponedAt,
+				Language:           notification.Language,
+				sentNotificationPK: notification.sentNotificationPK,
+			},
+			pn: &decodedPN,
+		})
+	}
+
+	return errors.Wrapf(runConcurrently(ctx, func(ctx context.Context, n *pushNotification) error {
+		if sErr := r.sendPushNotification(ctx, n); sErr != nil {
+			return multierror.Append(sErr, r.postponePushNotification(ctx, n)).ErrorOrNil() //nolint:wrapcheck // .
+		}
+
+		return nil
+	}, pn), "failed to send some of postponed notifications for userID:%v %#v", userID, pn)
 }
 
 func (r *repository) clearInvalidPushNotificationToken(ctx context.Context, userID string, token push.DeviceToken) error {

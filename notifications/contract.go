@@ -162,6 +162,9 @@ type (
 const (
 	applicationYamlKey          = "notifications"
 	requestingUserIDCtxValueKey = "requestingUserIDCtxValueKey"
+
+	registrationProcessFinalizedSteps = "registrationProcessFinalizedSteps"
+	iceBonusStep                      = "iceBonus"
 )
 
 var (
@@ -196,6 +199,14 @@ type (
 		Language                         string                          `json:"language,omitempty"`
 		AgendaContactUserIDs             []string                        `json:"agendaContactUserIDs,omitempty" db:"agenda_contact_user_ids"`
 	}
+
+	postponedNotification struct {
+		sentNotificationPK
+		PostponedAt      *time.Time `json:"postponedAt,omitempty" example:"2022-01-03T16:20:52.156534Z" db:"postponed_at"`
+		Language         string     `json:"language,omitempty" example:"en"`
+		NotificationData string     `db:"notification_data"`
+	}
+
 	userTableSource struct {
 		*processor
 	}

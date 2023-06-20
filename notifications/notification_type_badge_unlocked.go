@@ -94,7 +94,7 @@ func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.M
 	if s.cfg.DisableBadgeUnlockedPushOrAnalyticsNotifications {
 		return errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", notifType, in)
 	}
-	tokens, err := s.getPushNotificationTokens(ctx, AchievementsNotificationDomain, message.UserID)
+	tokens, err := s.getPushNotificationTokensOrPostpone(ctx, AchievementsNotificationDomain, "u.completed_registration_process = FALSE", message.UserID)
 	if err != nil || tokens == nil {
 		return multierror.Append( //nolint:wrapcheck // .
 			err,
@@ -161,6 +161,7 @@ func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.M
 					NotificationChannelValue: string(token),
 				},
 			},
+			postpone: tokens.Postpone,
 		})
 	}
 

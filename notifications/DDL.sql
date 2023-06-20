@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS users  (
                     profile_picture_name                    TEXT,
                     referred_by                             TEXT,
                     phone_number_hash                       TEXT,
-                    language                                TEXT NOT NULL default 'en'
+                    language                                TEXT NOT NULL default 'en',
+                    completed_registration_process          BOOLEAN DEFAULT FALSE
                   );
 --************************************************************************************************************************************
 -- sent_notifications
@@ -30,6 +31,21 @@ CREATE TABLE IF NOT EXISTS sent_notifications  (
                     notification_channel_value  TEXT NOT NULL,
                     primary key(user_id,uniqueness,notification_type,notification_channel,notification_channel_value));
 CREATE INDEX IF NOT EXISTS sent_notifications_sent_at_ix ON sent_notifications (sent_at);
+--************************************************************************************************************************************
+-- postponed_notifications
+CREATE TABLE IF NOT EXISTS postponed_notifications  (
+                    postponed_at                TIMESTAMP NOT NULL,
+                    language                    TEXT NOT NULL,
+                    user_id                     TEXT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+                    uniqueness                  TEXT NOT NULL,
+                    notification_type           TEXT NOT NULL,
+                    notification_channel        TEXT NOT NULL,
+                    notification_channel_value  TEXT NOT NULL,
+                    notification_data           TEXT NOT NULL,
+                    primary key(user_id,uniqueness,notification_type,notification_channel,notification_channel_value));
+
+
+
 --************************************************************************************************************************************
 -- sent_announcements
 CREATE TABLE IF NOT EXISTS sent_announcements (

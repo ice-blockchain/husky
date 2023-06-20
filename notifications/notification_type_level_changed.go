@@ -70,7 +70,7 @@ func (s *completedLevelsSource) Process(ctx context.Context, msg *messagebroker.
 			},
 		},
 	}
-	tokens, err := s.getPushNotificationTokens(ctx, AchievementsNotificationDomain, message.UserID)
+	tokens, err := s.getPushNotificationTokensOrPostpone(ctx, AchievementsNotificationDomain, "u.completed_registration_process = FALSE", message.UserID)
 	if err != nil || tokens == nil {
 		return multierror.Append( //nolint:wrapcheck // .
 			err,
@@ -125,6 +125,7 @@ func (s *completedLevelsSource) Process(ctx context.Context, msg *messagebroker.
 					NotificationChannelValue: string(token),
 				},
 			},
+			postpone: tokens.Postpone,
 		})
 	}
 
