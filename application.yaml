@@ -28,12 +28,12 @@ news: &news
     password: pass
   wintr/connectors/storage/v2:
     runDDL: true
-    primaryURL: postgresql://root:pass@localhost:5432/ice
+    primaryURL: postgresql://root:pass@localhost:5434/husky
     credentials:
       user: root
       password: pass
     replicaURLs:
-      - postgresql://root:pass@localhost:5432/ice
+      - postgresql://root:pass@localhost:5434/husky
   messageBroker: &newsMessageBroker
     consumerGroup: husky-local-news-testing
     createTopics: true
@@ -65,12 +65,12 @@ analytics: &analytics
     password: pass
   wintr/connectors/storage/v2:
     runDDL: true
-    primaryURL: postgresql://root:pass@localhost:5432/ice
+    primaryURL: postgresql://root:pass@localhost:5434/husky
     credentials:
       user: root
       password: pass
     replicaURLs:
-      - postgresql://root:pass@localhost:5432/ice
+      - postgresql://root:pass@localhost:5434/husky
   messageBroker: &analyticsMessageBroker
     consumerGroup: husky-local-analytics-testing
     createTopics: true
@@ -93,6 +93,13 @@ analytics: &analytics
 notifications: &notifications
   deeplinkScheme: staging.ice.app
   pingCooldown: 1m
+  disabledAchievementsNotifications:
+    levels:
+      - l6
+    badges:
+      - s1
+      - c1
+      - l1
   wintr/multimedia/picture:
     urlDownload: https://ice-staging.b-cdn.net
   db: &notificationsDatabase
@@ -102,12 +109,12 @@ notifications: &notifications
     password: pass
   wintr/connectors/storage/v2:
     runDDL: true
-    primaryURL: postgresql://root:pass@localhost:5432/ice
+    primaryURL: postgresql://root:pass@localhost:5434/husky
     credentials:
       user: root
       password: pass
     replicaURLs:
-      - postgresql://root:pass@localhost:5432/ice
+      - postgresql://root:pass@localhost:5434/husky
   messageBroker: &notificationsMessageBroker
     consumerGroup: husky-local-notifications-testing
     createTopics: true
