@@ -40,6 +40,9 @@ func (s *completedLevelsSource) Process(ctx context.Context, msg *messagebroker.
 	if message.UserID == "" {
 		return nil
 	}
+	if s.cfg.IsLevelNotificationDisabled(message.Type) {
+		return nil
+	}
 	now := time.Now()
 	deeplink := fmt.Sprintf("%v://profile?userId=%v", s.cfg.DeeplinkScheme, message.UserID)
 	imageURL := s.pictureClient.DownloadURL("assets/push-notifications/level-change.png")

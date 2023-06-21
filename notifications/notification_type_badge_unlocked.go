@@ -20,7 +20,7 @@ import (
 	"github.com/ice-blockchain/wintr/time"
 )
 
-func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.Message) error { //nolint:funlen,gocyclo,revive,cyclop // .
+func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.Message) error { //nolint:funlen,gocyclo,gocognit,revive,cyclop // .
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline while processing message")
 	}
@@ -47,6 +47,9 @@ func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.M
 		return errors.Wrapf(err, "cannot unmarshal %v into %#v", string(msg.Value), message)
 	}
 	if message.UserID == "" {
+		return nil
+	}
+	if s.cfg.IsBadgeNotificationDisabled(message.Type) {
 		return nil
 	}
 	var notifType NotificationType

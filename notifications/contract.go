@@ -244,6 +244,10 @@ type (
 		*repository
 	}
 	config struct {
+		DisabledAchievementsNotifications struct {
+			Badges []string `yaml:"badges"`
+			Levels []string `yaml:"levels"`
+		} `yaml:"disabledAchievementsNotifications"`
 		DeeplinkScheme                                   string                   `yaml:"deeplinkScheme"`
 		messagebroker.Config                             `mapstructure:",squash"` //nolint:tagliatelle // Nope.
 		PingCooldown                                     stdlibtime.Duration      `yaml:"pingCooldown"`

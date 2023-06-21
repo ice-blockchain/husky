@@ -5,6 +5,7 @@ package notifications
 import (
 	"context"
 	"math/rand"
+	"strings"
 	"sync"
 	stdlibtime "time"
 
@@ -318,4 +319,30 @@ func (r *repository) deleteSentAnnouncement(ctx context.Context, sa *sentAnnounc
 	)
 
 	return errors.Wrapf(err, "failed to insert sent announcement %#v", sa)
+}
+
+func (cfg *config) IsLevelNotificationDisabled(levelName string) bool {
+	if len(cfg.DisabledAchievementsNotifications.Levels) == 0 {
+		return false
+	}
+	for _, l := range cfg.DisabledAchievementsNotifications.Levels {
+		if strings.EqualFold(l, levelName) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (cfg *config) IsBadgeNotificationDisabled(badgeName string) bool {
+	if len(cfg.DisabledAchievementsNotifications.Badges) == 0 {
+		return false
+	}
+	for _, b := range cfg.DisabledAchievementsNotifications.Badges {
+		if strings.EqualFold(b, badgeName) {
+			return true
+		}
+	}
+
+	return false
 }
