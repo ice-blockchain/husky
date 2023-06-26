@@ -10,7 +10,6 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 
-	"github.com/ice-blockchain/wintr/coin"
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
 	"github.com/ice-blockchain/wintr/notifications/inapp"
 	"github.com/ice-blockchain/wintr/notifications/push"
@@ -19,8 +18,8 @@ import (
 
 type (
 	adoption struct {
-		BaseMiningRate *coin.ICEFlake `json:"baseMiningRate,omitempty" example:"100000"`
-		Milestone      uint64         `json:"milestone,omitempty" example:"1"`
+		BaseMiningRate float64 `json:"baseMiningRate,omitempty" example:"1,243.02"`
+		Milestone      uint64  `json:"milestone,omitempty" example:"1"`
 	}
 )
 
@@ -64,7 +63,7 @@ func (s *adoptionTableSource) broadcastPushNotifications(ctx context.Context, ad
 	now := time.Now()
 	languages := allPushNotificationTemplates[AdoptionChangedNotificationType]
 	bpn := make([]*broadcastPushNotification, 0, len(languages))
-	data := struct{ BaseMiningRate string }{BaseMiningRate: adoption.BaseMiningRate.UnsafeICE().String()}
+	data := struct{ BaseMiningRate float64 }{BaseMiningRate: adoption.BaseMiningRate}
 	for language, tmpl := range languages {
 		bpn = append(bpn, &broadcastPushNotification{
 			pn: &push.Notification[push.SubscriptionTopic]{
@@ -100,7 +99,7 @@ func (s *adoptionTableSource) broadcastInAppNotifications(ctx context.Context, a
 		in: &inapp.Parcel{
 			Time: now,
 			Data: map[string]any{
-				"baseMiningRate": adoption.BaseMiningRate.UnsafeICE().String(),
+				"baseMiningRate": adoption.BaseMiningRate,
 				"deeplink":       fmt.Sprintf("%v://home?section=adoption", s.cfg.DeeplinkScheme),
 				"imageUrl":       s.pictureClient.DownloadURL("assets/push-notifications/adoption-change.png"),
 			},
