@@ -74,7 +74,7 @@ func (s *newsTableSource) broadcastPushNotifications(ctx context.Context, newsAr
 	target := fmt.Sprintf("news_%v", newsArticle.Language)
 	bpn := &broadcastPushNotification{
 		pn: &push.Notification[push.SubscriptionTopic]{
-			Data:     map[string]string{"deeplink": fmt.Sprintf("%v://browser?url=%v", s.cfg.DeeplinkScheme, url.QueryEscape(newsArticle.URL))},
+			Data:     s.pushNotificationData(newsArticle),
 			Target:   push.SubscriptionTopic(target),
 			Title:    tmpl.getTitle(nil),
 			Body:     tmpl.getBody(nil),
@@ -102,11 +102,8 @@ func (s *newsTableSource) broadcastInAppNotifications(ctx context.Context, newsA
 	now := time.Now()
 	bin := &broadcastInAppNotification{
 		in: &inapp.Parcel{
-			Time: now,
-			Data: map[string]any{
-				"deeplink": fmt.Sprintf("%v://browser?url=%v", s.cfg.DeeplinkScheme, url.QueryEscape(newsArticle.URL)),
-				"imageUrl": newsArticle.ImageURL,
-			},
+			Time:   now,
+			Data:   s.inAppNotificationData(newsArticle),
 			Action: string(NewsAddedNotificationType),
 			Actor: inapp.ID{
 				Type:  "system",
@@ -138,4 +135,23 @@ func (s *newsTableSource) broadcastEmailNotifications(ctx context.Context, fallb
 	}
 
 	return errors.Errorf("broadcasting news via email is not supported yet. isFallback:%v, newsArticle:%#v", fallbackOnly, newsArticle)
+}
+
+func (s *newsTableSource) pushNotificationData(newsArticle *news) map[string]string {
+	return map[string]string{
+		"deeplink":        fmt.Sprintf("%v://browser?url=%v", s.cfg.DeeplinkScheme, url.QueryEscape(newsArticle.URL)),
+		"contentType":     "news",
+		"contentId":       newsArticle.ID,
+		"contentLanguage": newsArticle.Language,
+	}
+}
+
+func (s *newsTableSource) inAppNotificationData(newsArticle *news) map[string]any {
+	return map[string]any{
+		"deeplink":        fmt.Sprintf("%v://browser?url=%v", s.cfg.DeeplinkScheme, url.QueryEscape(newsArticle.URL)),
+		"imageUrl":        newsArticle.ImageURL,
+		"contentType":     "news",
+		"contentId":       newsArticle.ID,
+		"contentLanguage": newsArticle.Language,
+	}
 }
