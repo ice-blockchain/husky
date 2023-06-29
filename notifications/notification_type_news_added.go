@@ -139,19 +139,17 @@ func (s *newsTableSource) broadcastEmailNotifications(ctx context.Context, fallb
 
 func (s *newsTableSource) pushNotificationData(newsArticle *news) map[string]string {
 	return map[string]string{
-		"deeplink":        fmt.Sprintf("%v://browser?url=%v", s.cfg.DeeplinkScheme, url.QueryEscape(newsArticle.URL)),
-		"contentType":     "news",
-		"contentId":       newsArticle.ID,
-		"contentLanguage": newsArticle.Language,
+		"deeplink": s.deeplink(newsArticle),
 	}
 }
 
 func (s *newsTableSource) inAppNotificationData(newsArticle *news) map[string]any {
 	return map[string]any{
-		"deeplink":        fmt.Sprintf("%v://browser?url=%v", s.cfg.DeeplinkScheme, url.QueryEscape(newsArticle.URL)),
-		"imageUrl":        newsArticle.ImageURL,
-		"contentType":     "news",
-		"contentId":       newsArticle.ID,
-		"contentLanguage": newsArticle.Language,
+		"deeplink": s.deeplink(newsArticle),
+		"imageUrl": newsArticle.ImageURL,
 	}
+}
+
+func (s *newsTableSource) deeplink(newsArticle *news) string {
+	return fmt.Sprintf("%v://browser?contentType=news&contentId=%v&contentLanguage=%v&url=%v", s.cfg.DeeplinkScheme, newsArticle.ID, newsArticle.Language, url.QueryEscape(newsArticle.URL))
 }
