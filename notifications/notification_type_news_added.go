@@ -151,5 +151,6 @@ func (s *newsTableSource) inAppNotificationData(newsArticle *news) map[string]an
 }
 
 func (s *newsTableSource) deeplink(newsArticle *news) string {
-	return fmt.Sprintf("%v://browser?contentType=news&contentId=%v&contentLanguage=%v&url=%v", s.cfg.DeeplinkScheme, newsArticle.ID, newsArticle.Language, url.QueryEscape(newsArticle.URL))
+	return fmt.Sprintf("%v://browser?contentType=news&contentId=%v&contentLanguage=%v&url=%v",
+		s.cfg.DeeplinkScheme, newsArticle.ID, newsArticle.Language, url.QueryEscape(newsArticle.URL))
 }
