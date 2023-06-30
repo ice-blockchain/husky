@@ -26,7 +26,9 @@ func (r *repository) GetNews(ctx context.Context, newsType Type, language string
 								  AND nvu.user_id = $1
 						WHERE n.language = $2
 							  AND n.type = $3
-						ORDER BY nvu.created_at IS NULL DESC, n.created_at DESC
+						ORDER BY 
+							(CASE WHEN n.type = 'regular' THEN nvu.created_at IS NULL END) DESC,
+							n.created_at DESC
 						LIMIT $4 OFFSET $5`
 	result, err := storage.Select[PersonalNews](ctx, r.db, sql, args...)
 	if err != nil {
