@@ -60,6 +60,10 @@ func (r *repository) insertTag(ctx context.Context, nws *TaggedNews, tag Tag) er
 	}
 	sql := `INSERT INTO news_tags (CREATED_AT, LANGUAGE, VALUE) VALUES ($1, $2, $3)`
 	if _, err := storage.Exec(ctx, r.db, sql, nws.CreatedAt.Time, nws.Language, tag); err != nil {
+		if storage.IsErr(err, storage.ErrDuplicate) {
+			return nil
+		}
+
 		return errors.Wrapf(err, "failed to insert tag:%#v", tuple)
 	}
 
