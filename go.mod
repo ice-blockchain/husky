@@ -6,9 +6,9 @@ require (
 	github.com/goccy/go-json v0.10.2
 	github.com/google/uuid v1.3.0
 	github.com/hashicorp/go-multierror v1.1.1
-	github.com/ice-blockchain/eskimo v1.122.0
+	github.com/ice-blockchain/eskimo v1.124.0
 	github.com/ice-blockchain/go-tarantool-client v0.0.0-20230327200757-4fc71fa3f7bb
-	github.com/ice-blockchain/wintr v1.116.0
+	github.com/ice-blockchain/wintr v1.117.0
 	github.com/imroc/req/v3 v3.37.2
 	github.com/pkg/errors v0.9.1
 	github.com/swaggo/swag v1.16.1
@@ -45,7 +45,7 @@ require (
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
-	github.com/gaukas/godicttls v0.0.3 // indirect
+	github.com/gaukas/godicttls v0.0.4 // indirect
 	github.com/georgysavva/scany/v2 v2.0.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-gonic/gin v1.9.1 // indirect
@@ -60,6 +60,7 @@ require (
 	github.com/goccy/go-reflect v1.2.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
+	github.com/golang-jwt/jwt/v5 v5.0.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
@@ -96,14 +97,14 @@ require (
 	github.com/morikuni/aec v1.0.0 // indirect
 	github.com/onsi/ginkgo/v2 v2.11.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
-	github.com/opencontainers/image-spec v1.1.0-rc3 // indirect
+	github.com/opencontainers/image-spec v1.1.0-rc4 // indirect
 	github.com/opencontainers/runc v1.1.7 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
 	github.com/pierrec/lz4/v4 v4.1.18 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/quic-go/qtls-go1-19 v0.3.2 // indirect
 	github.com/quic-go/qtls-go1-20 v0.3.0 // indirect
-	github.com/quic-go/quic-go v0.36.0 // indirect
+	github.com/quic-go/quic-go v0.36.1 // indirect
 	github.com/refraction-networking/utls v1.3.2 // indirect
 	github.com/rs/zerolog v1.29.1 // indirect
 	github.com/sendgrid/rest v2.6.9+incompatible // indirect
@@ -152,7 +153,6 @@ require (
 replace (
 	github.com/containerd/containerd => github.com/containerd/containerd v1.6.19
 	github.com/docker/docker => github.com/docker/docker v20.10.3+incompatible
-	github.com/ice-blockchain/wintr => github.com/ice-blockchain/wintr v1.114.0
 	// https://github.com/quic-go/quic-go/issues/3907
 	github.com/quic-go/qtls-go1-20 => github.com/quic-go/qtls-go1-20 v0.2.2
 	github.com/testcontainers/testcontainers-go => github.com/testcontainers/testcontainers-go v0.15.0
