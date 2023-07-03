@@ -12,6 +12,8 @@ cmd/husky:
     port: 4443
     certPath: cmd/husky/.testdata/localhost.crt
     keyPath: cmd/husky/.testdata/localhost.key
+  wintr/auth/ice:
+    jwtSecret: bogus
 cmd/husky-pack:
   host: localhost:5443
   version: local
@@ -20,6 +22,8 @@ cmd/husky-pack:
     port: 5443
     certPath: cmd/husky-pack/.testdata/localhost.crt
     keyPath: cmd/husky-pack/.testdata/localhost.key
+  wintr/auth/ice:
+    jwtSecret: bogus
 news: &news
   db: &newsDatabase
     urls:
