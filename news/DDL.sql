@@ -3,7 +3,7 @@
 CREATE TABLE IF NOT EXISTS news (
                     created_at            TIMESTAMP NOT NULL,
                     updated_at            TIMESTAMP NOT NULL,
-                    views                 SMALLINT NOT NULL DEFAULT 0,
+                    views                 BIGINT NOT NULL DEFAULT 0,
                     notification_channels TEXT[],
                     id                    TEXT NOT NULL,
                     type                  TEXT NOT NULL,
