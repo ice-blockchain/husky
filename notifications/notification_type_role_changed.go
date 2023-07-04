@@ -39,6 +39,9 @@ func (s *enabledRolesSource) Process(ctx context.Context, msg *messagebroker.Mes
 	if message.UserID == "" {
 		return nil
 	}
+	if s.cfg.IsRoleNotificationDisabled(message.Type) {
+		return nil
+	}
 	now := time.Now()
 	deeplink := fmt.Sprintf("%v://profile?section=roles&userId=%v", s.cfg.DeeplinkScheme, message.UserID)
 	imageURL := s.pictureClient.DownloadURL("assets/push-notifications/role-change.png")

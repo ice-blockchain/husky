@@ -346,3 +346,16 @@ func (cfg *config) IsBadgeNotificationDisabled(badgeName string) bool {
 
 	return false
 }
+
+func (cfg *config) IsRoleNotificationDisabled(roleName string) bool {
+	if len(cfg.DisabledAchievementsNotifications.Roles) == 0 {
+		return false
+	}
+	for _, r := range cfg.DisabledAchievementsNotifications.Roles {
+		if strings.EqualFold(r, roleName) {
+			return true
+		}
+	}
+
+	return false
+}

@@ -247,10 +247,10 @@ type (
 		DisabledAchievementsNotifications struct {
 			Badges []string `yaml:"badges"`
 			Levels []string `yaml:"levels"`
+			Roles  []string `yaml:"roles"`
 		} `yaml:"disabledAchievementsNotifications"`
-		DeeplinkScheme                                   string                   `yaml:"deeplinkScheme"`
-		messagebroker.Config                             `mapstructure:",squash"` //nolint:tagliatelle // Nope.
-		PingCooldown                                     stdlibtime.Duration      `yaml:"pingCooldown"`
-		DisableBadgeUnlockedPushOrAnalyticsNotifications bool                     `yaml:"disableBadgeUnlockedPushOrAnalyticsNotifications"`
+		DeeplinkScheme       string                   `yaml:"deeplinkScheme"`
+		messagebroker.Config `mapstructure:",squash"` //nolint:tagliatelle // Nope.
+		PingCooldown         stdlibtime.Duration      `yaml:"pingCooldown"`
 	}
 )

@@ -20,7 +20,7 @@ import (
 	"github.com/ice-blockchain/wintr/time"
 )
 
-func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.Message) error { //nolint:funlen,gocyclo,gocognit,revive,cyclop // .
+func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.Message) error { //nolint:funlen,gocyclo,revive,cyclop // .
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline while processing message")
 	}
@@ -93,9 +93,6 @@ func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.M
 				NotificationChannel: InAppNotificationChannel,
 			},
 		},
-	}
-	if s.cfg.DisableBadgeUnlockedPushOrAnalyticsNotifications {
-		return errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", notifType, in)
 	}
 	tokens, err := s.getPushNotificationTokens(ctx, AchievementsNotificationDomain, message.UserID)
 	if err != nil || tokens == nil {
