@@ -6,14 +6,14 @@ require (
 	github.com/goccy/go-json v0.10.2
 	github.com/google/uuid v1.3.0
 	github.com/hashicorp/go-multierror v1.1.1
-	github.com/ice-blockchain/eskimo v1.134.0
+	github.com/ice-blockchain/eskimo v1.135.0
 	github.com/ice-blockchain/go-tarantool-client v0.0.0-20230327200757-4fc71fa3f7bb
 	github.com/ice-blockchain/wintr v1.120.0
 	github.com/imroc/req/v3 v3.37.2
 	github.com/pkg/errors v0.9.1
 	github.com/swaggo/swag v1.16.1
 	github.com/testcontainers/testcontainers-go v0.21.0
-	golang.org/x/net v0.11.0
+	golang.org/x/net v0.12.0
 )
 
 require (
