@@ -48,3 +48,5 @@ CREATE TABLE IF NOT EXISTS device_metadata (
                     device_unique_id            TEXT NOT NULL,
                     push_notification_token     TEXT,
                     primary key(user_id, device_unique_id));
+
+ALTER TABLE device_metadata DROP CONSTRAINT IF EXISTS device_metadata_user_id_fkey;
