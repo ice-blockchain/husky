@@ -44,7 +44,7 @@ CREATE INDEX IF NOT EXISTS sent_announcements_sent_at_ix ON sent_announcements (
 --************************************************************************************************************************************
 -- device_metadata
 CREATE TABLE IF NOT EXISTS device_metadata (
-                    user_id                     TEXT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+                    user_id                     TEXT NOT NULL,
                     device_unique_id            TEXT NOT NULL,
                     push_notification_token     TEXT,
                     primary key(user_id, device_unique_id));

@@ -296,9 +296,21 @@ func (s *userTableSource) deleteUser(ctx context.Context, us *users.UserSnapshot
 		return errors.Wrap(ctx.Err(), "context failed")
 	}
 	sql := `DELETE FROM users WHERE user_id = $1`
-	_, err := storage.Exec(ctx, s.db, sql, us.Before.ID)
+	if _, err := storage.Exec(ctx, s.db, sql, us.Before.ID); err != nil {
+		return errors.Wrapf(err, "failed to delete user:%#v", us)
+	}
 
-	return errors.Wrapf(err, "failed to delete user:%#v", us)
+	return errors.Wrapf(s.deleteDeviceMetadata(ctx, us.Before.ID), "failed to delete user:%#v", us)
+}
+
+func (s *userTableSource) deleteDeviceMetadata(ctx context.Context, userID string) error {
+	if ctx.Err() != nil {
+		return errors.Wrap(ctx.Err(), "[deleteDeviceMetadata] context failed")
+	}
+	sql := `DELETE FROM device_metadata WHERE user_id = $1`
+	_, err := storage.Exec(ctx, s.db, sql, userID)
+
+	return errors.Wrapf(err, "failed to delete device metadata for userID:%v", userID)
 }
 
 func (r *repository) getUserByID(ctx context.Context, userID string) (*user, error) {
