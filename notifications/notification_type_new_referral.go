@@ -16,12 +16,13 @@ import (
 	"github.com/ice-blockchain/wintr/time"
 )
 
-func (r *repository) sendNewReferralNotification(ctx context.Context, us *users.UserSnapshot) error { //nolint:funlen,gocognit // .
+func (r *repository) sendNewReferralNotification(ctx context.Context, us *users.UserSnapshot) error { //nolint:funlen,gocognit,gocyclo,revive,cyclop // .
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
 	if us.User == nil || us.User.ReferredBy == "" || us.User.ReferredBy == us.User.ID ||
-		(us.Before != nil && us.Before.ID != "" && us.User != nil && us.User.ID != "" && us.User.ReferredBy == us.Before.ReferredBy) {
+		(us.Before != nil && us.Before.ID != "" && us.User != nil && us.User.ID != "" && us.User.ReferredBy == us.Before.ReferredBy) ||
+		us.Username == "" || us.Username == us.ID {
 		return nil
 	}
 	const (
