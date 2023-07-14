@@ -62,7 +62,7 @@ func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.M
 		notifType = SocialBadgeUnlockedNotificationType
 	}
 	now := time.Now()
-	deeplink := fmt.Sprintf("%v://profile?section=badges&userId=%v", s.cfg.DeeplinkScheme, message.UserID)
+	deeplink := fmt.Sprintf("%v://profile?section=badges&userId=%v&category=%v", s.cfg.DeeplinkScheme, message.UserID, message.GroupType)
 	imageURL := s.pictureClient.DownloadURL(fmt.Sprintf("badges/%v.png", message.Type))
 	badgeIndex, err := strconv.Atoi(message.Type[1:])
 	log.Panic(err) //nolint:revive // Intended.
