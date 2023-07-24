@@ -20,11 +20,14 @@ func (r *repository) sendNewReferralNotification(ctx context.Context, us *users.
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
+	usernameEmpty := us.Username == "" || us.Username == us.ID
+	referredByNotChanged := us.Before != nil && us.Before.ID != "" && us.User != nil && us.User.ID != "" && us.User.ReferredBy == us.Before.ReferredBy
 	if us.User == nil || us.User.ReferredBy == "" || us.User.ReferredBy == us.User.ID ||
-		(us.Before != nil && us.Before.ID != "" && us.User != nil && us.User.ID != "" && us.User.ReferredBy == us.Before.ReferredBy) ||
-		us.Username == "" || us.Username == us.ID {
+		(referredByNotChanged && !usernameEmpty && !(us.Before.Username == "" || us.Before.Username == us.Before.ID)) ||
+		usernameEmpty {
 		return nil
 	}
+
 	const (
 		actionName = "referral_joined_team"
 	)
