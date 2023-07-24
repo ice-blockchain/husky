@@ -57,7 +57,7 @@ func (r *repository) getEmailNotificationParams( //nolint:funlen,revive // .
 	}
 	sql := fmt.Sprintf(`SELECT u.username AS display_name, 
 							   (CASE WHEN (u.disabled_email_notification_domains IS NULL 
-												OR NOT (u.disabled_email_notification_domains @> ARRAY['%[1]v','%[2]v'])
+												OR NOT (u.disabled_email_notification_domains && ARRAY['%[1]v','%[2]v'])
 										  )
 							    		THEN u.email 
 							    		ELSE '' 

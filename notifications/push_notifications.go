@@ -94,7 +94,7 @@ func (r *repository) getPushNotificationTokens(
 						FROM users u
 							 LEFT JOIN device_metadata dm
 									ON ( u.disabled_push_notification_domains IS NULL 
-										OR NOT (u.disabled_push_notification_domains @> ARRAY['%[1]v','%[2]v'] )
+										OR NOT (u.disabled_push_notification_domains && ARRAY['%[1]v','%[2]v'] )
 								   	   )
 								   AND dm.user_id = u.user_id
 								   AND dm.push_notification_token IS NOT NULL 
