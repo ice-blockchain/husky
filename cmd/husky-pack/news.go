@@ -199,11 +199,13 @@ func (*CreateNewsRequestBody) validateNews(nws []*news.TaggedNews) error {
 			break
 		}
 	}
-	for k, v := range allURLs {
-		if v > 1 {
-			errChan <- fmt.Sprintf("url `%v` is present in multiple items", k)
+	if false {
+		for k, v := range allURLs {
+			if v > 1 {
+				errChan <- fmt.Sprintf("url `%v` is present in multiple items", k)
 
-			break
+				break
+			}
 		}
 	}
 	close(errChan)
