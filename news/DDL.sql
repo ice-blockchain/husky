@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS news (
                     PRIMARY KEY(language,id)
                     );
 CREATE INDEX IF NOT EXISTS most_recent_news_lookup_ix ON news (language, type, created_at DESC);
+ALTER TABLE news DROP CONSTRAINT IF EXISTS news_url_key;
 CREATE UNIQUE INDEX IF NOT EXISTS news_url_language_ix ON news (url,language);
 -- news_viewed_by_users
 CREATE TABLE IF NOT EXISTS news_viewed_by_users (
