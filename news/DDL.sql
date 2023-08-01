@@ -42,3 +42,11 @@ CREATE TABLE IF NOT EXISTS news_tags_per_news  (
                    FOREIGN KEY(language, news_id) REFERENCES news(language,id) ON DELETE CASCADE,
                    FOREIGN KEY(language, news_tag) REFERENCES news_tags(language,value) ON DELETE CASCADE
                    );
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS news_views_by_language (
+                                 news_id, language, views
+                            ) AS (
+                                SELECT news_id, language, COALESCE(COUNT(*),0) as views
+                                FROM news_viewed_by_users
+                                GROUP BY news_id, language
+                            );

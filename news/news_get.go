@@ -17,22 +17,35 @@ func (r *repository) GetNews(ctx context.Context, newsType Type, language string
 		return nil, errors.Wrap(ctx.Err(), "get news failed because context failed")
 	}
 	args := []any{requestingUserID(ctx), language, newsType, int64(limit), int64(offset)}
-	sql := `SELECT nvu.created_at IS NOT NULL AS viewed,
-							   n.*
-						FROM news n
-							LEFT JOIN news_viewed_by_users nvu 
-								   ON nvu.language = n.language
-								  AND nvu.news_id = n.id
-								  AND nvu.user_id = $1
-						WHERE n.language = $2
-							  AND n.type = $3
-						ORDER BY 
-							(CASE WHEN n.type = 'regular'
-								THEN nvu.created_at IS NULL
-								ELSE FALSE
-					  		END) DESC,
-							n.created_at DESC
-						LIMIT $4 OFFSET $5`
+	sql := `WITH news_views as (
+				SELECT news_id, SUM(views) as views FROM news_views_by_language GROUP BY news_id 
+			)
+			SELECT nvu.created_at IS NOT NULL AS viewed,
+					   n.created_at,
+						n.updated_at,
+						COALESCE(v.views,0) as views,
+						n.notification_channels,
+						n.id,
+						n.type,
+						n.language,
+						n.title,
+						n.image_url,
+						n.url
+			FROM news n
+				LEFT JOIN news_viewed_by_users nvu 
+					   ON nvu.language = n.language
+					  AND nvu.news_id = n.id
+					  AND nvu.user_id = $1
+				LEFT JOIN news_views v ON v.news_id = n.id
+			WHERE n.language = $2
+				  AND n.type = $3
+			ORDER BY 
+				(CASE WHEN n.type = 'regular'
+					THEN nvu.created_at IS NULL
+					ELSE FALSE
+				END) DESC,
+				n.created_at DESC
+			LIMIT $4 OFFSET $5`
 	result, err := storage.Select[PersonalNews](ctx, r.db, sql, args...)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to get news for args:%#v", args...)
