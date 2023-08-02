@@ -97,6 +97,8 @@ const (
 	applicationYamlKey          = "news"
 	requestingUserIDCtxValueKey = "requestingUserIDCtxValueKey"
 	checksumCtxValueKey         = "versioningChecksumCtxValueKey"
+
+	fallbackLanguage = "en"
 )
 
 // .
