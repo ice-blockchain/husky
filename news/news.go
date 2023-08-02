@@ -214,7 +214,7 @@ func (r *repository) sendTaggedNewsSnapshotMessage(ctx context.Context, ss *Tagg
 }
 
 func (p *processor) startNewsViewsUpdater(ctx context.Context) {
-	ticker := stdlibtime.NewTicker(stdlibtime.Duration(1+rand.Intn(24)) * stdlibtime.Minute) //nolint:gosec,gomnd // Not an  issue.
+	ticker := stdlibtime.NewTicker(stdlibtime.Duration(10*(1+rand.Intn(10))) * stdlibtime.Second) //nolint:gosec,gomnd // Not an  issue.
 	defer ticker.Stop()
 
 	for {
@@ -234,7 +234,7 @@ func (p *processor) updateNewsCount(ctx context.Context) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "[updateNewsCount] unexpected deadline")
 	}
-	sql := `REFRESH MATERIALIZED VIEW news_views_by_language;`
+	sql := `REFRESH MATERIALIZED VIEW CONCURRENTLY news_views;`
 	if _, err := storage.Exec(ctx, p.db, sql); err != nil {
 		return errors.Wrap(err, "failed to update news count")
 	}
