@@ -5,6 +5,7 @@ package news
 import (
 	"context"
 	"fmt"
+	"math/rand"
 	"mime/multipart"
 	"strconv"
 	"strings"
@@ -44,13 +45,17 @@ func StartProcessor(ctx context.Context, _ context.CancelFunc) Processor {
 	db := storage.MustConnect(context.Background(), ddl, applicationYamlKey) //nolint:contextcheck // We need to gracefully shut it down.
 	mbProducer := messagebroker.MustConnect(ctx, applicationYamlKey)
 
-	return &processor{repository: &repository{
+	prc := &processor{repository: &repository{
 		cfg:           &cfg,
 		shutdown:      closeAll(mbProducer, db),
 		db:            db,
 		mb:            mbProducer,
 		pictureClient: picture.New(applicationYamlKey),
 	}}
+
+	go prc.startNewsViewsUpdater(ctx)
+
+	return prc
 }
 
 func (r *repository) Close() error {
@@ -206,4 +211,33 @@ func (r *repository) sendTaggedNewsSnapshotMessage(ctx context.Context, ss *Tagg
 	r.mb.SendMessage(ctx, msg, responder)
 
 	return errors.Wrapf(<-responder, "failed to send news snapshot message to broker")
+}
+
+func (p *processor) startNewsViewsUpdater(ctx context.Context) {
+	ticker := stdlibtime.NewTicker(stdlibtime.Duration(10*(1+rand.Intn(10))) * stdlibtime.Second) //nolint:gosec,gomnd // Not an  issue.
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ticker.C:
+			const deadline = 30 * stdlibtime.Second
+			reqCtx, cancel := context.WithTimeout(ctx, deadline)
+			log.Error(errors.Wrap(p.updateNewsCount(reqCtx), "failed to updateNewsCount"))
+			cancel()
+		case <-ctx.Done():
+			return
+		}
+	}
+}
+
+func (p *processor) updateNewsCount(ctx context.Context) error {
+	if ctx.Err() != nil {
+		return errors.Wrap(ctx.Err(), "[updateNewsCount] unexpected deadline")
+	}
+	sql := `REFRESH MATERIALIZED VIEW CONCURRENTLY news_views;`
+	if _, err := storage.Exec(ctx, p.db, sql); err != nil {
+		return errors.Wrap(err, "failed to update news count")
+	}
+
+	return nil
 }

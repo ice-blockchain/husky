@@ -42,3 +42,11 @@ CREATE TABLE IF NOT EXISTS news_tags_per_news  (
                    FOREIGN KEY(language, news_id) REFERENCES news(language,id) ON DELETE CASCADE,
                    FOREIGN KEY(language, news_tag) REFERENCES news_tags(language,value) ON DELETE CASCADE
                    );
+
+-- aggregated news views across languages
+CREATE MATERIALIZED VIEW IF NOT EXISTS news_views AS (
+                                SELECT id, COALESCE(SUM(views),0) as views
+                                FROM news
+                                GROUP BY id
+                            );
+CREATE UNIQUE INDEX ON news_views (id);
