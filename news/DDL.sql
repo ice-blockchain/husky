@@ -44,11 +44,9 @@ CREATE TABLE IF NOT EXISTS news_tags_per_news  (
                    );
 
 -- aggregated news views across languages
-CREATE MATERIALIZED VIEW IF NOT EXISTS news_views (
-                                 news_id, views
-                            ) AS (
+CREATE MATERIALIZED VIEW IF NOT EXISTS news_views AS (
                                 SELECT id, COALESCE(SUM(views),0) as views
                                 FROM news
                                 GROUP BY id
                             );
-CREATE UNIQUE INDEX ON news_views (news_id);
+CREATE UNIQUE INDEX ON news_views (id);

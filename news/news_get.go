@@ -33,7 +33,7 @@ func (r *repository) GetNews(ctx context.Context, newsType Type, language string
 								   ON nvu.language = n.language
 								  AND nvu.news_id = n.id
 								  AND nvu.user_id = $1
-							LEFT JOIN news_views v ON v.news_id = n.id
+							LEFT JOIN news_views v ON v.id = n.id
 						WHERE n.language = $2
 							  AND n.type = $3
 						ORDER BY 
