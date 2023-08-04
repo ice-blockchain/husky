@@ -78,23 +78,33 @@ func (r *repository) GetUnreadNewsCount(ctx context.Context, language string, cr
 	args := []any{requestingUserID(ctx), language, RegularNewsType, FeaturedNewsType, createdAfter.Time}
 	sql := fmt.Sprintf(`
 		WITH featured_count AS (
-			SELECT (CASE WHEN nvu.created_at IS NULL THEN 1 ELSE 0 END) AS count FROM news n 
-				LEFT JOIN news_viewed_by_users nvu 
-					ON nvu.language = n.language
-					AND nvu.news_id = n.id 
-					AND nvu.user_id = $1
-			WHERE 
-				n.language = $2 
-				AND n.type = $4 
-				AND n.created_at >= $5 
-			ORDER BY n.created_at DESC LIMIT 1
+			 SELECT (CASE WHEN (nvu.created_at IS NULL AND nvu_en.created_at IS NULL) THEN 1 ELSE 0 END) AS count
+				FROM news n_en
+				  LEFT JOIN news n 
+				 ON n.id = n_en.id 
+				AND n.language = $2
+				AND n.type = $4
+				  LEFT JOIN news_viewed_by_users nvu
+							 ON nvu.language = n.language
+								AND nvu.news_id = n.id
+								AND nvu.user_id = $1
+				  LEFT JOIN news_viewed_by_users nvu_en
+							 ON nvu_en.language = n_en.language
+								AND nvu_en.news_id = n_en.id
+								AND nvu_en.user_id = $1
+				WHERE
+				  n_en.language = '%[1]v'
+				  AND n_en.type = $4
+				  AND (n.created_at >= $5 OR n_en.created_at >= $5)
+				ORDER BY COALESCE(n.created_at, n_en.created_at) DESC LIMIT 1
 		) 
 		SELECT featured_count.count + regular_count.count as count FROM 
 		(
-			SELECT COALESCE(COUNT(*), 0) as count
+			SELECT COUNT(COALESCE(n.id,n_en.id)) as count
 				FROM news n_en	
-				    	LEFT JOIN news n ON 
-				    	    n.id = n_en.id AND n.language = $2
+				    	LEFT JOIN news n 
+						 ON n.id = n_en.id 
+						AND n.language = $2
 				    	AND n.type = $3
 						LEFT JOIN news_viewed_by_users nvu
 							ON nvu.language = n.language
@@ -105,11 +115,11 @@ func (r *repository) GetUnreadNewsCount(ctx context.Context, language string, cr
 							AND nvu_en.news_id = n_en.id 
 							AND nvu_en.user_id = $1
 				WHERE n_en.language = '%[1]v'
-					AND (n_en.type = $3)
+					AND n_en.type = $3
 					AND (n_en.created_at >= $5 OR n.created_at >= $5)
 					AND nvu_en.created_at IS NULL 
 				    AND nvu.created_at IS NULL
-			) regular_count, featured_count`, fallbackLanguage)
+			) regular_count CROSS JOIN featured_count`, fallbackLanguage)
 	result, err := storage.Get[UnreadNewsCount](ctx, r.db, sql, args...)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to get unread news count for params:%#v", args...)
