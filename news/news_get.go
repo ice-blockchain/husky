@@ -122,6 +122,10 @@ func (r *repository) GetUnreadNewsCount(ctx context.Context, language string, cr
 			) regular_count CROSS JOIN featured_count`, fallbackLanguage)
 	result, err := storage.Get[UnreadNewsCount](ctx, r.db, sql, args...)
 	if err != nil {
+		if storage.IsErr(err, storage.ErrNotFound) { // All news are filtered by createdAfter.
+			return &UnreadNewsCount{Count: 0}, nil
+		}
+
 		return nil, errors.Wrapf(err, "failed to get unread news count for params:%#v", args...)
 	}
 
