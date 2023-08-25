@@ -1,12 +1,12 @@
 module github.com/ice-blockchain/husky
 
-go 1.21.0
+go 1.21
 
 require (
 	github.com/goccy/go-json v0.10.2
 	github.com/google/uuid v1.3.1
 	github.com/hashicorp/go-multierror v1.1.1
-	github.com/ice-blockchain/eskimo v1.155.0
+	github.com/ice-blockchain/eskimo v1.156.0
 	github.com/ice-blockchain/go-tarantool-client v0.0.0-20230327200757-4fc71fa3f7bb
 	github.com/ice-blockchain/wintr v1.125.0
 	github.com/imroc/req/v3 v3.41.7
