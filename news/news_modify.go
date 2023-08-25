@@ -18,7 +18,7 @@ import (
 	"github.com/ice-blockchain/wintr/time"
 )
 
-//nolint:funlen,gocognit // Better to be grouped together.
+//nolint:funlen // Better to be grouped together.
 func (r *repository) ModifyNews(ctx context.Context, news *TaggedNews, image *multipart.FileHeader) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "context failed")
@@ -128,7 +128,7 @@ func (n *TaggedNews) override(news *TaggedNews) *TaggedNews {
 	return nws
 }
 
-func (r *repository) IncrementViews(ctx context.Context, newsID, language string) error { //nolint:funlen,gocognit // A lot of negative flow handling.
+func (r *repository) IncrementViews(ctx context.Context, newsID, language string) error { //nolint:funlen // A lot of negative flow handling.
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), " context failed")
 	}

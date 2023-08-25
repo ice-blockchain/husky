@@ -27,7 +27,7 @@ type (
 	}
 )
 
-func (s *newsTableSource) Process(ctx context.Context, msg *messagebroker.Message) error { //nolint:funlen,gocognit,gocyclo,revive,cyclop // .
+func (s *newsTableSource) Process(ctx context.Context, msg *messagebroker.Message) error { //nolint:funlen,gocyclo,revive,cyclop // .
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline while processing message")
 	}
