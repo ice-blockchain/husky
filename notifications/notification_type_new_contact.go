@@ -16,7 +16,7 @@ import (
 	"github.com/ice-blockchain/wintr/time"
 )
 
-func (r *repository) sendNewAgendaContactNotification(ctx context.Context, contact *users.Contact) error { //nolint:funlen,gocognit // .
+func (r *repository) sendNewAgendaContactNotification(ctx context.Context, contact *users.Contact) error { //nolint:funlen // .
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}

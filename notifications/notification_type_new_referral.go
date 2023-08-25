@@ -16,7 +16,7 @@ import (
 	"github.com/ice-blockchain/wintr/time"
 )
 
-func (r *repository) sendNewReferralNotification(ctx context.Context, us *users.UserSnapshot) error { //nolint:funlen,gocognit,gocyclo,revive,cyclop // .
+func (r *repository) sendNewReferralNotification(ctx context.Context, us *users.UserSnapshot) error { //nolint:funlen,gocyclo,revive,cyclop // .
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}

@@ -335,7 +335,7 @@ func (s *service) ModifyNews( //nolint:gocritic,funlen // .
 	return server.OK(&News{TaggedNews: nws, Checksum: nws.Checksum()}), nil
 }
 
-func (req *ModifyNewsRequestBody) validate() error { //nolint:gocognit // Beg to differ.
+func (req *ModifyNewsRequestBody) validate() error {
 	var errs []string
 	if req.Type != "" && req.Type != news.FeaturedNewsType && req.Type != news.RegularNewsType {
 		errs = append(errs, fmt.Sprintf("invalid `type=%q`", req.Type))

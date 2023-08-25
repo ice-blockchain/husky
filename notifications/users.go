@@ -224,7 +224,7 @@ func (r *repository) ToggleNotificationChannelDomain( //nolint:funlen,gocognit,g
 	return nil
 }
 
-func (s *userTableSource) Process(ctx context.Context, msg *messagebroker.Message) error { //nolint:gocognit // .
+func (s *userTableSource) Process(ctx context.Context, msg *messagebroker.Message) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline while processing message")
 	}
@@ -399,8 +399,9 @@ func (r *repository) PingUser(ctx context.Context, userID string) error { //noli
 	up := &UserPing{UserID: userID, PingedBy: reqUserID, LastPingCooldownEndedAt: newPingCooldownEndsAt}
 
 	if err = r.sendUserPingMessage(ctx, up); err != nil {
-		params[0] = usr.LastPingCooldownEndedAt
-		params[3] = newPingCooldownEndsAt
+		params[0] = usr.LastPingCooldownEndedAt.Time
+		params[3] = newPingCooldownEndsAt.Time
+
 		rRowsUpdated, rErr := storage.Exec(ctx, r.db, sql, params...)
 		if rRowsUpdated == 0 && rErr == nil {
 			return r.PingUser(ctx, userID)
