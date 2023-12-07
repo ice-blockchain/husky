@@ -5,6 +5,7 @@ package notifications
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/goccy/go-json"
 	"github.com/hashicorp/go-multierror"
@@ -60,7 +61,7 @@ func (s *completedLevelsSource) Process(ctx context.Context, msg *messagebroker.
 			},
 			Subject: inapp.ID{
 				Type:  "levelValue",
-				Value: fmt.Sprint(message.CompletedLevels),
+				Value: strconv.FormatUint(message.CompletedLevels, 10),
 			},
 		},
 		sn: &sentNotification{
@@ -81,7 +82,7 @@ func (s *completedLevelsSource) Process(ctx context.Context, msg *messagebroker.
 			errors.Wrap(executeConcurrently(func() error {
 				return errors.Wrapf(s.sendAnalyticsSetUserAttributesCommandMessage(ctx, &analytics.SetUserAttributesCommand{
 					Attributes: map[string]any{
-						"Current Level": fmt.Sprint(message.CompletedLevels),
+						"Current Level": strconv.FormatUint(message.CompletedLevels, 10),
 					},
 					UserID: message.UserID,
 				}),
@@ -90,7 +91,7 @@ func (s *completedLevelsSource) Process(ctx context.Context, msg *messagebroker.
 				return errors.Wrapf(s.sendAnalyticsTrackActionCommandMessage(ctx, &analytics.TrackActionCommand{
 					Action: &tracking.Action{
 						Attributes: map[string]any{
-							"Current Level": fmt.Sprint(message.CompletedLevels),
+							"Current Level": strconv.FormatUint(message.CompletedLevels, 10),
 						},
 						Name: "Level Changed",
 					},

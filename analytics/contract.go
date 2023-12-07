@@ -27,7 +27,7 @@ type (
 	}
 	Processor interface {
 		io.Closer
-		CheckHealth(context.Context) error
+		CheckHealth(ctx context.Context) error
 	}
 )
 

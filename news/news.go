@@ -16,7 +16,7 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 
-	appCfg "github.com/ice-blockchain/wintr/config"
+	appcfg "github.com/ice-blockchain/wintr/config"
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
 	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/log"
@@ -26,7 +26,7 @@ import (
 
 func New(ctx context.Context, _ context.CancelFunc) Repository {
 	var cfg config
-	appCfg.MustLoadFromKey(applicationYamlKey, &cfg)
+	appcfg.MustLoadFromKey(applicationYamlKey, &cfg)
 
 	db := storage.MustConnect(ctx, ddl, applicationYamlKey)
 
@@ -40,7 +40,7 @@ func New(ctx context.Context, _ context.CancelFunc) Repository {
 
 func StartProcessor(ctx context.Context, _ context.CancelFunc) Processor {
 	var cfg config
-	appCfg.MustLoadFromKey(applicationYamlKey, &cfg)
+	appcfg.MustLoadFromKey(applicationYamlKey, &cfg)
 
 	db := storage.MustConnect(context.Background(), ddl, applicationYamlKey) //nolint:contextcheck // We need to gracefully shut it down.
 	mbProducer := messagebroker.MustConnect(ctx, applicationYamlKey)
@@ -102,7 +102,7 @@ func (p *processor) CheckHealth(ctx context.Context) error {
 }
 
 func requestingUserID(ctx context.Context) (requestingUserID string) {
-	requestingUserID, _ = ctx.Value(requestingUserIDCtxValueKey).(string) //nolint:errcheck // Not needed.
+	requestingUserID, _ = ctx.Value(requestingUserIDCtxValueKey).(string) //nolint:errcheck,revive // Not needed.
 
 	return
 }
@@ -136,7 +136,7 @@ func (n *TaggedNews) Checksum() string {
 		return ""
 	}
 
-	return fmt.Sprint(n.UpdatedAt.UnixNano())
+	return strconv.FormatInt(n.UpdatedAt.UnixNano(), 10)
 }
 
 func mergeStringField(oldData, newData string) string {
@@ -196,7 +196,7 @@ func (r *repository) sendTaggedNewsSnapshotMessage(ctx context.Context, ss *Tagg
 	}
 	var key string
 	if ss.TaggedNews == nil {
-		key = ss.Before.ID + "~~~" + ss.Before.Language
+		key = ss.Before.ID + "~~~" + ss.Before.Language //nolint:goconst //.
 	} else {
 		key = ss.ID + "~~~" + ss.Language
 	}

@@ -5,6 +5,7 @@ package notifications
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/goccy/go-json"
 	"github.com/hashicorp/go-multierror"
@@ -36,7 +37,7 @@ func (s *userPingSource) Process(ctx context.Context, msg *messagebroker.Message
 		return errors.Wrapf(err, "failed to getUserByID for pingedBy:%v", pingedBy)
 	}
 	now := time.Now()
-	uniqueness := fmt.Sprint(message.LastPingCooldownEndedAt.UnixNano() / s.cfg.PingCooldown.Nanoseconds())
+	uniqueness := strconv.FormatInt(message.LastPingCooldownEndedAt.UnixNano()/s.cfg.PingCooldown.Nanoseconds(), 10)
 	deeplink := fmt.Sprintf("%v://home", s.cfg.DeeplinkScheme)
 	imageURL := s.pictureClient.DownloadURL(fmt.Sprintf("profile/%v", pingedBy.ProfilePictureName))
 	in := &inAppNotification{

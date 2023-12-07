@@ -17,9 +17,9 @@ func (r *repository) GetNews(ctx context.Context, newsType Type, language string
 	if ctx.Err() != nil {
 		return nil, errors.Wrap(ctx.Err(), "get news failed because context failed")
 	}
-	args := []any{requestingUserID(ctx), language, newsType, int64(limit), int64(offset)}
-	sql := fmt.Sprintf(`SELECT (nvu.created_at IS NOT NULL OR nvu_en.created_at IS NOT NULL) AS viewed,
-					    COALESCE(n.created_at,n_en.created_at) AS created_at,
+	args := []any{requestingUserID(ctx), language, newsType, int64(limit), int64(offset), createdAfter.Time}
+	sql := fmt.Sprintf(`SELECT (nvu.created_at IS NOT NULL OR nvu_en.created_at IS NOT NULL OR COALESCE(n.created_at,n_en.created_at) < $6::timestamp) AS viewed,
+					    COALESCE(n_en.created_at,n.created_at) AS created_at,
 						COALESCE(n.updated_at, n_en.updated_at) AS updated_at,
 						COALESCE(v.views,v_en.views) as views,
 						COALESCE(n.notification_channels, n_en.notification_channels) AS notification_channels,
@@ -45,10 +45,10 @@ func (r *repository) GetNews(ctx context.Context, newsType Type, language string
 				  AND n_en.type = $3
 			ORDER BY 
 				(CASE WHEN n.type = 'regular' OR n_en.type = 'regular'
-					THEN (nvu.created_at IS NULL AND nvu_en.created_at IS NULL)
+					THEN ((nvu_en.created_at IS NULL AND nvu.created_at IS NULL) OR COALESCE(n_en.created_at,n_en.created_at) >= $6::timestamp)
 					ELSE FALSE
 				END) DESC,
-				COALESCE(n.created_at,n_en.created_at) DESC
+				COALESCE(n_en.created_at,n.created_at) DESC
 			LIMIT $4 OFFSET $5`, fallbackLanguage)
 	result, err := storage.Select[PersonalNews](ctx, r.db, sql, args...)
 	if err != nil {

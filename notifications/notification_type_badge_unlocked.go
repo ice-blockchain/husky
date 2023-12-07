@@ -81,7 +81,7 @@ func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.M
 			},
 			Subject: inapp.ID{
 				Type:  "badgeIndex",
-				Value: fmt.Sprint(badgeIndex),
+				Value: strconv.FormatInt(int64(badgeIndex), 10),
 			},
 		},
 		sn: &sentNotification{

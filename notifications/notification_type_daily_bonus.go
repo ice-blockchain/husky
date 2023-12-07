@@ -5,6 +5,7 @@ package notifications
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/goccy/go-json"
 	"github.com/hashicorp/go-multierror"
@@ -53,14 +54,14 @@ func (s *availableDailyBonusSource) Process(ctx context.Context, msg *messagebro
 			},
 			Subject: inapp.ID{
 				Type:  "dailyBonus",
-				Value: fmt.Sprint(message.ExtraBonusIndex),
+				Value: strconv.FormatUint(message.ExtraBonusIndex, 10),
 			},
 		},
 		sn: &sentNotification{
 			SentAt: now,
 			sentNotificationPK: sentNotificationPK{
 				UserID:              message.UserID,
-				Uniqueness:          fmt.Sprint(message.ExtraBonusIndex),
+				Uniqueness:          strconv.FormatUint(message.ExtraBonusIndex, 10),
 				NotificationType:    DailyBonusNotificationType,
 				NotificationChannel: InAppNotificationChannel,
 			},
@@ -71,7 +72,7 @@ func (s *availableDailyBonusSource) Process(ctx context.Context, msg *messagebro
 		return multierror.Append( //nolint:wrapcheck // .
 			err,
 			errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", DailyBonusNotificationType, in),
-			errors.Wrapf(s.trySendEmailNotification(ctx, fmt.Sprint(message.ExtraBonusIndex), message.UserID), "failed to trySendEmailNotification for %v, message:%#v", DailyBonusNotificationType, message), //nolint:lll // .
+			errors.Wrapf(s.trySendEmailNotification(ctx, strconv.FormatUint(message.ExtraBonusIndex, 10), message.UserID), "failed to trySendEmailNotification for %v, message:%#v", DailyBonusNotificationType, message), //nolint:lll // .
 		).ErrorOrNil()
 	}
 	tmpl, found := allPushNotificationTemplates[DailyBonusNotificationType][tokens.Language]
@@ -80,7 +81,7 @@ func (s *availableDailyBonusSource) Process(ctx context.Context, msg *messagebro
 
 		return multierror.Append( //nolint:wrapcheck // .
 			errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", DailyBonusNotificationType, in),
-			errors.Wrapf(s.trySendEmailNotification(ctx, fmt.Sprint(message.ExtraBonusIndex), message.UserID), "failed to trySendEmailNotification for %v, message:%#v", DailyBonusNotificationType, message), //nolint:lll // .
+			errors.Wrapf(s.trySendEmailNotification(ctx, strconv.FormatUint(message.ExtraBonusIndex, 10), message.UserID), "failed to trySendEmailNotification for %v, message:%#v", DailyBonusNotificationType, message), //nolint:lll // .
 		).ErrorOrNil()
 	}
 	pn := make([]*pushNotification, 0, len(*tokens.PushNotificationTokens))
@@ -98,7 +99,7 @@ func (s *availableDailyBonusSource) Process(ctx context.Context, msg *messagebro
 				Language: tokens.Language,
 				sentNotificationPK: sentNotificationPK{
 					UserID:                   message.UserID,
-					Uniqueness:               fmt.Sprint(message.ExtraBonusIndex),
+					Uniqueness:               strconv.FormatUint(message.ExtraBonusIndex, 10),
 					NotificationType:         DailyBonusNotificationType,
 					NotificationChannel:      PushNotificationChannel,
 					NotificationChannelValue: string(token),
