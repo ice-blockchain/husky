@@ -5,6 +5,7 @@ package notifications
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/goccy/go-json"
 	"github.com/hashicorp/go-multierror"
@@ -77,7 +78,7 @@ func (s *adoptionTableSource) broadcastPushNotifications(ctx context.Context, ad
 				SentAt:   now,
 				Language: language,
 				sentAnnouncementPK: sentAnnouncementPK{
-					Uniqueness:               fmt.Sprint(adoption.Milestone),
+					Uniqueness:               strconv.FormatUint(adoption.Milestone, 10),
 					NotificationType:         AdoptionChangedNotificationType,
 					NotificationChannel:      PushNotificationChannel,
 					NotificationChannelValue: fmt.Sprintf("system_%v", language),
@@ -110,13 +111,13 @@ func (s *adoptionTableSource) broadcastInAppNotifications(ctx context.Context, a
 			},
 			Subject: inapp.ID{
 				Type:  "adoptionMilestone",
-				Value: fmt.Sprint(adoption.Milestone),
+				Value: strconv.FormatUint(adoption.Milestone, 10),
 			},
 		},
 		sa: &sentAnnouncement{
 			SentAt: now,
 			sentAnnouncementPK: sentAnnouncementPK{
-				Uniqueness:               fmt.Sprint(adoption.Milestone),
+				Uniqueness:               strconv.FormatUint(adoption.Milestone, 10),
 				NotificationType:         AdoptionChangedNotificationType,
 				NotificationChannel:      InAppNotificationChannel,
 				NotificationChannelValue: "system",

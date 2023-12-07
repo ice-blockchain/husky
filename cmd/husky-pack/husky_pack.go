@@ -12,7 +12,7 @@ import (
 	"github.com/ice-blockchain/husky/cmd/husky-pack/api"
 	"github.com/ice-blockchain/husky/news"
 	"github.com/ice-blockchain/husky/notifications"
-	appCfg "github.com/ice-blockchain/wintr/config"
+	appcfg "github.com/ice-blockchain/wintr/config"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/server"
 )
@@ -30,7 +30,7 @@ func main() {
 	defer cancel()
 
 	var cfg config
-	appCfg.MustLoadFromKey(applicationYamlKey, &cfg)
+	appcfg.MustLoadFromKey(applicationYamlKey, &cfg)
 	api.SwaggerInfo.Host = cfg.Host
 	api.SwaggerInfo.Version = cfg.Version
 	server.New(new(service), applicationYamlKey, swaggerRoot).ListenAndServe(ctx, cancel)

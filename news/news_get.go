@@ -61,7 +61,6 @@ func (r *repository) GetNews(ctx context.Context, newsType Type, language string
 	for _, elem := range result {
 		if elem.Viewed != nil && !*elem.Viewed && elem.CreatedAt.Before(*createdAfter.Time) {
 			elem.Viewed = &trueVal
-			// TODO: resort
 		}
 		elem.NotificationChannels = nil
 		elem.UpdatedAt = nil
