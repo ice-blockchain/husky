@@ -243,14 +243,20 @@ type (
 	processor struct {
 		*repository
 	}
+	notificationDelayConfig struct {
+		MinNotificationDelaySec uint `yaml:"minNotificationDelaySec"`
+		MaxNotificationDelaySec uint `yaml:"maxNotificationDelaySec"`
+	}
 	config struct {
+		NotificationDelaysByTopic         map[push.SubscriptionTopic]notificationDelayConfig `yaml:"notificationDelaysByTopic" mapstructure:"notificationDelaysByTopic"` //nolint:lll // .
+		DeeplinkScheme                    string                                             `yaml:"deeplinkScheme"`
 		DisabledAchievementsNotifications struct {
 			Badges []string `yaml:"badges"`
 			Levels []string `yaml:"levels"`
 			Roles  []string `yaml:"roles"`
-		} `yaml:"disabledAchievementsNotifications"`
-		DeeplinkScheme       string                   `yaml:"deeplinkScheme"`
-		messagebroker.Config `mapstructure:",squash"` //nolint:tagliatelle // Nope.
-		PingCooldown         stdlibtime.Duration      `yaml:"pingCooldown"`
+		} `yaml:"disabledAchievementsNotifications" `
+		messagebroker.Config    `mapstructure:",squash"` //nolint:tagliatelle // Nope.
+		notificationDelayConfig `mapstructure:",squash"`
+		PingCooldown            stdlibtime.Duration `yaml:"pingCooldown"`
 	}
 )

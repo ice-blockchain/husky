@@ -62,6 +62,7 @@ func (s *newsTableSource) Process(ctx context.Context, msg *messagebroker.Messag
 	return errors.Wrapf(multierror.Append(nil, errs...).ErrorOrNil(), "atleast one type of news broadcast failed for %#v", message)
 }
 
+//nolint:funlen // .
 func (s *newsTableSource) broadcastPushNotifications(ctx context.Context, newsArticle *news) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
@@ -71,11 +72,12 @@ func (s *newsTableSource) broadcastPushNotifications(ctx context.Context, newsAr
 		return errors.Errorf("language `%v` was not found in the `%v` push config", newsArticle.Language, NewsAddedNotificationType)
 	}
 	now := time.Now()
-	target := fmt.Sprintf("news_%v", newsArticle.Language)
-	bpn := &broadcastPushNotification{
+	regularTarget := push.SubscriptionTopic(fmt.Sprintf("news_%v", newsArticle.Language))
+	delayedTarget := push.SubscriptionTopic(fmt.Sprintf("news_%v_v2", newsArticle.Language))
+	bpn := &broadcastPushNotification[push.Notification[push.SubscriptionTopic]]{
 		pn: &push.Notification[push.SubscriptionTopic]{
 			Data:     s.pushNotificationData(newsArticle),
-			Target:   push.SubscriptionTopic(target),
+			Target:   regularTarget,
 			Title:    tmpl.getTitle(nil),
 			Body:     tmpl.getBody(nil),
 			ImageURL: newsArticle.ImageURL,
@@ -87,12 +89,15 @@ func (s *newsTableSource) broadcastPushNotifications(ctx context.Context, newsAr
 				Uniqueness:               newsArticle.ID,
 				NotificationType:         NewsAddedNotificationType,
 				NotificationChannel:      PushNotificationChannel,
-				NotificationChannelValue: target,
+				NotificationChannelValue: string(regularTarget),
 			},
 		},
 	}
 
-	return errors.Wrapf(s.broadcastPushNotification(ctx, bpn), "failed to broadcastPushNotification(%v) %#v", NewsAddedNotificationType, bpn)
+	return errors.Wrapf(multierror.Append(
+		s.broadcastPushNotification(ctx, bpn),
+		s.broadcastPushNotificationDelayed(ctx, s.broadcastWithDelay(delayedTarget, bpn)),
+	).ErrorOrNil(), "failed to broadcastPushNotification(%v) %#v", NewsAddedNotificationType, bpn)
 }
 
 func (s *newsTableSource) broadcastInAppNotifications(ctx context.Context, newsArticle *news) error { //nolint:funlen // .

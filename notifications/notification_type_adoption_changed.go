@@ -63,13 +63,16 @@ func (s *adoptionTableSource) broadcastPushNotifications(ctx context.Context, ad
 	}
 	now := time.Now()
 	languages := allPushNotificationTemplates[AdoptionChangedNotificationType]
-	bpn := make([]*broadcastPushNotification, 0, len(languages))
+	bpn := make([]*broadcastPushNotification[push.Notification[push.SubscriptionTopic]], 0, len(languages))
+	bpnDelayed := make([]*broadcastPushNotification[push.DelayedNotification], 0, len(languages))
 	data := struct{ BaseMiningRate float64 }{BaseMiningRate: adoption.BaseMiningRate}
 	for language, tmpl := range languages {
-		bpn = append(bpn, &broadcastPushNotification{
+		oldTopic := push.SubscriptionTopic(fmt.Sprintf("system_%v", language))
+		newTopic := push.SubscriptionTopic(fmt.Sprintf("system_%v_v2", language))
+		notif := &broadcastPushNotification[push.Notification[push.SubscriptionTopic]]{
 			pn: &push.Notification[push.SubscriptionTopic]{
 				Data:     map[string]string{"deeplink": fmt.Sprintf("%v://home?section=adoption", s.cfg.DeeplinkScheme)},
-				Target:   push.SubscriptionTopic(fmt.Sprintf("system_%v", language)),
+				Target:   oldTopic,
 				Title:    tmpl.getTitle(nil),
 				Body:     tmpl.getBody(data),
 				ImageURL: s.pictureClient.DownloadURL("assets/push-notifications/adoption-change.png"),
@@ -84,10 +87,16 @@ func (s *adoptionTableSource) broadcastPushNotifications(ctx context.Context, ad
 					NotificationChannelValue: fmt.Sprintf("system_%v", language),
 				},
 			},
-		})
+		}
+
+		bpn = append(bpn, notif)
+		bpnDelayed = append(bpnDelayed, s.broadcastWithDelay(newTopic, notif))
 	}
 
-	return errors.Wrapf(runConcurrently(ctx, s.broadcastPushNotification, bpn),
+	return errors.Wrapf(multierror.Append(
+		runConcurrently(ctx, s.broadcastPushNotification, bpn),
+		runConcurrently(ctx, s.broadcastPushNotificationDelayed, bpnDelayed),
+	).ErrorOrNil(),
 		"failed to broadcast push atleast to languages for %v, args:%#v", AdoptionChangedNotificationType, bpn)
 }
 
