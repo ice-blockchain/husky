@@ -200,9 +200,11 @@ func (r *repository) broadcastWithDelay(
 	}
 	newBPN.pn.Target = target
 	newBPN.sa.NotificationChannelValue = string(target)
-	if delays, found := r.cfg.NotificationDelays[bpn.pn.Target]; found {
-		newBPN.pn.MaxDelaySec = delays.MaxDelay
-		newBPN.pn.MinDelaySec = delays.MinDelay
+	newBPN.pn.MaxDelaySec = r.cfg.MaxNotificationDelaySec
+	newBPN.pn.MinDelaySec = r.cfg.MinNotificationDelaySec
+	if delays, found := r.cfg.NotificationDelaysByTopic[bpn.pn.Target]; found {
+		newBPN.pn.MaxDelaySec = delays.MaxNotificationDelaySec
+		newBPN.pn.MinDelaySec = delays.MinNotificationDelaySec
 	}
 
 	return newBPN
