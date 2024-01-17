@@ -249,7 +249,11 @@ type (
 			Levels []string `yaml:"levels"`
 			Roles  []string `yaml:"roles"`
 		} `yaml:"disabledAchievementsNotifications"`
-		DeeplinkScheme       string                   `yaml:"deeplinkScheme"`
+		DeeplinkScheme     string `yaml:"deeplinkScheme"`
+		NotificationDelays map[push.SubscriptionTopic]struct {
+			MinDelay uint `yaml:"minDelay"`
+			MaxDelay uint `yaml:"maxDelay"`
+		} `yaml:"notificationDelays"`
 		messagebroker.Config `mapstructure:",squash"` //nolint:tagliatelle // Nope.
 		PingCooldown         stdlibtime.Duration      `yaml:"pingCooldown"`
 	}

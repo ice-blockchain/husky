@@ -104,6 +104,10 @@ notifications: &notifications
       - s1
       - c1
       - l1
+  notificationDelays:
+    news_en_v2:
+      maxDelay: 60
+      minDelay: 20
   wintr/multimedia/picture:
     urlDownload: https://ice-staging.b-cdn.net
   db: &notificationsDatabase

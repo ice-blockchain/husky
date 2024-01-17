@@ -182,13 +182,33 @@ type (
 		Language string     `json:"language,omitempty" example:"en"`
 		sentAnnouncementPK
 	}
-	broadcastPushNotification struct {
-		pn *push.Notification[push.SubscriptionTopic]
-		sa *sentAnnouncement
+	broadcastPushNotification[NOTIFICATION push.Notification[push.SubscriptionTopic] | push.DelayedNotification] struct {
+		pn *NOTIFICATION     //nolint:structcheck // .
+		sa *sentAnnouncement //nolint:structcheck // .
 	}
 )
 
-func (r *repository) broadcastPushNotification(ctx context.Context, bpn *broadcastPushNotification) error {
+func (r *repository) broadcastWithDelay(
+	target push.SubscriptionTopic,
+	bpn *broadcastPushNotification[push.Notification[push.SubscriptionTopic]],
+) *broadcastPushNotification[push.DelayedNotification] {
+	newBPN := new(broadcastPushNotification[push.DelayedNotification])
+	newBPN.sa = bpn.sa
+	newBPN.pn = new(push.DelayedNotification)
+	newBPN.pn = &push.DelayedNotification{
+		Notification: bpn.pn,
+	}
+	newBPN.pn.Target = target
+	newBPN.sa.NotificationChannelValue = string(target)
+	if delays, found := r.cfg.NotificationDelays[bpn.pn.Target]; found {
+		newBPN.pn.MaxDelaySec = delays.MaxDelay
+		newBPN.pn.MinDelaySec = delays.MinDelay
+	}
+
+	return newBPN
+}
+
+func (r *repository) broadcastPushNotification(ctx context.Context, bpn *broadcastPushNotification[push.Notification[push.SubscriptionTopic]]) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
@@ -198,6 +218,25 @@ func (r *repository) broadcastPushNotification(ctx context.Context, bpn *broadca
 	}
 
 	if err := r.pushNotificationsClient.Broadcast(ctx, bpn.pn); err != nil {
+		return multierror.Append( //nolint:wrapcheck // .
+			errors.Wrapf(err, "failed to broadcast push notification:%#v, desired to be sent:%#v", bpn.pn, bpn.sa),
+			errors.Wrapf(r.deleteSentAnnouncement(ctx, bpn.sa), "failed to delete SENT_ANNOUNCEMENTS as a rollback for %#v", bpn.sa),
+		).ErrorOrNil()
+	}
+
+	return nil
+}
+
+func (r *repository) broadcastPushNotificationDelayed(ctx context.Context, bpn *broadcastPushNotification[push.DelayedNotification]) error {
+	if ctx.Err() != nil {
+		return errors.Wrap(ctx.Err(), "unexpected deadline")
+	}
+
+	if err := r.insertSentAnnouncement(ctx, bpn.sa); err != nil {
+		return errors.Wrapf(err, "failed to insert %#v", bpn.sa)
+	}
+
+	if err := r.pushNotificationsClient.BroadcastDelayed(ctx, bpn.pn); err != nil {
 		return multierror.Append( //nolint:wrapcheck // .
 			errors.Wrapf(err, "failed to broadcast push notification:%#v, desired to be sent:%#v", bpn.pn, bpn.sa),
 			errors.Wrapf(r.deleteSentAnnouncement(ctx, bpn.sa), "failed to delete SENT_ANNOUNCEMENTS as a rollback for %#v", bpn.sa),
