@@ -6,9 +6,9 @@ require (
 	github.com/goccy/go-json v0.10.2
 	github.com/google/uuid v1.5.0
 	github.com/hashicorp/go-multierror v1.1.1
-	github.com/ice-blockchain/eskimo v1.265.0
+	github.com/ice-blockchain/eskimo v1.267.0
 	github.com/ice-blockchain/go-tarantool-client v0.0.0-20230327200757-4fc71fa3f7bb
-	github.com/ice-blockchain/wintr v1.132.0
+	github.com/ice-blockchain/wintr v1.133.0
 	github.com/imroc/req/v3 v3.42.3
 	github.com/pkg/errors v0.9.1
 	github.com/swaggo/swag v1.16.2
@@ -98,7 +98,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/morikuni/aec v1.0.0 // indirect
-	github.com/onsi/ginkgo/v2 v2.14.0 // indirect
+	github.com/onsi/ginkgo/v2 v2.15.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0-rc5 // indirect
 	github.com/opencontainers/runc v1.1.11 // indirect
@@ -131,9 +131,9 @@ require (
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.46.1 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.46.1 // indirect
-	go.opentelemetry.io/otel v1.21.0 // indirect
-	go.opentelemetry.io/otel/metric v1.21.0 // indirect
-	go.opentelemetry.io/otel/trace v1.21.0 // indirect
+	go.opentelemetry.io/otel v1.22.0 // indirect
+	go.opentelemetry.io/otel/metric v1.22.0 // indirect
+	go.opentelemetry.io/otel/trace v1.22.0 // indirect
 	go.uber.org/mock v0.4.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/arch v0.7.0 // indirect
