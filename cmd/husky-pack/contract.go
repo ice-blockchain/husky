@@ -5,7 +5,6 @@ package main
 import (
 	"mime/multipart"
 
-	"github.com/ice-blockchain/husky/analytics"
 	"github.com/ice-blockchain/husky/news"
 	"github.com/ice-blockchain/husky/notifications"
 )
@@ -274,7 +273,6 @@ type (
 	service struct {
 		notificationsProcessor notifications.Processor
 		newsProcessor          news.Processor
-		analyticsProcessor     analytics.Processor
 	}
 	config struct {
 		Host    string `yaml:"host"`

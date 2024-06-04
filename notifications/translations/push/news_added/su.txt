@@ -1,4 +1,0 @@
-{
- "body": "Tetep informed jeung kajadian panganyarna dina ice.",
- "title": "🚨 Siaga Warta"
-}

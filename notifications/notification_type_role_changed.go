@@ -10,8 +10,6 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 
-	"github.com/ice-blockchain/husky/analytics"
-	"github.com/ice-blockchain/wintr/analytics/tracking"
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/notifications/inapp"
@@ -77,27 +75,6 @@ func (s *enabledRolesSource) Process(ctx context.Context, msg *messagebroker.Mes
 		return multierror.Append( //nolint:wrapcheck // .
 			err,
 			errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", RoleChangedNotificationType, in),
-			errors.Wrap(executeConcurrently(func() error {
-				return errors.Wrapf(s.sendAnalyticsSetUserAttributesCommandMessage(ctx, &analytics.SetUserAttributesCommand{
-					Attributes: map[string]any{
-						"Current Role": message.Type,
-					},
-					UserID: message.UserID,
-				}),
-					"failed to sendAnalyticsSetUserAttributesCommandMessage %#v", message)
-			}, func() error {
-				return errors.Wrapf(s.sendAnalyticsTrackActionCommandMessage(ctx, &analytics.TrackActionCommand{
-					Action: &tracking.Action{
-						Attributes: map[string]any{
-							"Current Role": message.Type,
-						},
-						Name: "Role Changed",
-					},
-					ID:     fmt.Sprintf("%v_role_%v", message.UserID, message.Type),
-					UserID: message.UserID,
-				}),
-					"failed to sendAnalyticsTrackActionCommandMessage %#v", message)
-			}), "at least one analytics command failed to execute"),
 		).ErrorOrNil()
 	}
 	tmpl, found := allPushNotificationTemplates[RoleChangedNotificationType][tokens.Language]

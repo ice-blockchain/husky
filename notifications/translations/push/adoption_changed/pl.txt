@@ -1,4 +1,0 @@
-{
- "body": "Podstawowa stawka zarobków została zmniejszona o połowę do {{.BaseMiningRate}} ice/h!",
- "title": "🚨 Zmieniono stawkę zarobków 🚨"
-}

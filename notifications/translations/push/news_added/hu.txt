@@ -1,4 +1,0 @@
-{
- "body": "Legyen tájékozott az ice legfrissebb eseményeiről.",
- "title": "🚨 Hírértesítés"
-}

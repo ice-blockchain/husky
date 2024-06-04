@@ -1,4 +1,0 @@
-{
- "body": "Uspelo ti je! Dobrodošli v ekipi ambasadorjev. 🚀",
- "title": "🌟Ti si junak skupnosti!"
-}

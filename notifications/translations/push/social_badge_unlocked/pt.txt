@@ -1,4 +1,0 @@
-{
- "body": "Você desbloqueou a insígnia social {{.BadgeName}}! Confira no seu perfil.",
- "title": "🎉 Nova insígnia conquistada!"
-}

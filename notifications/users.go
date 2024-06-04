@@ -224,6 +224,7 @@ func (r *repository) ToggleNotificationChannelDomain( //nolint:funlen,gocognit,g
 	return nil
 }
 
+//nolint:gocyclo,revive,cyclop // .
 func (s *userTableSource) Process(ctx context.Context, msg *messagebroker.Message) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline while processing message")
@@ -244,8 +245,28 @@ func (s *userTableSource) Process(ctx context.Context, msg *messagebroker.Messag
 	if err := s.upsertUser(ctx, snapshot); err != nil {
 		return errors.Wrapf(err, "failed to upsert:%#v", snapshot)
 	}
+	if snapshot.Before == nil && snapshot.User != nil {
+		if err := s.addScheduledNotifications(ctx, snapshot); err != nil {
+			return errors.Wrapf(err, "failed to addScheduledNotifications for:%#v", snapshot)
+		}
+	}
 
 	return errors.Wrapf(s.sendNewReferralNotification(ctx, snapshot), "failed to sendNewReferralNotification for :%#v", snapshot)
+}
+
+func (s *userTableSource) addScheduledNotifications(ctx context.Context, snapshot *users.UserSnapshot) error {
+	if err := s.addScheduledInviteFriendNotifications(ctx, snapshot.User); err != nil {
+		return errors.Wrapf(err, "failed to addScheduledInviteFriendNotifications for:%#v", snapshot)
+	}
+	if err := s.addScheduledSocialsNotifications(ctx, snapshot.User); err != nil {
+		return errors.Wrapf(multierror.Append(nil,
+			errors.Wrapf(err, "failed to addScheduledSocialsNotifications for:%#v", snapshot),
+			errors.Wrapf(s.removeScheduledNotifications(ctx, snapshot.ID, []NotificationType{InviteFriendNotificationType}),
+				"can't rollback invite friend scheduled notifications for id:%v", snapshot.ID),
+		).ErrorOrNil(), "can't execute addScheduledSocialsNotifications for:%v", snapshot.User)
+	}
+
+	return nil
 }
 
 func (s *userTableSource) upsertUser(ctx context.Context, us *users.UserSnapshot) error { //nolint:funlen // Big SQL.

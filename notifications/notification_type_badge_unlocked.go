@@ -11,8 +11,6 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 
-	"github.com/ice-blockchain/husky/analytics"
-	"github.com/ice-blockchain/wintr/analytics/tracking"
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/notifications/inapp"
@@ -20,7 +18,7 @@ import (
 	"github.com/ice-blockchain/wintr/time"
 )
 
-func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.Message) error { //nolint:funlen,gocyclo,revive,cyclop // .
+func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.Message) error { //nolint:funlen // .
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline while processing message")
 	}
@@ -99,38 +97,6 @@ func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.M
 		return multierror.Append( //nolint:wrapcheck // .
 			err,
 			errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", notifType, in),
-			errors.Wrap(executeConcurrently(func() error {
-				key := ""
-				switch message.GroupType {
-				case LevelGroupType:
-					key = "Current Social Badge"
-				case CoinGroupType:
-					key = "Current Coins Badge"
-				case SocialGroupType:
-					key = "Current Level Badge"
-				}
-
-				return errors.Wrapf(s.sendAnalyticsSetUserAttributesCommandMessage(ctx, &analytics.SetUserAttributesCommand{
-					Attributes: map[string]any{
-						key: message.Name,
-					},
-					UserID: message.UserID,
-				}),
-					"failed to sendAnalyticsSetUserAttributesCommandMessage %#v", message)
-			}, func() error {
-				return errors.Wrapf(s.sendAnalyticsTrackActionCommandMessage(ctx, &analytics.TrackActionCommand{
-					Action: &tracking.Action{
-						Attributes: map[string]any{
-							"Badge Type": message.GroupType,
-							"Badge Name": message.Name,
-						},
-						Name: "Badge Unlocked",
-					},
-					ID:     fmt.Sprintf("%v_badge_type_%v", message.UserID, message.Type),
-					UserID: message.UserID,
-				}),
-					"failed to sendAnalyticsTrackActionCommandMessage %#v", message)
-			}), "at least one analytics command failed to execute"),
 		).ErrorOrNil()
 	}
 	tmpl, found := allPushNotificationTemplates[notifType][tokens.Language]

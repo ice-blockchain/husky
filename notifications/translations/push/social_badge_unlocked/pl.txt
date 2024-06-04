@@ -1,4 +1,0 @@
-{
- "body": "Odblokowałeś odznakę społecznościową {{.BadgeName}}! Sprawdź to w swoim profilu.",
- "title": "🎉 Zdobyto nową odznakę!"
-}

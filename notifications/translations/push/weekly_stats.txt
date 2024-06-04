@@ -1,0 +1,6 @@
+{
+   "en":{
+      "body":"Check weekly stats.",
+      "title":"Weekly stats"
+   }
+}

@@ -1,0 +1,206 @@
+{
+   "af":{
+      "body":"Bly op hoogte van die jongste gebeure op ice.",
+      "title":"🚨 Nuuswaarskuwing"
+   },
+   "am":{
+      "body":"በ ice ላይ የቅርብ ጊዜ ክስተቶችን ይወቁ።",
+      "title":"🚨 የዜና ማንቂያ"
+   },
+   "ar":{
+      "body":"ابق على اطلاع بآخر الأحداث على ice.",
+      "title":"🚨 تنبيه الأخبار"
+   },
+   "az":{
+      "body":"ice-də ən son hadisələrdən xəbərdar olun.",
+      "title":"🚨 Xəbər Xəbərdarlığı"
+   },
+   "bg":{
+      "body":"Бъдете информирани за най-новите събития в ice",
+      "title":"🚨 Сигнал за новини"
+   },
+   "bn":{
+      "body":"ice-তে সাম্প্রতিক ঘটনা সম্পর্কে অবগত থাকুন।",
+      "title":"🚨 সংবাদ সতর্কতা"
+   },
+   "cs":{
+      "body":"Zůstaňte informováni o nejnovějším dění na ice.",
+      "title":"🚨 Upozornění na novinky"
+   },
+   "de":{
+      "body":"Bleiben Sie mit den neuesten Ereignissen auf ice auf dem Laufenden.",
+      "title":"🚨 Nachrichtenalarm"
+   },
+   "en":{
+      "body":"Stay informed with the latest happenings on ice.",
+      "title":"🚨 News Alert"
+   },
+   "es":{
+      "body":"Manténgase informado con los últimos acontecimientos en ice.",
+      "title":"🚨 Alerta de noticias"
+   },
+   "fa":{
+      "body":"از آخرین اتفاقات ice مطلع باشید.",
+      "title":"🚨 هشدار خبری"
+   },
+   "fil":{
+      "body":"Manatiling may alam sa mga pinakabagong pangyayari sa ice.",
+      "title":"🚨 Balitang Alerto"
+   },
+   "fr":{
+      "body":"Restez informé des derniers événements sur ice.",
+      "title":"🚨 Alerte actualité"
+   },
+   "ge":{
+      "body":"Μείνετε ενημερωμένοι με τα τελευταία γεγονότα στο ice.",
+      "title":"🚨 Ειδοποίηση ειδήσεων"
+   },
+   "gu":{
+      "body":"ice પર નવીનતમ ઘટનાઓથી માહિતગાર રહો.",
+      "title":"🚨 સમાચાર ચેતવણી"
+   },
+   "he":{
+      "body":"הישאר מעודכן לגבי ההתרחשויות האחרונות ב-ice.",
+      "title":"🚨 התראת חדשות"
+   },
+   "hi":{
+      "body":"ice पर नवीनतम घटनाओं से अवगत रहें।",
+      "title":"🚨 न्यूज अलर्ट"
+   },
+   "hu":{
+      "body":"Legyen tájékozott az ice legfrissebb eseményeiről.",
+      "title":"🚨 Hírértesítés"
+   },
+   "id":{
+      "body":"Tetap terinformasi dengan kejadian terbaru di ice.",
+      "title":"🚨 Peringatan Berita"
+   },
+   "it":{
+      "body":"Tieniti informato con gli ultimi avvenimenti su ice.",
+      "title":"🚨 Avviso notizie"
+   },
+   "ja":{
+      "body":"ice の最新情報を入手してください。",
+      "title":"🚨ニュースアラート"
+   },
+   "jv":{
+      "body":"Tetep ngerti babagan kedadeyan paling anyar ing ice.",
+      "title":"🚨 Tandha Warta"
+   },
+   "kn":{
+      "body":"ice ನಲ್ಲಿ ಇತ್ತೀಚಿನ ಘಟನೆಗಳ ಕುರಿತು ಮಾಹಿತಿಯಲ್ಲಿರಿ.",
+      "title":"🚨 ಸುದ್ದಿ ಎಚ್ಚರಿಕೆ"
+   },
+   "ko":{
+      "body":"ice의 최신 소식을 받아보세요.",
+      "title":"🚨 뉴스 알림"
+   },
+   "mr":{
+      "body":"ice वर ताज्या घडामोडींची माहिती ठेवा.",
+      "title":"🚨 न्यूज अलर्ट"
+   },
+   "ms":{
+      "body":"Kekal dimaklumkan dengan kejadian terkini di ice.",
+      "title":"🚨 Makluman Berita"
+   },
+   "no":{
+      "body":"Hold deg informert om de siste hendelsene på ice.",
+      "title":"🚨 Nyhetsvarsel"
+   },
+   "pa":{
+      "body":"ice 'ਤੇ ਨਵੀਨਤਮ ਘਟਨਾਵਾਂ ਨਾਲ ਸੂਚਿਤ ਰਹੋ।",
+      "title":"🚨 ਨਿਊਜ਼ ਅਲਰਟ"
+   },
+   "pl":{
+      "body":"Bądź na bieżąco z najnowszymi wydarzeniami na ice",
+      "title":"🚨 Powiadomienie o nowościach"
+   },
+   "ps":{
+      "body":"په ice کې د وروستي پیښو سره خبر اوسئ.",
+      "title":"🚨 خبرتیا"
+   },
+   "pt":{
+      "body":"Mantenha-se informado com os últimos acontecimentos no ice.",
+      "title":"🚨 Alerta de Novidades"
+   },
+   "ro":{
+      "body":"Rămâneți la curent cu cele mai recente evenimente de pe ice.",
+      "title":"🚨 Alertă de știri"
+   },
+   "ru":{
+      "body":"Будьте в курсе последних событий на ice.",
+      "title":"🚨 Оповещение о новостях"
+   },
+   "sd":{
+      "body":"ice تي تازي واقعن سان باخبر رھو.",
+      "title":"🚨 نيوز الرٽ"
+   },
+   "sk":{
+      "body":"Zostaňte informovaní o najnovšom dianí na ice.",
+      "title":"🚨 Upozornenie na novinky"
+   },
+   "sl":{
+      "body":"Bodite obveščeni o najnovejših dogodkih na ice.",
+      "title":"🚨 Obvestilo o novicah"
+   },
+   "sq":{
+      "body":"Qëndroni të informuar me ngjarjet më të fundit në ice.",
+      "title":"🚨 Lajmërim Lajmi"
+   },
+   "su":{
+      "body":"Tetep informed jeung kajadian panganyarna dina ice.",
+      "title":"🚨 Siaga Warta"
+   },
+   "sv":{
+      "body":"Håll dig informerad om de senaste händelserna på ice.",
+      "title":"🚨 Nyhetslarm"
+   },
+   "ta":{
+      "body":"ice இல் சமீபத்திய நிகழ்வுகள் குறித்து அறிந்திருங்கள்.",
+      "title":"🚨 செய்தி எச்சரிக்கை"
+   },
+   "te":{
+      "body":"iceలో తాజా సంఘటనల గురించి తెలుసుకుంటూ ఉండండి.",
+      "title":"🚨 వార్తల హెచ్చరిక"
+   },
+   "th":{
+      "body":"รับทราบข่าวสารล่าสุดเกี่ยวกับ ice",
+      "title":"🚨 แจ้งเตือนข่าวสาร"
+   },
+   "tr":{
+      "body":"ice'deki son gelişmelerden haberdar olun.",
+      "title":"🚨 Haber Uyarısı"
+   },
+   "uk":{
+      "body":"Будьте в курсі останніх подій на ice.",
+      "title":"🚨 Новини"
+   },
+   "ur":{
+      "body":"ice پر تازہ ترین واقعات سے باخبر رہیں۔",
+      "title":"🚨 نیوز الرٹ"
+   },
+   "vi":{
+      "body":"Được thông báo với những diễn biến mới nhất trên ice.",
+      "title":"🚨 Thông báo tin tức"
+   },
+   "yo":{
+      "body":"Duro si alaye pẹlu awọn iṣẹlẹ tuntun lori ice.",
+      "title":"🚨 Itaniji Iroyin"
+   },
+   "zh":{
+      "body":"隨時了解 ice 上的最新動態。",
+      "title":"🚨 新聞提醒"
+   },
+   "zh-hans":{
+      "body":"随时了解 ice 上的最新动态。",
+      "title":"🚨 新闻提醒"
+   },
+   "zh-hant":{
+      "body":"隨時了解 ice 上的最新動態。",
+      "title":"🚨 新聞提醒"
+   },
+   "zu":{
+      "body":"Hlala unolwazi ngezehlakalo zakamuva ku-ice.",
+      "title":"🚨 Isexwayiso Sezindaba"
+   }
+}

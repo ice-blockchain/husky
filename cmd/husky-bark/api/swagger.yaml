@@ -1,0 +1,15 @@
+# SPDX-License-Identifier: ice License 1.0
+
+basePath: /v1w
+info:
+  contact:
+    name: ice.io
+    url: https://ice.io
+  description: API that handles everything related to write-only operations for notifying
+    users about anything worthwhile.
+  title: Notifications API
+  version: latest
+paths: {}
+schemes:
+- https
+swagger: "2.0"

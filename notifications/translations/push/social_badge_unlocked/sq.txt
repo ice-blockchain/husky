@@ -1,4 +1,0 @@
-{
- "body": "Ke zhbllokuar distinktivin social {{.BadgeName}}! Shikojeni në profilin tuaj.",
- "title": "🎉 Fituar distinktivin e ri!"
-}

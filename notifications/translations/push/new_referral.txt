@@ -1,0 +1,206 @@
+{
+   "af":{
+      "body":"Jou span het net groter geword! 🎉",
+      "title":"🔥 {{.Username}} het by jou span aangesluit."
+   },
+   "am":{
+      "body":"የእርስዎ ቡድን አሁን ትልቅ ሆኗል! 🎉",
+      "title":"🔥 {{.Username}} ቡድንዎን ተቀላቅሏል።"
+   },
+   "ar":{
+      "body":"فريقك أصبح أكبر للتو! 🎉",
+      "title":"🔥{{.Username}} انضم إلى فريقك."
+   },
+   "az":{
+      "body":"Komandanız daha da böyüdü! 🎉",
+      "title":"🔥 {{.Username}} komandanıza qoşuldu."
+   },
+   "bg":{
+      "body":"Вашият екип току-що стана по-голям! 🎉",
+      "title":"🔥 {{.Username}} се присъедини към вашия екип."
+   },
+   "bn":{
+      "body":"আপনার দল শুধু বড় হয়েছে! 🎉",
+      "title":"🔥 {{.Username}} আপনার দলে যোগ দিয়েছে।"
+   },
+   "cs":{
+      "body":"Váš tým se právě rozrostl! 🎉",
+      "title":"🔥 {{.Username}} se připojil k vašemu týmu."
+   },
+   "de":{
+      "body":"Ihr Team ist gerade größer geworden! 🎉",
+      "title":"🔥 {{.Username}} ist Ihrem Team beigetreten."
+   },
+   "en":{
+      "body":" Your team just got bigger! 🎉",
+      "title":"🔥 {{.Username}} has joined your team."
+   },
+   "es":{
+      "body":"¡Tu equipo acaba de crecer! 🎉",
+      "title":"🔥 {{.Username}} se ha unido a tu equipo."
+   },
+   "fa":{
+      "body":"تیم شما به تازگی بزرگتر شده است! 🎉",
+      "title":"🔥 {{.Username}} به تیم شما پیوست."
+   },
+   "fil":{
+      "body":"Lumaki lang ang team mo! 🎉",
+      "title":"🔥 Sumali si {{.Username}} sa iyong team."
+   },
+   "fr":{
+      "body":"Votre équipe vient de s'agrandir! 🎉",
+      "title":"🔥 {{.Username}} a rejoint votre équipe."
+   },
+   "ge":{
+      "body":"Η ομάδα σας μόλις έγινε μεγαλύτερη! 🎉",
+      "title":"🔥 {{.Username}} έγινε μέλος της ομάδας σας."
+   },
+   "gu":{
+      "body":"તમારી ટીમ હવે મોટી થઈ ગઈ છે! 🎉",
+      "title":"🔥 {{.Username}} તમારી ટીમમાં જોડાયો છે."
+   },
+   "he":{
+      "body":"הצוות שלך רק גדל! 🎉",
+      "title":"🔥 {{.Username}} הצטרף לצוות שלך."
+   },
+   "hi":{
+      "body":"आपकी टीम अभी बड़ी हो गई है! 🎉",
+      "title":"🔥 {{.Username}} आपकी टीम में शामिल हो गया है।"
+   },
+   "hu":{
+      "body":"A csapatod még nagyobb lett! 🎉",
+      "title":"🔥 {{.Username}} csatlakozott a csapatodhoz."
+   },
+   "id":{
+      "body":"Tim Anda semakin besar! 🎉",
+      "title":"🔥 {{.Username}} telah bergabung dengan tim Anda."
+   },
+   "it":{
+      "body":"La tua squadra è appena diventata più grande! 🎉",
+      "title":"🔥 {{.Username}} si è unito al tuo team."
+   },
+   "ja":{
+      "body":"チームが大きくなりました！ 🎉",
+      "title":"🔥 {{.Username}} があなたのチームに加わりました。"
+   },
+   "jv":{
+      "body":"Tim sampeyan tambah gedhe! 🎉",
+      "title":"🔥 {{.Username}} wis gabung karo tim sampeyan."
+   },
+   "kn":{
+      "body":"ನಿಮ್ಮ ತಂಡ ಈಗಷ್ಟೇ ದೊಡ್ಡದಾಗಿದೆ! 🎉",
+      "title":"🔥 {{.Username}} ಅವರು ನಿಮ್ಮ ತಂಡವನ್ನು ಸೇರಿಕೊಂಡಿದ್ದಾರೆ."
+   },
+   "ko":{
+      "body":"팀이 더 커졌습니다! 🎉",
+      "title":"🔥 {{.Username}}이 팀에 합류했습니다."
+   },
+   "mr":{
+      "body":"तुमची टीम आता मोठी झाली आहे! 🎉",
+      "title":"🔥 {{.Username}} तुमच्या टीममध्ये सामील झाला आहे."
+   },
+   "ms":{
+      "body":"Pasukan anda semakin besar! 🎉",
+      "title":"🔥 {{.Username}} telah menyertai pasukan anda."
+   },
+   "no":{
+      "body":"Teamet ditt har akkurat blitt større! 🎉",
+      "title":"🔥 {{.Username}} har blitt med i teamet ditt."
+   },
+   "pa":{
+      "body":"ਤੁਹਾਡੀ ਟੀਮ ਹੁਣੇ ਵੱਡੀ ਹੋ ਗਈ ਹੈ! 🎉",
+      "title":"🔥 {{.Username}} ਤੁਹਾਡੀ ਟੀਮ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਇਆ ਹੈ।"
+   },
+   "pl":{
+      "body":"Twój zespół właśnie się powiększył! 🎉",
+      "title":"🔥 {{.Username}} dołączył do Twojego zespołu."
+   },
+   "ps":{
+      "body":"ستاسو ټیم یوازې لوی شوی! 🎉",
+      "title":"🔥 {{.Username}} ستاسو له ټیم سره یوځای شو."
+   },
+   "pt":{
+      "body":"Sua equipe acaba de ficar maior! 🎉",
+      "title":"🔥 {{.Username}} juntou-se à sua equipe."
+   },
+   "ro":{
+      "body":"Echipa ta tocmai a devenit mai mare! 🎉",
+      "title":"🔥 {{.Username}} s-a alăturat echipei tale."
+   },
+   "ru":{
+      "body":"Ваша команда стала больше! 🎉",
+      "title":"🔥 {{.Username}} присоединился к вашей команде."
+   },
+   "sd":{
+      "body":"توهان جي ٽيم صرف وڏي ٿي وئي آهي! 🎉",
+      "title":"🔥 {{.Username}} توهان جي ٽيم ۾ شامل ٿيو آهي."
+   },
+   "sk":{
+      "body":"Váš tím sa práve zväčšil! 🎉",
+      "title":"🔥 {{.Username}} sa pripojil k vášmu tímu."
+   },
+   "sl":{
+      "body":"Vaša ekipa je pravkar postala večja! 🎉",
+      "title":"🔥 {{.Username}} se je pridružil vaši ekipi."
+   },
+   "sq":{
+      "body":"Ekipi juaj sapo u bë më i madh! 🎉",
+      "title":"🔥 {{.Username}} i është bashkuar ekipit tuaj."
+   },
+   "su":{
+      "body":"Tim anjeun langkung ageung! 🎉",
+      "title":"🔥 {{.Username}} parantos gabung ka tim anjeun."
+   },
+   "sv":{
+      "body":"SDitt lag har precis blivit större! 🎉",
+      "title":"🔥 {{.Username}} har gått med i ditt team."
+   },
+   "ta":{
+      "body":"உங்கள் குழு இப்போது பெரிதாகிவிட்டது! 🎉",
+      "title":"🔥 {{.Username}} உங்கள் குழுவில் சேர்ந்துள்ளார்."
+   },
+   "te":{
+      "body":"మీ బృందం ఇప్పుడే పెద్దదైంది! 🎉",
+      "title":"🔥 {{.Username}} మీ బృందంలో చేరారు."
+   },
+   "th":{
+      "body":"ทีมของคุณใหญ่ขึ้น! 🎉",
+      "title":"🔥 {{.Username}} เข้าร่วมทีมของคุณแล้ว"
+   },
+   "tr":{
+      "body":"Ekibiniz daha da büyüdü! 🎉",
+      "title":"🔥 {{.Username}} ekibinize katıldı."
+   },
+   "uk":{
+      "body":"Ваша команда стала більшою! 🎉",
+      "title":"🔥 {{.Username}} приєднався до вашої команди."
+   },
+   "ur":{
+      "body":"آپ کی ٹیم ابھی بڑی ہو گئی ہے! 🎉",
+      "title":"🔥 {{.Username}} آپ کی ٹیم میں شامل ہو گیا ہے۔"
+   },
+   "vi":{
+      "body":"Nhóm của bạn vừa trở nên lớn hơn! 🎉",
+      "title":"🔥 {{.Username}} đã tham gia nhóm của bạn."
+   },
+   "yo":{
+      "body":"Ẹgbẹ rẹ ṣẹṣẹ di nla! 🎉",
+      "title":"🔥 {{.Username}} ti darapọ mọ ẹgbẹ rẹ."
+   },
+   "zh":{
+      "body":"你的團隊變得更大了！ 🎉",
+      "title":"🔥 {{.Username}} 已加入您的團隊。"
+   },
+   "zh-hans":{
+      "body":"你的团队变得更大了！ 🎉",
+      "title":"🔥 {{.Username}} 已加入您的团队。"
+   },
+   "zh-hant":{
+      "body":"你的團隊變得更大了！ 🎉",
+      "title":"🔥 {{.Username}} 已加入您的團隊。"
+   },
+   "zu":{
+      "body":"UIqembu lakho lisanda kuba likhulu! 🎉",
+      "title":"🔥 {{.Username}} ujoyine iqembu lakho."
+   }
+}

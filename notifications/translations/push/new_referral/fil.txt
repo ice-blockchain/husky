@@ -1,4 +1,0 @@
-{
- "body": "Lumaki lang ang team mo! 🎉",
- "title": "🔥 Sumali si {{.Username}} sa iyong team."
-}

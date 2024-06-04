@@ -1,4 +1,0 @@
-{
- "body": "Håll dig informerad om de senaste händelserna på ice.",
- "title": "🚨 Nyhetslarm"
-}

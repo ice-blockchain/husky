@@ -1,4 +1,0 @@
-{
- "body": "Omunye wabangane bakho manje useyingxenye yomphakathi we-ice. 🚀",
- "title": "👋 Umngane wakho u-{{.Username}} ujoyine i-ice"
-}

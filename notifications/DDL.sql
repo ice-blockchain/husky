@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS scheduled_notifications  (
                     primary key(user_id,uniqueness,notification_type,notification_channel,notification_channel_value));
 CREATE UNIQUE INDEX IF NOT EXISTS scheduled_notifications_i_ix ON scheduled_notifications (i);
 CREATE INDEX IF NOT EXISTS scheduled_notifications_lookup_ix ON scheduled_notifications (i,scheduled_for DESC);
+CREATE INDEX IF NOT EXISTS scheduled_notifications_user_id_notification_type_ix ON scheduled_notifications (user_id,notification_type);
 --************************************************************************************************************************************
 -- sent_announcements
 CREATE TABLE IF NOT EXISTS sent_announcements (

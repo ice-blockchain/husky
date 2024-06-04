@@ -1,4 +1,0 @@
-{
- "body": "Schlummern Sie nicht, Sie werden verlieren! Starten Sie Ihre Check-in-Session 💪",
- "title": "🔔 {{.Username}} hat dich gepingt!"
-}

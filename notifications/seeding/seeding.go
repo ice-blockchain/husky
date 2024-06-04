@@ -28,9 +28,9 @@ func dbConnector() tarantool.Connector {
 	parts := strings.Split(os.Getenv("MASTER_DB_INSTANCE_ADDRESS"), "@")
 	userAndPass := strings.Split(parts[0], ":")
 	opts := tarantool.Opts{
-		Timeout:       20 * stdlibtime.Second, //nolint:gomnd,mnd // It doesnt matter here.
+		Timeout:       20 * stdlibtime.Second,
 		Reconnect:     stdlibtime.Millisecond,
-		MaxReconnects: 10, //nolint:gomnd,mnd // It doesnt matter here.
+		MaxReconnects: 10,
 		User:          userAndPass[0],
 		Pass:          userAndPass[1],
 	}

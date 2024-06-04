@@ -1,4 +1,0 @@
-{
- "body": "Mantenha-se informado com os últimos acontecimentos no ice.",
- "title": "🚨 Alerta de Novidades"
-}

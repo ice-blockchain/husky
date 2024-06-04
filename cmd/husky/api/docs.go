@@ -295,10 +295,7 @@ const docTemplate = `{
                             "sms",
                             "email",
                             "push",
-                            "analytics",
-                            "push||analytics",
-                            "push||email",
-                            "push||email||analytics"
+                            "push||email"
                         ]
                     }
                 },

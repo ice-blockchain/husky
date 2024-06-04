@@ -510,6 +510,17 @@ linters-settings:
     ignore-map-index-ok: true
     ignore-chan-recv-ok: true
 
+  mnd:
+    checks:
+      - argument
+      - case
+      - condition
+      - return
+    ignored-numbers:
+      - '0'
+      - '1'
+      - '24'
+
 linters:
   disable:
     # TODO remove asap!

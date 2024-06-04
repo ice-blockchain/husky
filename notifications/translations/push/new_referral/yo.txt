@@ -1,4 +1,0 @@
-{
- "body": "Ẹgbẹ rẹ ṣẹṣẹ di nla! 🎉",
- "title": "🔥 {{.Username}} ti darapọ mọ ẹgbẹ rẹ."
-}

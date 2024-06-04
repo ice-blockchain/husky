@@ -1,4 +1,0 @@
-{
- "body": "Na-unlock mo ang {{.BadgeName}} social badge! Tingnan ito sa iyong profile.",
- "title": "🎉 Bagong badge ang nakuha!"
-}

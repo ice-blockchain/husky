@@ -52,10 +52,6 @@ notifications: &notifications
         partitions: 10
         replicationFactor: 1
         retention: 1000h
-      - name: started-days-off
-        partitions: 10
-        replicationFactor: 1
-        retention: 1000h
       - name:  achieved-badges
         partitions: 10
         replicationFactor: 1
@@ -79,14 +75,10 @@ notifications: &notifications
       - name: news-table
       - name: available-daily-bonuses
       - name: user-pings
-      - name: started-days-off
       - name: achieved-badges
       - name: completed-levels
       - name: enabled-roles
       - name: contacts-table
-    producingTopics:
-      - name: analytics-set-attributes
-      - name: analytics-track-action
 notifications_test:
   <<: *notifications
   messageBroker:

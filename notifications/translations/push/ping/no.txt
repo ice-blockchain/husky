@@ -1,4 +1,0 @@
-{
- "body": "Ikke slumre, du vil tape! Start innsjekkingsøkten 💪",
- "title": "🔔 {{.Username}} har pinget deg!"
-}

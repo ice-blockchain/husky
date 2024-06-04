@@ -1,4 +1,0 @@
-{
- "body": "Die basis mynboukoers is gehalveer tot {{.BaseMiningRate}} ice/h!",
- "title": "🚨 Mynboukoers verander 🚨"
-}

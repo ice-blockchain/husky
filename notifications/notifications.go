@@ -67,11 +67,11 @@ func StartProcessor(ctx context.Context, cancel context.CancelFunc) Processor { 
 		&newsTableSource{processor: prc},
 		&availableDailyBonusSource{processor: prc},
 		&userPingSource{processor: prc},
-		&startedDaysOffSource{processor: prc},
 		&achievedBadgesSource{processor: prc},
 		&completedLevelsSource{processor: prc},
 		&enabledRolesSource{processor: prc},
 		&agendaContactsSource{processor: prc},
+		&miningSource{processor: prc},
 	)
 	prc.shutdown = closeAll(mbConsumer, prc.mb, prc.db, prc.pushNotificationsClient.Close)
 	go prc.startOldSentNotificationsCleaner(ctx)
@@ -125,7 +125,7 @@ func (p *processor) CheckHealth(ctx context.Context) error {
 }
 
 func (p *processor) startOldSentNotificationsCleaner(ctx context.Context) {
-	ticker := stdlibtime.NewTicker(stdlibtime.Duration(1+rand.Intn(24)) * stdlibtime.Minute) //nolint:gosec,gomnd,mnd // Not an  issue.
+	ticker := stdlibtime.NewTicker(stdlibtime.Duration(1+rand.Intn(24)) * stdlibtime.Minute) //nolint:gosec // Not an  issue.
 	defer ticker.Stop()
 
 	for {
@@ -142,7 +142,7 @@ func (p *processor) startOldSentNotificationsCleaner(ctx context.Context) {
 }
 
 func (p *processor) startOldSentAnnouncementsCleaner(ctx context.Context) {
-	ticker := stdlibtime.NewTicker(stdlibtime.Duration(1+rand.Intn(24)) * stdlibtime.Minute) //nolint:gosec,gomnd,mnd // Not an  issue.
+	ticker := stdlibtime.NewTicker(stdlibtime.Duration(1+rand.Intn(24)) * stdlibtime.Minute) //nolint:gosec // Not an  issue.
 	defer ticker.Stop()
 
 	for {

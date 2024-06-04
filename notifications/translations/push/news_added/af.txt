@@ -1,4 +1,0 @@
-{
- "body": "Bly op hoogte van die jongste gebeure op ice.",
- "title": "🚨 Nuuswaarskuwing"
-}

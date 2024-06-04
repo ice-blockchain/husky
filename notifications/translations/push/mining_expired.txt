@@ -1,0 +1,6 @@
+{
+   "en":{
+      "body":"Mining expired! Start your session 💪",
+      "title":"Mining expired"
+   }
+}

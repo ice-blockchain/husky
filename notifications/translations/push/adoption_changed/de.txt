@@ -1,4 +1,0 @@
-{
- "body": "Der Grundverdienst wurde auf {{.BaseMiningRate}} ice/h halbiert!",
- "title": "🚨 Verdienstquote geändert 🚨"
-}

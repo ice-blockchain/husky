@@ -1,0 +1,6 @@
+{
+   "en":{
+      "body":"Increase your community. Invite friend.",
+      "title":"Invite friend"
+   }
+}

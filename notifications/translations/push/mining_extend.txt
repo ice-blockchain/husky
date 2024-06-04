@@ -1,0 +1,6 @@
+{
+   "en":{
+      "body":"Extend your mining!",
+      "title":"Extend mining"
+   }
+}

@@ -1,4 +1,0 @@
-{
- "body": "ice-də ən son hadisələrdən xəbərdar olun.",
- "title": "🚨 Xəbər Xəbərdarlığı"
-}

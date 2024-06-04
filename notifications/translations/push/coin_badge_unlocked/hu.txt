@@ -1,4 +1,0 @@
-{
- "body": "Feloldottad a {{.BadgeName}} érme jelvényt! Nézd meg a profilodban.",
- "title": "🎉 Új jelvényt szerzett!"
-}

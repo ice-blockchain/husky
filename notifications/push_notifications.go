@@ -5,11 +5,10 @@ package notifications
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
-	"strings"
 	"text/template"
 
-	"github.com/goccy/go-json"
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 
@@ -52,24 +51,25 @@ func loadPushNotificationTranslationTemplates() {
 	const totalLanguages = 50
 	allPushNotificationTemplates = make(map[NotificationType]map[languageCode]*pushNotificationTemplate, len(AllNotificationTypes))
 	for _, notificationType := range AllNotificationTypes {
-		files, err := translations.ReadDir(fmt.Sprintf("translations/push/%v", notificationType))
+		content, fErr := translations.ReadFile(fmt.Sprintf("translations/push/%v.txt", notificationType))
+		if fErr != nil {
+			panic(fErr)
+		}
+		allPushNotificationTemplates[notificationType] = make(map[languageCode]*pushNotificationTemplate, totalLanguages)
+		var translations map[string]*struct {
+			Body  string `json:"body"`
+			Title string `json:"title"`
+		}
+		err := json.Unmarshal(content, &translations)
 		if err != nil {
 			panic(err)
 		}
-		allPushNotificationTemplates[notificationType] = make(map[languageCode]*pushNotificationTemplate, totalLanguages)
-		for _, file := range files {
-			content, fErr := translations.ReadFile(fmt.Sprintf("translations/push/%v/%v", notificationType, file.Name()))
-			if fErr != nil {
-				panic(fErr)
-			}
+		for language, data := range translations {
 			var tmpl pushNotificationTemplate
-			err = json.Unmarshal(content, &tmpl)
-			if err != nil {
-				panic(err)
-			}
-			language := strings.Split(file.Name(), ".")[0]
-			tmpl.title = template.Must(template.New(fmt.Sprintf("push_%v_%v_title", notificationType, language)).Parse(tmpl.Title))
-			tmpl.body = template.Must(template.New(fmt.Sprintf("push_%v_%v_body", notificationType, language)).Parse(tmpl.Body))
+			tmpl.Body = data.Body
+			tmpl.Title = data.Title
+			tmpl.title = template.Must(template.New(fmt.Sprintf("push_%v_%v_title", notificationType, language)).Parse(data.Title))
+			tmpl.body = template.Must(template.New(fmt.Sprintf("push_%v_%v_body", notificationType, language)).Parse(data.Body))
 			allPushNotificationTemplates[notificationType][language] = &tmpl
 		}
 	}
