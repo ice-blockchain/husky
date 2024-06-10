@@ -25,7 +25,6 @@ func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber 
 		successedNotifications      = make([]*pushNotification, 0, batchNumber)
 		emptyTokensNotifications    = make([]*scheduledNotificationInfo, 0, batchNumber)
 		invalidTokens               = make([]*invalidToken, 0)
-		exConcurrently              = make([]func() error, 0)
 		toSendPushNotifications     = make([]*pushNotification, 0)
 		notifications               = make([]*scheduledNotificationInfo, batchNumber)
 		imageURLNotification        = s.pictureClient.DownloadURL("assets/push-notifications/batch-notification.png")
@@ -39,7 +38,6 @@ func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber 
 		now = time.Now()
 		errs = errs[:0]
 		successedNotifications = successedNotifications[:0]
-		exConcurrently = exConcurrently[:0]
 		toSendPushNotifications = toSendPushNotifications[:0]
 		invalidTokens = invalidTokens[:0]
 		notifications = notifications[:0]

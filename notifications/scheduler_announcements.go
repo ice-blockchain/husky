@@ -24,7 +24,6 @@ func (s *Scheduler) runAnnouncementsProcessor(ctx context.Context, workerNumber 
 		batchSize                   = s.cfg.Scheduler.BatchSize
 		errs                        = make([]error, 0)
 		successedAnnouncements      = make([]*broadcastPushNotification[push.Notification[push.SubscriptionTopic]], 0, batchNumber)
-		exConcurrently              = make([]func() error, 0)
 		announcements               = make([]*scheduledAnnouncement, batchNumber)
 		toSendAnnouncements         = make([]*broadcastPushNotification[push.Notification[push.SubscriptionTopic]], 0, batchNumber)
 		imageURLAnnouncement        = s.pictureClient.DownloadURL("assets/push-notifications/batch-announcement.png")
@@ -37,9 +36,9 @@ func (s *Scheduler) runAnnouncementsProcessor(ctx context.Context, workerNumber 
 		}
 		now = time.Now()
 		errs = errs[:0]
-		exConcurrently = exConcurrently[:0]
 		toSendAnnouncements = toSendAnnouncements[:0]
 		announcements = announcements[:0]
+		successedAnnouncements = successedAnnouncements[:0]
 	}
 	for ctx.Err() == nil {
 		/******************************************************************************************************************************************************
@@ -47,7 +46,7 @@ func (s *Scheduler) runAnnouncementsProcessor(ctx context.Context, workerNumber 
 		******************************************************************************************************************************************************/
 		before := time.Now()
 		reqCtx, reqCancel := context.WithTimeout(ctx, requestDeadline)
-		announcements, err = s.fetchScheduledAnnouncements(ctx, now, workerNumber)
+		announcements, err = s.fetchScheduledAnnouncements(reqCtx, now, workerNumber)
 		if err != nil {
 			log.Error(errors.Wrapf(err, "[scheduler] failed to fetch scheduled announcements for batchNumber:%v,workerNumber:%v", batchNumber, workerNumber))
 			resetVars(false)
@@ -62,6 +61,7 @@ func (s *Scheduler) runAnnouncementsProcessor(ctx context.Context, workerNumber 
 		/******************************************************************************************************************************************************
 			2. Processing batch of announcements.
 		******************************************************************************************************************************************************/
+		before = time.Now()
 		for _, an := range announcements {
 			tmpl, found := allPushNotificationTemplates[NotificationType(an.NotificationType)][an.Language]
 			if !found {
@@ -90,25 +90,21 @@ func (s *Scheduler) runAnnouncementsProcessor(ctx context.Context, workerNumber 
 				},
 			})
 		}
-		exConcurrently = append(exConcurrently, func() error {
-			reqCtx, reqCancel = context.WithTimeout(context.Background(), requestDeadline)
-			defer reqCancel()
-
-			return errors.Wrapf(runConcurrentlyBatch(ctx, s.broadcastPushNotification, toSendAnnouncements, func(arg *broadcastPushNotification[push.Notification[push.SubscriptionTopic]], err error) { //nolint:lll // .
-			}, func(arg *broadcastPushNotification[push.Notification[push.SubscriptionTopic]]) {
-				s.schedulerAnnouncementsMX.Lock()
-				defer s.schedulerAnnouncementsMX.Unlock()
-
-				successedAnnouncements = append(successedAnnouncements, arg)
-			}), "can't execute notifications batch concurrently for:%#v", announcements)
-		})
 
 		/******************************************************************************************************************************************************
 			3. Send all announcements concurrently.
 		******************************************************************************************************************************************************/
-		if eErr := executeConcurrently(exConcurrently...); eErr != nil {
-			log.Error(errors.Wrapf(eErr, "[scheduler] failed to execute concurrently sending push notifications for batchNumber:%v,workerNumber:%v", batchNumber, workerNumber)) //nolint:lll // .
+		reqCtx, reqCancel = context.WithTimeout(ctx, requestDeadline)
+		if rErr := runConcurrentlyBatch(reqCtx, s.broadcastPushNotification, toSendAnnouncements, func(arg *broadcastPushNotification[push.Notification[push.SubscriptionTopic]], err error) { //nolint:lll // .
+		}, func(arg *broadcastPushNotification[push.Notification[push.SubscriptionTopic]]) {
+			s.schedulerAnnouncementsMX.Lock()
+			defer s.schedulerAnnouncementsMX.Unlock()
+
+			successedAnnouncements = append(successedAnnouncements, arg)
+		}); rErr != nil {
+			log.Error(errors.Wrapf(rErr, "[scheduler] failed to sending announcements concurrently for batchNumber:%v,workerNumber:%v", batchNumber, workerNumber)) //nolint:lll // .
 		}
+		reqCancel()
 		if len(toSendAnnouncements) > 0 {
 			go s.telemetryAnnouncements.collectElapsed(2, *before.Time) //nolint:gomnd,mnd // .
 		}
@@ -149,12 +145,12 @@ func (s *Scheduler) broadcastPushNotification(
 }
 
 func (s *Scheduler) fetchScheduledAnnouncements(ctx context.Context, now *time.Time, workerNumber int64) (resp []*scheduledAnnouncement, err error) {
-	sql := fmt.Sprintf(`SELECT sn.*
-				FROM scheduled_announcements sn
-				WHERE MOD(i, %[1]v) = %[2]v
-					  AND scheduled_for <= $1
-				ORDER BY MOD(i, %[1]v), scheduled_for ASC
-			LIMIT %[3]v;`, s.cfg.Scheduler.Workers, workerNumber, s.cfg.Scheduler.BatchSize)
+	sql := fmt.Sprintf(`SELECT *
+							FROM scheduled_announcements
+						WHERE MOD(i, %[1]v) = %[2]v
+					  		  AND scheduled_for <= $1
+						ORDER BY MOD(i, %[1]v), scheduled_for ASC
+						LIMIT %[3]v;`, s.cfg.Scheduler.Workers, workerNumber, s.cfg.Scheduler.BatchSize)
 	resp, err = storage.ExecMany[scheduledAnnouncement](ctx, s.db, sql, now.Time)
 
 	return resp, errors.Wrapf(err, "failed to fetch scheduled announcements for worker:%v", workerNumber)
