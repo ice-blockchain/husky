@@ -60,7 +60,6 @@ const (
 	MiningExtendNotificationType        NotificationType = "mining_extend"
 	MiningEndingSoonNotificationType    NotificationType = "mining_ending_soon"
 	MiningExpiredNotificationType       NotificationType = "mining_expired"
-	MiningNotActiveNotificationType     NotificationType = "mining_not_active"
 	InviteFriendNotificationType        NotificationType = "invite_friend"
 	SocialsNotificationType             NotificationType = "socials"
 	WeeklyStatsNotificationType         NotificationType = "weekly_stats"
@@ -95,7 +94,6 @@ var (
 		MiningExtendNotificationType,
 		MiningEndingSoonNotificationType,
 		MiningExpiredNotificationType,
-		MiningNotActiveNotificationType,
 		InviteFriendNotificationType,
 		SocialsNotificationType,
 		WeeklyStatsNotificationType,
@@ -163,13 +161,13 @@ type (
 		CheckHealth(ctx context.Context) error
 	}
 	Scheduler struct {
-		mb                       messagebroker.Client
 		pictureClient            picture.Client
 		pushNotificationsClient  push.Client
 		cfg                      *config
 		schedulerAnnouncementsMX *sync.Mutex
 		schedulerNotificationsMX *sync.Mutex
-		telemetry                *telemetry
+		telemetryNotifications   *telemetry
+		telemetryAnnouncements   *telemetry
 		db                       *storage.DB
 	}
 )
@@ -244,7 +242,7 @@ type (
 	agendaContactsSource struct {
 		*processor
 	}
-	miningSource struct {
+	miningSessionSource struct {
 		*processor
 	}
 	repository struct {
@@ -265,19 +263,22 @@ type (
 		MinNotificationDelaySec uint `yaml:"minNotificationDelaySec"`
 		MaxNotificationDelaySec uint `yaml:"maxNotificationDelaySec"`
 	}
-	scheduledNotification struct {
+	scheduledNotificationInfo struct {
 		PushNotificationTokens          *users.Enum[push.DeviceToken]
 		DisabledPushNotificationDomains *users.Enum[NotificationDomain]
-		ScheduledAt                     *time.Time  `json:"scheduledAt,omitempty" example:"2022-01-03T16:20:52.156534Z"`
-		ScheduledFor                    *time.Time  `json:"scheduledFor,omitempty" example:"2022-01-03T16:20:52.156534Z"`
-		Data                            *users.JSON `json:"data,omitempty"`
-		Language                        string      `json:"language,omitempty" example:"en"`
-		UserID                          string      `json:"userId,omitempty" example:"edfd8c02-75e0-4687-9ac2-1ce4723865c4"`
-		Uniqueness                      string      `json:"uniqueness,omitempty" example:"anything"`
-		NotificationType                string      `json:"notificationType,omitempty" example:"adoption_changed"`
-		NotificationChannel             string      `json:"notificationChannel,omitempty" example:"email"`
-		NotificationChannelValue        string      `json:"notificationChannelValue,omitempty" example:"jdoe@example.com"`
-		I                               int64       `json:"i" example:"1"`
+		scheduledNotification
+	}
+	scheduledNotification struct {
+		ScheduledAt              *time.Time  `json:"scheduledAt,omitempty" example:"2022-01-03T16:20:52.156534Z"`
+		ScheduledFor             *time.Time  `json:"scheduledFor,omitempty" example:"2022-01-03T16:20:52.156534Z"`
+		Data                     *users.JSON `json:"data,omitempty"`
+		Language                 string      `json:"language,omitempty" example:"en"`
+		UserID                   string      `json:"userId,omitempty" example:"edfd8c02-75e0-4687-9ac2-1ce4723865c4"`
+		Uniqueness               string      `json:"uniqueness,omitempty" example:"anything"`
+		NotificationType         string      `json:"notificationType,omitempty" example:"adoption_changed"`
+		NotificationChannel      string      `json:"notificationChannel,omitempty" example:"email"`
+		NotificationChannelValue string      `json:"notificationChannelValue,omitempty" example:"jdoe@example.com"`
+		I                        int64       `json:"i" example:"1"`
 	}
 	scheduledAnnouncement struct {
 		ScheduledAt              *time.Time  `json:"scheduledAt,omitempty" example:"2022-01-03T16:20:52.156534Z"`

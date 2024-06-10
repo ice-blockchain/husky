@@ -19,20 +19,20 @@ func (r *repository) addScheduledSocialsNotifications(ctx context.Context, us *u
 	}
 	now := time.Now()
 	scheduled := make([]*scheduledNotification, 0, len(r.cfg.Socials))
-	var miningSessionDuration stdlibtime.Duration
+	var dayDuration stdlibtime.Duration
 	if r.cfg.Development {
-		miningSessionDuration = 1 * stdlibtime.Minute
+		dayDuration = 1 * stdlibtime.Minute
 	} else {
-		miningSessionDuration = 24 * stdlibtime.Hour
+		dayDuration = 24 * stdlibtime.Hour
 	}
 	for ix := range r.cfg.Socials {
 		scheduled = append(scheduled, &scheduledNotification{
 			ScheduledAt:              now,
-			ScheduledFor:             time.New(us.CreatedAt.Add(stdlibtime.Duration((ix + 1)) * miningSessionDuration)),
+			ScheduledFor:             time.New(us.CreatedAt.Add(stdlibtime.Duration((ix + 1)) * dayDuration)),
 			Language:                 us.Language,
 			UserID:                   us.ID,
 			NotificationType:         string(SocialsNotificationType),
-			Uniqueness:               fmt.Sprintf("%v_%v", us.ID, time.New(us.CreatedAt.Add(stdlibtime.Duration((ix+1))*miningSessionDuration))),
+			Uniqueness:               fmt.Sprintf("%v_%v", us.ID, time.New(us.CreatedAt.Add(stdlibtime.Duration((ix+1))*dayDuration)).UnixNano()),
 			NotificationChannel:      string(PushNotificationChannel),
 			NotificationChannelValue: us.ID,
 			Data: &users.JSON{

@@ -9,17 +9,19 @@ import (
 	stdlibtime "time"
 
 	"github.com/goccy/go-json"
+	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 
 	"github.com/ice-blockchain/eskimo/users"
 	"github.com/ice-blockchain/freezer/tokenomics"
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
 	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
+	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/time"
 )
 
 //nolint:funlen // .
-func (m *miningSource) Process(ctx context.Context, msg *messagebroker.Message) error {
+func (m *miningSessionSource) Process(ctx context.Context, msg *messagebroker.Message) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline while processing message")
 	}
@@ -40,47 +42,77 @@ func (m *miningSource) Process(ctx context.Context, msg *messagebroker.Message) 
 	if err != nil {
 		return errors.Wrapf(err, "can't find the user: %#v", usr)
 	}
+	old, err := m.getMiningScheduledNotifications(ctx, *message.UserID)
+	if err != nil && !errors.Is(err, storage.ErrNotFound) {
+		return errors.Wrapf(err, "can't get mining scheduled notifications for:%v", *message.UserID)
+	}
 	notificationTypes := []NotificationType{
 		MiningEndingSoonNotificationType,
 		MiningExpiredNotificationType,
 		MiningExtendNotificationType,
-		MiningNotActiveNotificationType,
 	}
 	if rErr := m.removeScheduledNotifications(ctx, *message.UserID, notificationTypes); rErr != nil {
 		return errors.Wrapf(rErr, "can't remove scheduled notifications for:%v", *message.UserID)
 	}
+	if iErr := m.insertMiningScheduledNotifications(ctx, message, usr.Language); iErr != nil {
+		if errors.Is(iErr, storage.ErrDuplicate) {
+			log.Warn("race condition for: %#v", message)
 
-	return errors.Wrapf(m.upsertScheduledNotifications(ctx, message, usr.Language), "can't insert/update mining scheduled notifications for:%#v", message)
+			return nil
+		}
+
+		return errors.Wrapf(multierror.Append(
+			errors.Wrapf(iErr, "can't insert/update mining scheduled notifications for:%#v", message),
+			errors.Wrapf(m.insertScheduledNotifications(ctx, old), "can't rollback scheduled notifications for:%v", message),
+		).ErrorOrNil(), "one of executions failed for:%#v", message)
+	}
+
+	return nil
+}
+
+func (m *miningSessionSource) getMiningScheduledNotifications(ctx context.Context, userID string) (resp []*scheduledNotification, err error) {
+	notificationTypes := []NotificationType{
+		MiningEndingSoonNotificationType,
+		MiningExpiredNotificationType,
+		MiningExtendNotificationType,
+	}
+	sql := `SELECT *
+				FROM scheduled_notifications
+				WHERE user_id = $1
+				      AND notification_type = ANY($2)`
+	resp, err = storage.ExecMany[scheduledNotification](ctx, m.db, sql, userID, notificationTypes)
+
+	return resp, errors.Wrapf(err, "failed to get mining scheduled notifications for userID:%v", userID)
 }
 
 //nolint:funlen // .
-func (m *miningSource) upsertScheduledNotifications(ctx context.Context, message *tokenomics.MiningSession, language string) error {
+func (m *miningSessionSource) insertMiningScheduledNotifications(ctx context.Context, message *tokenomics.MiningSession, language string) error {
 	now := time.Now()
 	const notificationsNum = 7
-	var miningSessionDuration stdlibtime.Duration
+	var dayDuration stdlibtime.Duration
 	if m.cfg.Development {
-		miningSessionDuration = 1 * stdlibtime.Minute
+		dayDuration = 1 * stdlibtime.Minute
 	} else {
-		miningSessionDuration = 24 * stdlibtime.Hour
+		dayDuration = 24 * stdlibtime.Hour
 	}
 	scheduled := make([]*scheduledNotification, 0, notificationsNum)
 	scheduled = append(scheduled, &scheduledNotification{
 		ScheduledAt:              now,
-		ScheduledFor:             time.New(message.EndedAt.Add(-(miningSessionDuration / 2))),
+		ScheduledFor:             message.ResettableStartingAt,
 		Language:                 language,
 		UserID:                   *message.UserID,
 		NotificationType:         string(MiningExtendNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, time.New(message.EndedAt.Add(-(miningSessionDuration / 2)))),
+		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, message.ResettableStartingAt.UnixNano()),
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
 		Data:                     &users.JSON{},
 	}, &scheduledNotification{
 		ScheduledAt:              now,
-		ScheduledFor:             time.New(message.EndedAt.Add(-miningSessionDuration / 24)),
+		ScheduledFor:             message.WarnAboutExpirationStartingAt,
 		Language:                 language,
 		UserID:                   *message.UserID,
 		NotificationType:         string(MiningEndingSoonNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, time.New(message.EndedAt.Add(-miningSessionDuration/24))),
+		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, message.WarnAboutExpirationStartingAt.UnixNano()),
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
 		Data:                     &users.JSON{},
@@ -90,17 +122,19 @@ func (m *miningSource) upsertScheduledNotifications(ctx context.Context, message
 		Language:                 language,
 		UserID:                   *message.UserID,
 		NotificationType:         string(MiningExpiredNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, message.EndedAt),
+		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, message.EndedAt.UnixNano()),
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
-		Data:                     &users.JSON{},
+		Data: &users.JSON{
+			"Days": 0,
+		},
 	}, &scheduledNotification{
 		ScheduledAt:              now,
-		ScheduledFor:             time.New(message.EndedAt.Add(miningSessionDuration)),
+		ScheduledFor:             time.New(message.EndedAt.Add(dayDuration)),
 		Language:                 language,
 		UserID:                   *message.UserID,
-		NotificationType:         string(MiningNotActiveNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, time.New(message.EndedAt.Add(miningSessionDuration))),
+		NotificationType:         string(MiningExpiredNotificationType),
+		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, time.New(message.EndedAt.Add(dayDuration)).UnixNano()),
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
 		Data: &users.JSON{
@@ -108,11 +142,11 @@ func (m *miningSource) upsertScheduledNotifications(ctx context.Context, message
 		},
 	}, &scheduledNotification{
 		ScheduledAt:              now,
-		ScheduledFor:             time.New(message.EndedAt.Add(7 * miningSessionDuration)), //nolint:gomnd,mnd // .
+		ScheduledFor:             time.New(message.EndedAt.Add(7 * dayDuration)), //nolint:gomnd,mnd // .
 		Language:                 language,
 		UserID:                   *message.UserID,
-		NotificationType:         string(MiningNotActiveNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, time.New(message.EndedAt.Add(7*miningSessionDuration))), //nolint:gomnd,mnd // .
+		NotificationType:         string(MiningExpiredNotificationType),
+		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, time.New(message.EndedAt.Add(7*dayDuration)).UnixNano()), //nolint:gomnd,mnd // .
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
 		Data: &users.JSON{
@@ -120,11 +154,11 @@ func (m *miningSource) upsertScheduledNotifications(ctx context.Context, message
 		},
 	}, &scheduledNotification{
 		ScheduledAt:              now,
-		ScheduledFor:             time.New(message.EndedAt.Add(14 * miningSessionDuration)), //nolint:gomnd,mnd // .
+		ScheduledFor:             time.New(message.EndedAt.Add(14 * dayDuration)), //nolint:gomnd,mnd // .
 		Language:                 language,
 		UserID:                   *message.UserID,
-		NotificationType:         string(MiningNotActiveNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, time.New(message.EndedAt.Add(14*miningSessionDuration))), //nolint:gomnd,mnd // .
+		NotificationType:         string(MiningExpiredNotificationType),
+		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, time.New(message.EndedAt.Add(14*dayDuration)).UnixNano()), //nolint:gomnd,mnd // .
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
 		Data: &users.JSON{
@@ -132,11 +166,11 @@ func (m *miningSource) upsertScheduledNotifications(ctx context.Context, message
 		},
 	}, &scheduledNotification{
 		ScheduledAt:              now,
-		ScheduledFor:             time.New(message.EndedAt.Add(30 * miningSessionDuration)), //nolint:gomnd,mnd // .
+		ScheduledFor:             time.New(message.EndedAt.Add(30 * dayDuration)), //nolint:gomnd,mnd // .
 		Language:                 language,
 		UserID:                   *message.UserID,
-		NotificationType:         string(MiningNotActiveNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, time.New(message.EndedAt.Add(30*miningSessionDuration))), //nolint:gomnd,mnd // .
+		NotificationType:         string(MiningExpiredNotificationType),
+		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, time.New(message.EndedAt.Add(30*dayDuration)).UnixNano()), //nolint:gomnd,mnd // .
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
 		Data: &users.JSON{
@@ -166,13 +200,7 @@ func (r *repository) insertScheduledNotifications(ctx context.Context, scheduled
 				notification_channel,
 				notification_channel_value
 			)
-			VALUES %v
-			ON CONFLICT(user_id, uniqueness, notification_type, notification_channel, notification_channel_value)
-			DO UPDATE SET
-				scheduled_at  = EXCLUDED.scheduled_at,
-				scheduled_for = EXCLUDED.scheduled_for,
-				data 		  = EXCLUDED.data,
-				language      = EXCLUDED.language`, strings.Join(values, ","))
+			VALUES %v`, strings.Join(values, ","))
 	_, err := storage.Exec(ctx, r.db, sql, params...)
 
 	return errors.Wrapf(err, "can't execute insert/update scheduled notifications records:%#v", values)

@@ -1,6 +1,0 @@
-{
-   "en":{
-      "body":"Mining has not been active for {{.Days}}! Start your mining.",
-      "title":"Mining has not been active"
-   }
-}

@@ -29,7 +29,7 @@ cmd/husky-bark:
   version: local
   defaultEndpointTimeout: 30s
   httpServer:
-    port: 6443
+    port: 8443
     certPath: cmd/husky-bark/.testdata/localhost.crt
     keyPath: cmd/husky-bark/.testdata/localhost.key
   wintr/auth/ice:

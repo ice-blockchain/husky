@@ -20,21 +20,21 @@ func init() { //nolint:gochecknoinits // .
 type (
 	telemetry struct {
 		registry        metrics.Registry
-		steps           [7]string
 		currentStepName string
+		steps           []string
 	}
 )
 
-func (t *telemetry) mustInit() *telemetry {
+func (t *telemetry) mustInit(steps []string) *telemetry {
 	const (
 		decayAlpha    = 0.015
 		reservoirSize = 10_000
 	)
 	t.registry = metrics.NewRegistry()
-	t.steps = [7]string{"scheduler[full iteration]", "get_scheduled_notifications", "get_scheduled_announcements", "process", "clear_invalid_tokens", "delete_scheduled_notifications", "delete_scheduled_announcements"} //nolint:lll // .
-	for ix := range &t.steps {
+	t.steps = append(t.steps, steps...)
+	for ix := range t.steps {
 		if ix > 1 {
-			t.steps[ix] = fmt.Sprintf("[%v]mine.%v", ix-1, t.steps[ix])
+			t.steps[ix] = fmt.Sprintf("[%v]scheduled.%v", ix-1, t.steps[ix])
 		}
 		log.Panic(t.registry.Register(t.steps[ix], metrics.NewCustomTimer(metrics.NewHistogram(metrics.NewExpDecaySample(reservoirSize, decayAlpha)), metrics.NewMeter()))) //nolint:lll // .
 	}

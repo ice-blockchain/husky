@@ -30,7 +30,7 @@ func (s *Scheduler) addScheduledWeeklyStatsAnnouncement(ctx context.Context) err
 			ScheduledAt:              now,
 			ScheduledFor:             nextTime,
 			Language:                 language,
-			Uniqueness:               fmt.Sprintf("%v_%v_%v", WeeklyStatsNotificationType, language, nextTime),
+			Uniqueness:               fmt.Sprintf("%v_%v_%v", WeeklyStatsNotificationType, language, nextTime.UnixNano()),
 			NotificationType:         string(WeeklyStatsNotificationType),
 			NotificationChannel:      string(PushNotificationChannel),
 			NotificationChannelValue: fmt.Sprintf("system_%v", language),
@@ -59,11 +59,17 @@ func (s *Scheduler) insertScheduledAnnouncement(ctx context.Context, scheduled [
 							notification_channel,
 							notification_channel_value)
 						VALUES %v
-						ON CONFLICT DO NOTHING
 				`, strings.Join(values, ","))
 	_, err := storage.Exec(ctx, s.db, sql, params...)
+	if err != nil {
+		if errors.Is(err, storage.ErrDuplicate) {
+			return errors.Wrapf(ErrDuplicate, "scheduled announcement has already existed:%v", params...)
+		}
 
-	return errors.Wrapf(err, "can't execute insert/update scheduled announcement records:%v", params...)
+		return errors.Wrapf(err, "can't execute insert/update scheduled announcement records:%v", params...)
+	}
+
+	return nil
 }
 
 func nextTimeMatch(now *time.Time, weekday stdlibtime.Weekday, hour, minute int) *time.Time {

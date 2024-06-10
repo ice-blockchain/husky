@@ -19,30 +19,30 @@ func (r *repository) addScheduledInviteFriendNotifications(ctx context.Context, 
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
 	now := time.Now()
-	var miningSessionDuration stdlibtime.Duration
+	var dayDuration stdlibtime.Duration
 	if r.cfg.Development {
-		miningSessionDuration = 1 * stdlibtime.Minute
+		dayDuration = 1 * stdlibtime.Minute
 	} else {
-		miningSessionDuration = 24 * stdlibtime.Hour
+		dayDuration = 24 * stdlibtime.Hour
 	}
 	scheduled := []*scheduledNotification{
 		{
 			ScheduledAt:              now,
-			ScheduledFor:             time.New(us.CreatedAt.Add(miningSessionDuration / 24)),
+			ScheduledFor:             time.New(us.CreatedAt.Add(dayDuration / 24)),
 			Language:                 us.Language,
 			UserID:                   us.ID,
 			NotificationType:         string(InviteFriendNotificationType),
-			Uniqueness:               fmt.Sprintf("%v_%v", us.ID, time.New(us.CreatedAt.Add(miningSessionDuration/24))),
+			Uniqueness:               fmt.Sprintf("%v_%v", us.ID, time.New(us.CreatedAt.Add(dayDuration/24)).UnixNano()),
 			NotificationChannel:      string(PushNotificationChannel),
 			NotificationChannelValue: us.ID,
 			Data:                     &users.JSON{},
 		}, {
 			ScheduledAt:              now,
-			ScheduledFor:             time.New(us.CreatedAt.Add(7 * miningSessionDuration)), //nolint:gomnd,mnd // .
+			ScheduledFor:             time.New(us.CreatedAt.Add(7 * dayDuration)), //nolint:gomnd,mnd // .
 			Language:                 us.Language,
 			UserID:                   us.ID,
 			NotificationType:         string(InviteFriendNotificationType),
-			Uniqueness:               fmt.Sprintf("%v_%v", us.ID, time.New(us.CreatedAt.Add(7*miningSessionDuration))), //nolint:gomnd,mnd // .
+			Uniqueness:               fmt.Sprintf("%v_%v", us.ID, time.New(us.CreatedAt.Add(7*dayDuration)).UnixNano()), //nolint:gomnd,mnd // .
 			NotificationChannel:      string(PushNotificationChannel),
 			NotificationChannelValue: us.ID,
 			Data:                     &users.JSON{},

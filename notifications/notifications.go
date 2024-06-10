@@ -4,6 +4,7 @@ package notifications
 
 import (
 	"context"
+	"fmt"
 	"math/rand"
 	"strings"
 	"sync"
@@ -32,7 +33,8 @@ func New(ctx context.Context, _ context.CancelFunc) Repository {
 	var cfg config
 	appcfg.MustLoadFromKey(applicationYamlKey, &cfg)
 
-	db := storage.MustConnect(ctx, ddl, applicationYamlKey)
+	ddlWorkersParam := fmt.Sprintf(ddl, cfg.Scheduler.Workers)
+	db := storage.MustConnect(ctx, ddlWorkersParam, applicationYamlKey)
 
 	return &repository{
 		cfg:           &cfg,
@@ -46,10 +48,12 @@ func StartProcessor(ctx context.Context, cancel context.CancelFunc) Processor { 
 	var cfg config
 	appcfg.MustLoadFromKey(applicationYamlKey, &cfg)
 
+	ddlWorkersParam := fmt.Sprintf(ddl, cfg.Scheduler.Workers)
+
 	var mbConsumer messagebroker.Client
 	prc := &processor{repository: &repository{
 		cfg:                     &cfg,
-		db:                      storage.MustConnect(context.Background(), ddl, applicationYamlKey), //nolint:contextcheck // We need to gracefully shut it down.
+		db:                      storage.MustConnect(context.Background(), ddlWorkersParam, applicationYamlKey), //nolint:contextcheck,lll // We need to gracefully shut it down.
 		mb:                      messagebroker.MustConnect(ctx, applicationYamlKey),
 		pushNotificationsClient: push.New(applicationYamlKey),
 		pictureClient:           picture.New(applicationYamlKey),
@@ -71,7 +75,7 @@ func StartProcessor(ctx context.Context, cancel context.CancelFunc) Processor { 
 		&completedLevelsSource{processor: prc},
 		&enabledRolesSource{processor: prc},
 		&agendaContactsSource{processor: prc},
-		&miningSource{processor: prc},
+		&miningSessionSource{processor: prc},
 	)
 	prc.shutdown = closeAll(mbConsumer, prc.mb, prc.db, prc.pushNotificationsClient.Close)
 	go prc.startOldSentNotificationsCleaner(ctx)
