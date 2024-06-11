@@ -172,14 +172,12 @@ func (s *Scheduler) markScheduledAnnouncementAsSent(
 	sql := fmt.Sprintf(`WITH sent AS (
 		INSERT INTO sent_announcements(sent_at, language, uniqueness, notification_type, notification_channel, notification_channel_value)
 			VALUES %[1]v
+			ON CONFLICT DO NOTHING
 			RETURNING uniqueness, notification_type, notification_channel, notification_channel_value
 		)
 		DELETE FROM scheduled_announcements 
 			WHERE (uniqueness, notification_type, notification_channel, notification_channel_value) IN (SELECT * FROM sent)`, strings.Join(values, ","))
 	_, err := storage.Exec(ctx, s.db, sql, params...)
-	if errors.Is(err, storage.ErrDuplicate) {
-		return nil
-	}
 
 	return errors.Wrapf(err, "failed to delete scheduled announcements %#v", announcements)
 }

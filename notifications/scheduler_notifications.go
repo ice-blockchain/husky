@@ -244,9 +244,6 @@ func (s *Scheduler) deleteScheduledNotifications(ctx context.Context, notificati
 	sql := fmt.Sprintf(`DELETE FROM scheduled_notifications 
 							   WHERE (user_id, uniqueness, notification_type, notification_channel, notification_channel_value) IN (%v)`, strings.Join(values, ","))
 	_, err := storage.Exec(ctx, s.db, sql, params...)
-	if errors.Is(err, storage.ErrDuplicate) {
-		return nil
-	}
 
 	return errors.Wrapf(err, "failed to delete scheduled notifications %#v", notifications)
 }

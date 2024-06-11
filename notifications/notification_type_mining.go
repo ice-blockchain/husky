@@ -20,7 +20,7 @@ import (
 	"github.com/ice-blockchain/wintr/time"
 )
 
-//nolint:funlen // .
+//nolint:funlen,gocognit,gocyclo,revive,cyclop // .
 func (m *miningSessionSource) Process(ctx context.Context, msg *messagebroker.Message) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline while processing message")
@@ -51,8 +51,10 @@ func (m *miningSessionSource) Process(ctx context.Context, msg *messagebroker.Me
 		MiningExpiredNotificationType,
 		MiningExtendNotificationType,
 	}
-	if rErr := m.removeScheduledNotifications(ctx, *message.UserID, notificationTypes); rErr != nil {
-		return errors.Wrapf(rErr, "can't remove scheduled notifications for:%v", *message.UserID)
+	if len(old) > 0 {
+		if rErr := m.removeScheduledNotifications(ctx, *message.UserID, notificationTypes); rErr != nil {
+			return errors.Wrapf(rErr, "can't remove scheduled notifications for:%v", *message.UserID)
+		}
 	}
 	if iErr := m.insertMiningScheduledNotifications(ctx, message, usr.Language); iErr != nil {
 		if errors.Is(iErr, storage.ErrDuplicate) {
@@ -60,10 +62,14 @@ func (m *miningSessionSource) Process(ctx context.Context, msg *messagebroker.Me
 
 			return nil
 		}
+		var mErr *multierror.Error
+		if len(old) > 0 {
+			multierror.Append(mErr, errors.Wrapf(m.insertScheduledNotifications(ctx, old), "can't rollback scheduled notifications for:%v", message)) //nolint:lll,errcheck // .
+		}
 
 		return errors.Wrapf(multierror.Append(
-			errors.Wrapf(iErr, "can't insert/update mining scheduled notifications for:%#v", message),
-			errors.Wrapf(m.insertScheduledNotifications(ctx, old), "can't rollback scheduled notifications for:%v", message),
+			mErr,
+			errors.Wrapf(iErr, "can't insert mining scheduled notifications for:%#v", message),
 		).ErrorOrNil(), "one of executions failed for:%#v", message)
 	}
 
@@ -203,7 +209,7 @@ func (r *repository) insertScheduledNotifications(ctx context.Context, scheduled
 			VALUES %v`, strings.Join(values, ","))
 	_, err := storage.Exec(ctx, r.db, sql, params...)
 
-	return errors.Wrapf(err, "can't execute insert/update scheduled notifications records:%#v", values)
+	return errors.Wrapf(err, "can't execute insert scheduled notifications records:%#v", values)
 }
 
 func (r *repository) removeScheduledNotifications(ctx context.Context, userID string, nt []NotificationType) error {
