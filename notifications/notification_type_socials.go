@@ -32,7 +32,7 @@ func (r *repository) addScheduledSocialsNotifications(ctx context.Context, us *u
 			Language:                 us.Language,
 			UserID:                   us.ID,
 			NotificationType:         string(SocialsNotificationType),
-			Uniqueness:               fmt.Sprintf("%v_%v", us.ID, time.New(us.CreatedAt.Add(stdlibtime.Duration((ix+1))*dayDuration)).UnixNano()),
+			Uniqueness:               fmt.Sprintf("%v_%v_%vd", us.ID, SocialsNotificationType, ix+1),
 			NotificationChannel:      string(PushNotificationChannel),
 			NotificationChannelValue: us.ID,
 			Data: &users.JSON{

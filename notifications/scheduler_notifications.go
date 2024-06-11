@@ -20,18 +20,17 @@ func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber 
 	var (
 		batchNumber                 int64
 		now, lastIterationStartedAt = time.Now(), time.Now()
-		batchSize                   = s.cfg.Scheduler.BatchSize
 		errs                        = make([]error, 0)
-		successedNotifications      = make([]*pushNotification, 0, batchNumber)
-		emptyTokensNotifications    = make([]*scheduledNotificationInfo, 0, batchNumber)
+		successedNotifications      = make([]*pushNotification, 0, schedulerBatchSize)
+		emptyTokensNotifications    = make([]*scheduledNotificationInfo, 0, schedulerBatchSize)
 		invalidTokens               = make([]*invalidToken, 0)
 		toSendPushNotifications     = make([]*pushNotification, 0)
-		notifications               = make([]*scheduledNotificationInfo, batchNumber)
+		notifications               = make([]*scheduledNotificationInfo, schedulerBatchSize)
 		imageURLNotification        = s.pictureClient.DownloadURL("assets/push-notifications/batch-notification.png")
 		err                         error
 	)
 	resetVars := func(success bool) {
-		if success && len(notifications) < int(batchSize) {
+		if success && len(notifications) < int(schedulerBatchSize) {
 			go s.telemetryNotifications.collectElapsed(0, *lastIterationStartedAt.Time)
 			batchNumber = 0
 		}
@@ -42,7 +41,7 @@ func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber 
 		invalidTokens = invalidTokens[:0]
 		notifications = notifications[:0]
 		emptyTokensNotifications = emptyTokensNotifications[:0]
-		lastIterationStartedAt = time.Now()
+		lastIterationStartedAt = now
 	}
 
 	for ctx.Err() == nil {
@@ -268,7 +267,7 @@ func (s *Scheduler) fetchScheduledNotifications(ctx context.Context, now *time.T
 						 sn.notification_channel, sn.notification_channel_value, u.disabled_push_notification_domains
 				ORDER BY MOD(i, %[2]v), scheduled_for ASC
 				LIMIT %[4]v`,
-		AllNotificationDomain, s.cfg.Scheduler.Workers, workerNumber, s.cfg.Scheduler.BatchSize)
+		AllNotificationDomain, schedulerWorkersCount, workerNumber, schedulerBatchSize)
 	resp, err = storage.ExecMany[scheduledNotificationInfo](ctx, s.db, sql, now.Time)
 
 	return resp, errors.Wrapf(err, "failed to fetch scheduled notifications worker:%v", workerNumber)

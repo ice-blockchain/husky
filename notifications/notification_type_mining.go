@@ -108,7 +108,7 @@ func (m *miningSessionSource) insertMiningScheduledNotifications(ctx context.Con
 		Language:                 language,
 		UserID:                   *message.UserID,
 		NotificationType:         string(MiningExtendNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, message.ResettableStartingAt.UnixNano()),
+		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, MiningExtendNotificationType),
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
 		Data:                     &users.JSON{},
@@ -118,7 +118,7 @@ func (m *miningSessionSource) insertMiningScheduledNotifications(ctx context.Con
 		Language:                 language,
 		UserID:                   *message.UserID,
 		NotificationType:         string(MiningEndingSoonNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, message.WarnAboutExpirationStartingAt.UnixNano()),
+		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, MiningEndingSoonNotificationType),
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
 		Data:                     &users.JSON{},
@@ -128,7 +128,7 @@ func (m *miningSessionSource) insertMiningScheduledNotifications(ctx context.Con
 		Language:                 language,
 		UserID:                   *message.UserID,
 		NotificationType:         string(MiningExpiredNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, message.EndedAt.UnixNano()),
+		Uniqueness:               fmt.Sprintf("%v_%v_0d", *message.UserID, MiningExpiredNotificationType),
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
 		Data: &users.JSON{
@@ -140,7 +140,7 @@ func (m *miningSessionSource) insertMiningScheduledNotifications(ctx context.Con
 		Language:                 language,
 		UserID:                   *message.UserID,
 		NotificationType:         string(MiningExpiredNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, time.New(message.EndedAt.Add(dayDuration)).UnixNano()),
+		Uniqueness:               fmt.Sprintf("%v_%v_1d", *message.UserID, MiningExpiredNotificationType),
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
 		Data: &users.JSON{
@@ -152,7 +152,7 @@ func (m *miningSessionSource) insertMiningScheduledNotifications(ctx context.Con
 		Language:                 language,
 		UserID:                   *message.UserID,
 		NotificationType:         string(MiningExpiredNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, time.New(message.EndedAt.Add(7*dayDuration)).UnixNano()), //nolint:gomnd,mnd // .
+		Uniqueness:               fmt.Sprintf("%v_%v_7d", *message.UserID, MiningExpiredNotificationType),
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
 		Data: &users.JSON{
@@ -164,7 +164,7 @@ func (m *miningSessionSource) insertMiningScheduledNotifications(ctx context.Con
 		Language:                 language,
 		UserID:                   *message.UserID,
 		NotificationType:         string(MiningExpiredNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, time.New(message.EndedAt.Add(14*dayDuration)).UnixNano()), //nolint:gomnd,mnd // .
+		Uniqueness:               fmt.Sprintf("%v_%v_14d", *message.UserID, MiningExpiredNotificationType),
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
 		Data: &users.JSON{
@@ -176,7 +176,7 @@ func (m *miningSessionSource) insertMiningScheduledNotifications(ctx context.Con
 		Language:                 language,
 		UserID:                   *message.UserID,
 		NotificationType:         string(MiningExpiredNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, time.New(message.EndedAt.Add(30*dayDuration)).UnixNano()), //nolint:gomnd,mnd // .
+		Uniqueness:               fmt.Sprintf("%v_%v_30d", *message.UserID, MiningExpiredNotificationType),
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
 		Data: &users.JSON{

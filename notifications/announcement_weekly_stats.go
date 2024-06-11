@@ -20,17 +20,20 @@ func (s *Scheduler) addScheduledWeeklyStatsAnnouncement(ctx context.Context) err
 	languages := allPushNotificationTemplates[WeeklyStatsNotificationType]
 	scheduled := make([]*scheduledAnnouncement, 0, len(languages))
 	var nextTime *time.Time
+	var nextTimeFormatted string
 	if s.cfg.Development {
 		nextTime = time.New(now.Add(stdlibtime.Minute))
+		nextTimeFormatted = nextTime.Format("2006-01-01 01:00")
 	} else {
 		nextTime = nextTimeMatch(now, s.cfg.WeeklyStats.Weekday, s.cfg.WeeklyStats.Hour, s.cfg.WeeklyStats.Minutes)
+		nextTimeFormatted = nextTime.Format("2006-01-01")
 	}
 	for language := range languages {
 		scheduled = append(scheduled, &scheduledAnnouncement{
 			ScheduledAt:              now,
 			ScheduledFor:             nextTime,
 			Language:                 language,
-			Uniqueness:               fmt.Sprintf("%v_%v_%v", WeeklyStatsNotificationType, language, nextTime.UnixNano()),
+			Uniqueness:               fmt.Sprintf("%v_%v_%v", WeeklyStatsNotificationType, language, nextTimeFormatted),
 			NotificationType:         string(WeeklyStatsNotificationType),
 			NotificationChannel:      string(PushNotificationChannel),
 			NotificationChannelValue: fmt.Sprintf("system_%v", language),

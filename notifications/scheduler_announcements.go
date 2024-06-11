@@ -21,16 +21,15 @@ func (s *Scheduler) runAnnouncementsProcessor(ctx context.Context, workerNumber 
 	var (
 		batchNumber                 int64
 		now, lastIterationStartedAt = time.Now(), time.Now()
-		batchSize                   = s.cfg.Scheduler.BatchSize
 		errs                        = make([]error, 0)
-		successedAnnouncements      = make([]*broadcastPushNotification[push.Notification[push.SubscriptionTopic]], 0, batchNumber)
-		announcements               = make([]*scheduledAnnouncement, batchNumber)
-		toSendAnnouncements         = make([]*broadcastPushNotification[push.Notification[push.SubscriptionTopic]], 0, batchNumber)
+		successedAnnouncements      = make([]*broadcastPushNotification[push.Notification[push.SubscriptionTopic]], 0, schedulerBatchSize)
+		announcements               = make([]*scheduledAnnouncement, schedulerBatchSize)
+		toSendAnnouncements         = make([]*broadcastPushNotification[push.Notification[push.SubscriptionTopic]], 0, schedulerBatchSize)
 		imageURLAnnouncement        = s.pictureClient.DownloadURL("assets/push-notifications/batch-announcement.png")
 		err                         error
 	)
 	resetVars := func(success bool) {
-		if success && len(announcements) < int(batchSize) {
+		if success && len(announcements) < int(schedulerBatchSize) {
 			go s.telemetryAnnouncements.collectElapsed(0, *lastIterationStartedAt.Time)
 			batchNumber = 0
 		}
@@ -39,6 +38,7 @@ func (s *Scheduler) runAnnouncementsProcessor(ctx context.Context, workerNumber 
 		toSendAnnouncements = toSendAnnouncements[:0]
 		announcements = announcements[:0]
 		successedAnnouncements = successedAnnouncements[:0]
+		lastIterationStartedAt = now
 	}
 	for ctx.Err() == nil {
 		/******************************************************************************************************************************************************
@@ -150,7 +150,7 @@ func (s *Scheduler) fetchScheduledAnnouncements(ctx context.Context, now *time.T
 						WHERE MOD(i, %[1]v) = %[2]v
 					  		  AND scheduled_for <= $1
 						ORDER BY MOD(i, %[1]v), scheduled_for ASC
-						LIMIT %[3]v;`, s.cfg.Scheduler.Workers, workerNumber, s.cfg.Scheduler.BatchSize)
+						LIMIT %[3]v;`, schedulerWorkersCount, workerNumber, schedulerBatchSize)
 	resp, err = storage.ExecMany[scheduledAnnouncement](ctx, s.db, sql, now.Time)
 
 	return resp, errors.Wrapf(err, "failed to fetch scheduled announcements for worker:%v", workerNumber)

@@ -22,7 +22,7 @@ import (
 func MustStartScheduler(ctx context.Context) *Scheduler {
 	var cfg config
 	appcfg.MustLoadFromKey(applicationYamlKey, &cfg)
-	ddlWorkersParam := fmt.Sprintf(ddl, cfg.Scheduler.Workers)
+	ddlWorkersParam := fmt.Sprintf(ddl, schedulerWorkersCount)
 	sh := Scheduler{
 		cfg:                      &cfg,
 		db:                       storage.MustConnect(context.Background(), ddlWorkersParam, applicationYamlKey), //nolint:contextcheck // .
@@ -36,9 +36,9 @@ func MustStartScheduler(ctx context.Context) *Scheduler {
 	loadPushNotificationTranslationTemplates()
 	go sh.startWeeklyStatsUpdater(ctx)
 	wg := new(sync.WaitGroup)
-	wg.Add(2 * int(cfg.Scheduler.Workers)) //nolint:gomnd,mnd // .
+	wg.Add(2 * int(schedulerWorkersCount)) //nolint:gomnd,mnd // .
 	defer wg.Wait()
-	for workerNumber := range cfg.Scheduler.Workers {
+	for workerNumber := range schedulerWorkersCount {
 		go func(wn int64) {
 			defer wg.Done()
 			sh.runNotificationsProcessor(ctx, wn)
@@ -69,7 +69,7 @@ func (s *Scheduler) startWeeklyStatsUpdater(ctx context.Context) {
 		case <-ticker.C:
 			reqCtx, cancel := context.WithTimeout(ctx, 10*stdlibtime.Minute) //nolint:gomnd,mnd // .
 			if err := s.addScheduledWeeklyStatsAnnouncement(reqCtx); err != nil && !errors.Is(err, ErrDuplicate) {
-				log.Error(errors.Wrap(s.addScheduledWeeklyStatsAnnouncement(reqCtx), "failed to addScheduledWeeklyStatsAnnouncement"))
+				log.Error(errors.Wrap(err, "failed to addScheduledWeeklyStatsAnnouncement"))
 			}
 			cancel()
 		case <-ctx.Done():

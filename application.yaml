@@ -100,9 +100,6 @@ notifications: &notifications
     weekday: 1
     hour: 10
     minutes: 0
-  scheduler:
-    workers: 2
-    batchSize: 100
   development: true
   db: &notificationsDatabase
     urls:

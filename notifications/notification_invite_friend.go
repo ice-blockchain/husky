@@ -19,20 +19,22 @@ func (r *repository) addScheduledInviteFriendNotifications(ctx context.Context, 
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
 	now := time.Now()
-	var dayDuration stdlibtime.Duration
+	var dayDuration, firstNotificationDuration stdlibtime.Duration
 	if r.cfg.Development {
 		dayDuration = 1 * stdlibtime.Minute
+		firstNotificationDuration = 1 * stdlibtime.Minute
 	} else {
 		dayDuration = 24 * stdlibtime.Hour
+		firstNotificationDuration = 1 * stdlibtime.Hour
 	}
 	scheduled := []*scheduledNotification{
 		{
 			ScheduledAt:              now,
-			ScheduledFor:             time.New(us.CreatedAt.Add(dayDuration / 24)),
+			ScheduledFor:             time.New(us.CreatedAt.Add(firstNotificationDuration)),
 			Language:                 us.Language,
 			UserID:                   us.ID,
 			NotificationType:         string(InviteFriendNotificationType),
-			Uniqueness:               fmt.Sprintf("%v_%v", us.ID, time.New(us.CreatedAt.Add(dayDuration/24)).UnixNano()),
+			Uniqueness:               fmt.Sprintf("%v_%v_1h", us.ID, InviteFriendNotificationType),
 			NotificationChannel:      string(PushNotificationChannel),
 			NotificationChannelValue: us.ID,
 			Data:                     &users.JSON{},
@@ -42,7 +44,7 @@ func (r *repository) addScheduledInviteFriendNotifications(ctx context.Context, 
 			Language:                 us.Language,
 			UserID:                   us.ID,
 			NotificationType:         string(InviteFriendNotificationType),
-			Uniqueness:               fmt.Sprintf("%v_%v", us.ID, time.New(us.CreatedAt.Add(7*dayDuration)).UnixNano()), //nolint:gomnd,mnd // .
+			Uniqueness:               fmt.Sprintf("%v_%v_7d", us.ID, InviteFriendNotificationType),
 			NotificationChannel:      string(PushNotificationChannel),
 			NotificationChannelValue: us.ID,
 			Data:                     &users.JSON{},

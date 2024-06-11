@@ -33,7 +33,7 @@ func New(ctx context.Context, _ context.CancelFunc) Repository {
 	var cfg config
 	appcfg.MustLoadFromKey(applicationYamlKey, &cfg)
 
-	ddlWorkersParam := fmt.Sprintf(ddl, cfg.Scheduler.Workers)
+	ddlWorkersParam := fmt.Sprintf(ddl, schedulerWorkersCount)
 	db := storage.MustConnect(ctx, ddlWorkersParam, applicationYamlKey)
 
 	return &repository{
@@ -48,7 +48,7 @@ func StartProcessor(ctx context.Context, cancel context.CancelFunc) Processor { 
 	var cfg config
 	appcfg.MustLoadFromKey(applicationYamlKey, &cfg)
 
-	ddlWorkersParam := fmt.Sprintf(ddl, cfg.Scheduler.Workers)
+	ddlWorkersParam := fmt.Sprintf(ddl, schedulerWorkersCount)
 
 	var mbConsumer messagebroker.Client
 	prc := &processor{repository: &repository{

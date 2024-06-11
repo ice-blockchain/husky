@@ -178,6 +178,9 @@ const (
 	applicationYamlKey          = "notifications"
 	requestingUserIDCtxValueKey = "requestingUserIDCtxValueKey"
 	requestDeadline             = 30 * stdlibtime.Second
+
+	schedulerWorkersCount int64 = 10
+	schedulerBatchSize    int64 = 250
 )
 
 var (
@@ -310,11 +313,7 @@ type (
 		messagebroker.Config      `mapstructure:",squash"`                           //nolint:tagliatelle // Nope.
 		notificationDelayConfig   `mapstructure:",squash"`
 		PingCooldown              stdlibtime.Duration `yaml:"pingCooldown"`
-		Scheduler                 struct {
-			Workers   int64 `yaml:"workers"`
-			BatchSize int64 `yaml:"batchSize"`
-		} `yaml:"scheduler"`
-		WeeklyStats struct {
+		WeeklyStats               struct {
 			Weekday stdlibtime.Weekday `yaml:"weekday"`
 			Hour    int                `yaml:"hour"`
 			Minutes int                `yaml:"minutes"`
