@@ -85,6 +85,3 @@ notifications_test:
     <<: *notificationsMessageBroker
     consumingTopics: *notificationsMessageBrokerTopics
     consumerGroup: husky-notifications-testing-runner
-  db:
-    <<: *notificationsDatabase
-    schemaPath: notifications/DDL.lua

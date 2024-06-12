@@ -23,10 +23,10 @@ func (s *Scheduler) addScheduledWeeklyStatsAnnouncement(ctx context.Context) err
 	var nextTimeFormatted string
 	if s.cfg.Development {
 		nextTime = time.New(now.Add(stdlibtime.Minute))
-		nextTimeFormatted = nextTime.Format("2006-01-01 01:00")
+		nextTimeFormatted = fmt.Sprintf("%v:%02d:%02d %02d:%02d:%02d", nextTime.Year(), int(nextTime.Month()), nextTime.Day(), nextTime.Hour(), nextTime.Minute(), nextTime.Second()) //nolint:lll // .
 	} else {
 		nextTime = nextTimeMatch(now, s.cfg.WeeklyStats.Weekday, s.cfg.WeeklyStats.Hour, s.cfg.WeeklyStats.Minutes)
-		nextTimeFormatted = nextTime.Format("2006-01-01")
+		nextTimeFormatted = fmt.Sprintf("%v:%02d:%02d", nextTime.Year(), int(nextTime.Month()), nextTime.Day())
 	}
 	for language := range languages {
 		scheduled = append(scheduled, &scheduledAnnouncement{
@@ -83,7 +83,7 @@ func nextTimeMatch(now *time.Time, weekday stdlibtime.Weekday, hour, minute int)
 	beginningOfWeek := beginningOfDay.AddDate(0, 0, -currentWeekday)
 
 	var nextDate stdlibtime.Time
-	if currentWeekday == int(weekday) && now.Hour() < hour {
+	if (currentWeekday == int(weekday) && now.Hour() < hour) || currentWeekday < int(weekday) {
 		nextDate = beginningOfWeek.AddDate(0, 0, int(weekday))
 	} else {
 		nextDate = beginningOfWeek.AddDate(0, 0, int(weekday)+7) //nolint:mnd,gomnd // .

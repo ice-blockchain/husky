@@ -64,7 +64,7 @@ func (m *miningSessionSource) Process(ctx context.Context, msg *messagebroker.Me
 		}
 		var mErr *multierror.Error
 		if len(old) > 0 {
-			multierror.Append(mErr, errors.Wrapf(m.insertScheduledNotifications(ctx, old), "can't rollback scheduled notifications for:%v", message)) //nolint:lll,errcheck // .
+			mErr = multierror.Append(mErr, errors.Wrapf(m.insertScheduledNotifications(ctx, old), "can't rollback scheduled notifications for:%v", message))
 		}
 
 		return errors.Wrapf(multierror.Append(
