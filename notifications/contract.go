@@ -101,7 +101,6 @@ var (
 			NewsNotificationDomain,
 			MicroCommunityNotificationDomain,
 			MiningNotificationDomain,
-			DailyBonusNotificationDomain,
 			SystemNotificationDomain,
 		},
 		PushNotificationChannel: {
@@ -112,7 +111,6 @@ var (
 			NewsNotificationDomain,
 			MicroCommunityNotificationDomain,
 			MiningNotificationDomain,
-			DailyBonusNotificationDomain,
 			SystemNotificationDomain,
 		},
 	}
