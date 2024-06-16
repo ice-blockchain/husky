@@ -1,6 +1,202 @@
 {
-   "en":{
-      "body":"Mining has not been active for {{.Days}}! Start your mining.",
-      "title":"Mining has not been active"
-   }
+    "en": {
+        "title": "⏰  Tick-tock, tick-tock!",
+        "body": "Keep your coins safe by starting a new check-in session now."
+    },
+    "ro": {
+        "title": "⏰ Tic-tac, tic-tac!",
+        "body": "Păstrați-vă monedele în siguranță, pornind acum o nouă sesiune de check-in."
+    },
+    "el": {
+        "title": "⏰ Τικ-τακ, τικ-τακ!",
+        "body": "Διατηρήστε τα νομίσματά σας ασφαλή ξεκινώντας μια νέα συνεδρία check-in τώρα."
+    },
+    "af": {
+        "title": "⏰ Tik-tok, tik-tok!",
+        "body": "Hou jou munte veilig deur nou 'n nuwe inkloksessie te begin."
+    },
+    "am": {
+        "title": "⏰ ቲክ-ቶክ፣ ቲክ-ቶክ!",
+        "body": "አሁን አዲስ የመመዝገቢያ ክፍለ ጊዜ በመጀመር የሳንቲሞችዎን ደህንነት ይጠብቁ።"
+    },
+    "ar": {
+        "title": "⏰ تيك توك ، تيك توك!",
+        "body": "حافظ على أمان عملاتك عن طريق بدء جلسة تسجيل وصول جديدة الآن."
+    },
+    "az": {
+        "title": "⏰ Tik-tak, tik-tak!",
+        "body": "İndi yeni qeydiyyat seansına başlamaqla pullarınızı təhlükəsiz saxlayın."
+    },
+    "bg": {
+        "title": "⏰ Тик-так, тик-так!",
+        "body": "Пазете вашите монети в безопасност, като започнете нова сесия за регистрация сега."
+    },
+    "bn": {
+        "title": "⏰ টিক-টক, টিক-টক!",
+        "body": "এখনই একটি নতুন চেক-ইন সেশন শুরু করে আপনার কয়েনগুলিকে সুরক্ষিত রাখুন৷"
+    },
+    "yo": {
+        "title": "⏰ Tiki-toki, tiki-toki!",
+        "body": "Tọju awọn owó rẹ lailewu nipa bibẹrẹ igba iṣayẹwo tuntun ni bayi."
+    },
+    "cs": {
+        "title": "⏰ Tik-tak, tik-tak!",
+        "body": "Udržujte své coiny v bezpečí tím, že nyní zahájíte novou relaci odbavení."
+    },
+    "de": {
+        "title": "⏰ Tick-Tack, Tick-Tack!",
+        "body": "Schützen Sie Ihre Münzen, indem Sie jetzt eine neue Check-in-Sitzung starten."
+    },
+    "es": {
+        "title": "⏰ ¡Tic-tac, tic-tac!",
+        "body": "Mantenga sus monedas seguras iniciando una nueva sesión de registro ahora."
+    },
+    "fa": {
+        "title": "⏰ تیک تاک، تیک تاک!",
+        "body": "سکه های خود را با شروع یک جلسه بررسی جدید از هم اکنون ایمن نگه دارید."
+    },
+    "tl": {
+        "title": "⏰ Tik-tok, tik-tok!",
+        "body": "Panatilihing ligtas ang iyong mga barya sa pamamagitan ng pagsisimula ng bagong sesyon ng check-in ngayon."
+    },
+    "fr": {
+        "title": "⏰ Tic-tac, tic-tac !",
+        "body": "Protégez vos pièces en démarrant une nouvelle session d'enregistrement maintenant."
+    },
+    "gu": {
+        "title": "⏰ ટિક-ટોક, ટિક-ટોક!",
+        "body": "હમણાં એક નવું ચેક-ઇન સત્ર શરૂ કરીને તમારા સિક્કાઓને સુરક્ષિત રાખો."
+    },
+    "he": {
+        "title": "⏰ טיק-טק, טיק-טק!",
+        "body": "שמרו על המטבעות שלכם על ידי התחלת מפגש צ'ק-אין חדש עכשיו."
+    },
+    "hi": {
+        "title": "⏰ टिक-टॉक, टिक-टॉक!",
+        "body": "अभी नया चेक-इन सत्र शुरू करके अपने सिक्कों को सुरक्षित रखें।"
+    },
+    "hu": {
+        "title": "⏰ Tick-tock, tic-tock!",
+        "body": "Tartsa biztonságban érméit, ha most új bejelentkezést indít."
+    },
+    "id": {
+        "title": "⏰ Tik-tok, tik-tok!",
+        "body": "Amankan koin Anda dengan memulai sesi check-in baru sekarang."
+    },
+    "it": {
+        "title": "⏰ Tic tac, tic tac!",
+        "body": "Mantieni le tue monete al sicuro avviando subito una nuova sessione di check-in."
+    },
+    "ja": {
+        "title": "⏰ チクタク、チクタク！",
+        "body": "今すぐ新しいチェックイン セッションを開始して、コインを安全に保管してください。"
+    },
+    "jv": {
+        "title": "⏰ Tik tok, tik tok!",
+        "body": "Tansah dhuwit recehan sampeyan kanthi miwiti sesi check-in anyar saiki."
+    },
+    "ko": {
+        "title": "⏰ 틱톡, 틱톡!",
+        "body": "지금 새로운 체크인 세션을 시작하여 코인을 안전하게 보관하세요."
+    },
+    "mr": {
+        "title": "⏰ टिक-टॉक, टिक-टॉक!",
+        "body": "आता नवीन चेक-इन सत्र सुरू करून तुमची नाणी सुरक्षित ठेवा."
+    },
+    "ms": {
+        "title": "⏰ Tik-tok, tik-tok!",
+        "body": "Pastikan syiling anda selamat dengan memulakan sesi daftar masuk baharu sekarang."
+    },
+    "no": {
+        "title": "⏰ Tikk-takk, tikk-takk!",
+        "body": "Hold myntene dine trygge ved å starte en ny innsjekkingsøkt nå."
+    },
+    "pa": {
+        "title": "⏰ ਟਿੱਕ-ਟੌਕ, ਟਿੱਕ-ਟੌਕ!",
+        "body": "ਹੁਣੇ ਇੱਕ ਨਵਾਂ ਚੈੱਕ-ਇਨ ਸੈਸ਼ਨ ਸ਼ੁਰੂ ਕਰਕੇ ਆਪਣੇ ਸਿੱਕਿਆਂ ਨੂੰ ਸੁਰੱਖਿਅਤ ਰੱਖੋ।"
+    },
+    "pl": {
+        "title": "⏰ Tik-tak, tik-tak!",
+        "body": "Chroń swoje monety, rozpoczynając teraz nową sesję odprawy."
+    },
+    "ps": {
+        "title": "⏰ ټک ټک، ټک ټک!",
+        "body": "همدا اوس د نوي چیک ان سیشن په پیل کولو سره خپلې سکې خوندي وساتئ."
+    },
+    "pt": {
+        "title": "⏰ Tic-tac, tic-tac!",
+        "body": "Mantenha suas moedas seguras iniciando uma nova sessão de check-in agora."
+    },
+    "ru": {
+        "title": "⏰ Тик-так, тик-так!",
+        "body": "Защитите свои монеты, начав новую сессию регистрации прямо сейчас."
+    },
+    "sd": {
+        "title": "⏰ ٽڪ ٽڪ، ٽڪ ٽڪ!",
+        "body": "ھاڻي ھڪڙو نئون چيڪ-ان سيشن شروع ڪندي پنھنجي سڪن کي محفوظ رکو."
+    },
+    "sk": {
+        "title": "⏰ Tik-tak, tik-tak!",
+        "body": "Udržujte svoje mince v bezpečí tým, že teraz začnete novú reláciu registrácie."
+    },
+    "sl": {
+        "title": "⏰ Tik-tak, tik-tak!",
+        "body": "Poskrbite za svoje kovance tako, da zdaj začnete novo sejo prijave."
+    },
+    "sq": {
+        "title": "⏰ Tik-tak, tik-tak!",
+        "body": "Mbani monedhat tuaja të sigurta duke filluar një seancë të re check-in tani."
+    },
+    "sv": {
+        "title": "⏰ Tick-tack, tick-tack!",
+        "body": "Håll dina mynt säkra genom att starta en ny incheckningssession nu."
+    },
+    "ta": {
+        "title": "⏰ டிக்-டாக், டிக்-டாக்!",
+        "body": "இப்போது புதிய செக்-இன் அமர்வைத் தொடங்கி உங்கள் நாணயங்களைப் பாதுகாப்பாக வைத்திருங்கள்."
+    },
+    "te": {
+        "title": "⏰ టిక్-టాక్, టిక్-టాక్!",
+        "body": "ఇప్పుడే కొత్త చెక్-ఇన్ సెషన్‌ను ప్రారంభించడం ద్వారా మీ నాణేలను సురక్షితంగా ఉంచండి."
+    },
+    "th": {
+        "title": "⏰ ติ๊กต็อก ติ๊กต็อก!",
+        "body": "รักษาเหรียญของคุณให้ปลอดภัยโดยเริ่มเซสชันการเช็คอินใหม่ทันที"
+    },
+    "su": {
+        "title": "⏰ Tiktok, tiktok!",
+        "body": "Jaga koin anjeun aman ku ngamimitian sési cek-in énggal ayeuna."
+    },
+    "kn": {
+        "title": "⏰ ಟಿಕ್-ಟಾಕ್, ಟಿಕ್-ಟಾಕ್!",
+        "body": "ಇದೀಗ ಹೊಸ ಚೆಕ್-ಇನ್ ಸೆಶನ್ ಅನ್ನು ಪ್ರಾರಂಭಿಸುವ ಮೂಲಕ ನಿಮ್ಮ ನಾಣ್ಯಗಳನ್ನು ಸುರಕ್ಷಿತವಾಗಿರಿಸಿಕೊಳ್ಳಿ."
+    },
+    "tr": {
+        "title": "⏰ Tik-tak, tik-tak!",
+        "body": "Şimdi yeni bir check-in oturumu başlatarak madeni paralarınızı güvende tutun."
+    },
+    "zh-hant": {
+        "title": "⏰ 滴答，滴答！",
+        "body": "立即開始新的簽到會話，確保您的硬幣安全。"
+    },
+    "uk": {
+        "title": "⏰ Тік-так, тік-так!",
+        "body": "Збережіть свої монети в безпеці, розпочавши новий сеанс реєстрації зараз."
+    },
+    "ur": {
+        "title": "⏰ ٹک ٹاک، ٹک ٹاک!",
+        "body": "ابھی ایک نیا چیک ان سیشن شروع کر کے اپنے سکوں کو محفوظ رکھیں۔"
+    },
+    "vi": {
+        "title": "⏰ Tích tắc, tích tắc!",
+        "body": "Giữ tiền của bạn an toàn bằng cách bắt đầu phiên đăng ký mới ngay bây giờ."
+    },
+    "zh": {
+        "title": "⏰ 滴答，滴答！",
+        "body": "立即开始新的签到会话，确保您的硬币安全。"
+    },
+    "zu": {
+        "title": "⏰ Thikha-tock, umaka-tock!",
+        "body": "Gcina izinhlamvu zemali zakho ziphephile ngokuqala iseshini entsha yokungena manje."
+    }
 }

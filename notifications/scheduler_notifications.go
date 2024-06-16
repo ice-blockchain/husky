@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 
 	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
@@ -125,6 +126,8 @@ func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber 
 					Token:  arg.pn.Target,
 				})
 				s.schedulerNotificationsMX.Unlock()
+			} else {
+				log.Error(err, "can't send notification for:%v", arg.sn.UserID)
 			}
 		}, func(arg *pushNotification) {
 			s.schedulerNotificationsMX.Lock()
@@ -162,10 +165,17 @@ func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber 
 		if dErr := s.deleteScheduledNotifications(reqCtx, emptyTokensNotifications); dErr != nil {
 			errs = append(errs, errors.Wrapf(dErr, "can't delete scheduled notifications for:%#v", emptyTokensNotifications))
 		}
-		reqCancel()
-		if len(successedNotifications) > 0 {
+		if len(successedNotifications)+len(emptyTokensNotifications) > 0 {
 			go s.telemetryNotifications.collectElapsed(4, *before.Time) //nolint:gomnd,mnd // .
 		}
+		if err = multierror.Append(nil, errs...).ErrorOrNil(); err != nil {
+			log.Error(errors.Wrapf(err, "[scheduler] failed to mark/delete scheduled notifications for batchNumber:%v,workerNumber:%v", batchNumber, workerNumber))
+			resetVars(false)
+			reqCancel()
+
+			continue
+		}
+		reqCancel()
 
 		batchNumber++
 		resetVars(true)

@@ -23,7 +23,7 @@ func (s *Scheduler) addScheduledWeeklyStatsAnnouncement(ctx context.Context) err
 	var nextTimeFormatted string
 	if s.cfg.Development {
 		nextTime = time.New(now.Add(stdlibtime.Minute))
-		nextTimeFormatted = fmt.Sprintf("%v:%02d:%02d %02d:%02d:%02d", nextTime.Year(), int(nextTime.Month()), nextTime.Day(), nextTime.Hour(), nextTime.Minute(), nextTime.Second()) //nolint:lll // .
+		nextTimeFormatted = fmt.Sprintf("%v:%02d:%02d %02d:%02d:%02d", nextTime.Year(), int(nextTime.Month()), nextTime.Day(), nextTime.Hour(), nextTime.Minute(), 0) //nolint:lll // .
 	} else {
 		nextTime = nextTimeMatch(now, s.cfg.WeeklyStats.Weekday, s.cfg.WeeklyStats.Hour, s.cfg.WeeklyStats.Minutes)
 		nextTimeFormatted = fmt.Sprintf("%v:%02d:%02d", nextTime.Year(), int(nextTime.Month()), nextTime.Day())

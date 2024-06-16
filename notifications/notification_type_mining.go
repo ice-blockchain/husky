@@ -96,10 +96,13 @@ func (m *miningSessionSource) insertMiningScheduledNotifications(ctx context.Con
 	now := time.Now()
 	const notificationsNum = 7
 	var dayDuration stdlibtime.Duration
+	var uniquenessTime string
 	if m.cfg.Development {
 		dayDuration = 1 * stdlibtime.Minute
+		uniquenessTime = fmt.Sprintf("%v:%02d:%02d %02d:%02d:%02d", now.Year(), int(now.Month()), now.Day(), now.Hour(), now.Minute(), 0)
 	} else {
 		dayDuration = 24 * stdlibtime.Hour
+		uniquenessTime = fmt.Sprintf("%v:%02d:%02d", now.Year(), int(now.Month()), now.Day())
 	}
 	scheduled := make([]*scheduledNotification, 0, notificationsNum)
 	scheduled = append(scheduled, &scheduledNotification{
@@ -108,17 +111,19 @@ func (m *miningSessionSource) insertMiningScheduledNotifications(ctx context.Con
 		Language:                 language,
 		UserID:                   *message.UserID,
 		NotificationType:         string(MiningExtendNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, MiningExtendNotificationType),
+		Uniqueness:               fmt.Sprintf("%v_%v_%v", *message.UserID, MiningExtendNotificationType, uniquenessTime),
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
-		Data:                     &users.JSON{},
+		Data: &users.JSON{
+			"TenantName": m.cfg.TenantName,
+		},
 	}, &scheduledNotification{
 		ScheduledAt:              now,
 		ScheduledFor:             message.WarnAboutExpirationStartingAt,
 		Language:                 language,
 		UserID:                   *message.UserID,
 		NotificationType:         string(MiningEndingSoonNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v", *message.UserID, MiningEndingSoonNotificationType),
+		Uniqueness:               fmt.Sprintf("%v_%v_%v", *message.UserID, MiningEndingSoonNotificationType, uniquenessTime),
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
 		Data:                     &users.JSON{},
@@ -128,60 +133,50 @@ func (m *miningSessionSource) insertMiningScheduledNotifications(ctx context.Con
 		Language:                 language,
 		UserID:                   *message.UserID,
 		NotificationType:         string(MiningExpiredNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v_0d", *message.UserID, MiningExpiredNotificationType),
+		Uniqueness:               fmt.Sprintf("%v_%v_0d_%v", *message.UserID, MiningExpiredNotificationType, uniquenessTime),
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
-		Data: &users.JSON{
-			"Days": 0,
-		},
+		Data:                     &users.JSON{},
 	}, &scheduledNotification{
 		ScheduledAt:              now,
 		ScheduledFor:             time.New(message.EndedAt.Add(dayDuration)),
 		Language:                 language,
 		UserID:                   *message.UserID,
 		NotificationType:         string(MiningExpiredNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v_1d", *message.UserID, MiningExpiredNotificationType),
+		Uniqueness:               fmt.Sprintf("%v_%v_1d_%v", *message.UserID, MiningExpiredNotificationType, uniquenessTime),
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
-		Data: &users.JSON{
-			"Days": 1,
-		},
+		Data:                     &users.JSON{},
 	}, &scheduledNotification{
 		ScheduledAt:              now,
 		ScheduledFor:             time.New(message.EndedAt.Add(7 * dayDuration)), //nolint:gomnd,mnd // .
 		Language:                 language,
 		UserID:                   *message.UserID,
 		NotificationType:         string(MiningExpiredNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v_7d", *message.UserID, MiningExpiredNotificationType),
+		Uniqueness:               fmt.Sprintf("%v_%v_7d_%v", *message.UserID, MiningExpiredNotificationType, uniquenessTime),
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
-		Data: &users.JSON{
-			"Days": 7,
-		},
+		Data:                     &users.JSON{},
 	}, &scheduledNotification{
 		ScheduledAt:              now,
 		ScheduledFor:             time.New(message.EndedAt.Add(14 * dayDuration)), //nolint:gomnd,mnd // .
 		Language:                 language,
 		UserID:                   *message.UserID,
 		NotificationType:         string(MiningExpiredNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v_14d", *message.UserID, MiningExpiredNotificationType),
+		Uniqueness:               fmt.Sprintf("%v_%v_14d_%v", *message.UserID, MiningExpiredNotificationType, uniquenessTime),
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
-		Data: &users.JSON{
-			"Days": 14,
-		},
+		Data:                     &users.JSON{},
 	}, &scheduledNotification{
 		ScheduledAt:              now,
 		ScheduledFor:             time.New(message.EndedAt.Add(30 * dayDuration)), //nolint:gomnd,mnd // .
 		Language:                 language,
 		UserID:                   *message.UserID,
 		NotificationType:         string(MiningExpiredNotificationType),
-		Uniqueness:               fmt.Sprintf("%v_%v_30d", *message.UserID, MiningExpiredNotificationType),
+		Uniqueness:               fmt.Sprintf("%v_%v_30d_%v", *message.UserID, MiningExpiredNotificationType, uniquenessTime),
 		NotificationChannel:      string(PushNotificationChannel),
 		NotificationChannelValue: *message.UserID,
-		Data: &users.JSON{
-			"Days": 30,
-		},
+		Data:                     &users.JSON{},
 	})
 
 	return errors.Wrapf(m.insertScheduledNotifications(ctx, scheduled), "can't execute insertScheduledNotifications:%#v", scheduled)

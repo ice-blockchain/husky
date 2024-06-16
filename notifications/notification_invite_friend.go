@@ -37,7 +37,9 @@ func (r *repository) addScheduledInviteFriendNotifications(ctx context.Context, 
 			Uniqueness:               fmt.Sprintf("%v_%v_1h", us.ID, InviteFriendNotificationType),
 			NotificationChannel:      string(PushNotificationChannel),
 			NotificationChannelValue: us.ID,
-			Data:                     &users.JSON{},
+			Data: &users.JSON{
+				"TenantName": r.cfg.TenantName,
+			},
 		}, {
 			ScheduledAt:              now,
 			ScheduledFor:             time.New(us.CreatedAt.Add(7 * dayDuration)), //nolint:gomnd,mnd // .
@@ -47,7 +49,9 @@ func (r *repository) addScheduledInviteFriendNotifications(ctx context.Context, 
 			Uniqueness:               fmt.Sprintf("%v_%v_7d", us.ID, InviteFriendNotificationType),
 			NotificationChannel:      string(PushNotificationChannel),
 			NotificationChannelValue: us.ID,
-			Data:                     &users.JSON{},
+			Data: &users.JSON{
+				"TenantName": r.cfg.TenantName,
+			},
 		},
 	}
 

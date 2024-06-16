@@ -5,6 +5,7 @@ package notifications
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"sync"
 	stdlibtime "time"
 
@@ -131,7 +132,7 @@ func (s *Scheduler) getDeeplink(nt NotificationType, data *users.JSON) string {
 	case InviteFriendNotificationType:
 		return fmt.Sprintf("%v://invite", s.cfg.DeeplinkScheme)
 	case SocialsNotificationType:
-		return fmt.Sprintf("%v://browser?url=%v", s.cfg.DeeplinkScheme, (*data)["SocialUrl"])
+		return fmt.Sprintf("%v://browser?url=%v", s.cfg.DeeplinkScheme, url.QueryEscape(fmt.Sprintf("%v", (*data)["SocialUrl"])))
 	case WeeklyStatsNotificationType:
 		return fmt.Sprintf("%v://stats", s.cfg.DeeplinkScheme)
 	default:

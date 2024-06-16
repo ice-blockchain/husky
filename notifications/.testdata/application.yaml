@@ -5,6 +5,7 @@ logger:
   encoder: console
   level: info
 notifications: &notifications
+  tenantName: BogusName
   deeplinkScheme: staging.ice.app
   pingCooldown: 1m
   wintr/multimedia/picture:

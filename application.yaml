@@ -114,6 +114,7 @@ notifications: &notifications
       password: pass
     replicaURLs:
       - postgresql://root:pass@localhost:5434/husky
+  tenantName: BogusName
   messageBroker: &notificationsMessageBroker
     consumerGroup: husky-local-notifications-testing
     createTopics: true

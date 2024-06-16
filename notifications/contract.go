@@ -299,7 +299,8 @@ type (
 		Token  push.DeviceToken
 	}
 	config struct {
-		Socials []struct {
+		TenantName string `yaml:"tenantName"`
+		Socials    []struct {
 			Name string `yaml:"name"`
 			Link string `yaml:"link"`
 		} `yaml:"socials"`
