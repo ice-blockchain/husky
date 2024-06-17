@@ -50,6 +50,7 @@ func (m *miningSessionSource) Process(ctx context.Context, msg *messagebroker.Me
 		MiningEndingSoonNotificationType,
 		MiningExpiredNotificationType,
 		MiningExtendNotificationType,
+		MiningNotActiveNotificationType,
 	}
 	if len(old) > 0 {
 		if rErr := m.removeScheduledNotifications(ctx, *message.UserID, notificationTypes); rErr != nil {
@@ -81,6 +82,7 @@ func (m *miningSessionSource) getMiningScheduledNotifications(ctx context.Contex
 		MiningEndingSoonNotificationType,
 		MiningExpiredNotificationType,
 		MiningExtendNotificationType,
+		MiningNotActiveNotificationType,
 	}
 	sql := `SELECT *
 				FROM scheduled_notifications
