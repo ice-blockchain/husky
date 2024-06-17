@@ -26,7 +26,6 @@ func (s *Scheduler) runAnnouncementsProcessor(ctx context.Context, workerNumber 
 		successedAnnouncements      = make([]*broadcastPushNotification[push.Notification[push.SubscriptionTopic]], 0, schedulerBatchSize)
 		announcements               = make([]*scheduledAnnouncement, schedulerBatchSize)
 		toSendAnnouncements         = make([]*broadcastPushNotification[push.Notification[push.SubscriptionTopic]], 0, schedulerBatchSize)
-		imageURLAnnouncement        = s.pictureClient.DownloadURL("assets/push-notifications/batch-announcement.png")
 		err                         error
 	)
 	resetVars := func(success bool) {
@@ -75,11 +74,10 @@ func (s *Scheduler) runAnnouncementsProcessor(ctx context.Context, workerNumber 
 			deeplink := s.getDeeplink(NotificationType(an.NotificationType), an.Data)
 			toSendAnnouncements = append(toSendAnnouncements, &broadcastPushNotification[push.Notification[push.SubscriptionTopic]]{
 				pn: &push.Notification[push.SubscriptionTopic]{
-					Data:     map[string]string{"deeplink": deeplink},
-					Target:   push.SubscriptionTopic(an.NotificationChannelValue),
-					Title:    tmpl.getTitle(an.Data),
-					Body:     tmpl.getBody(an.Data),
-					ImageURL: imageURLAnnouncement,
+					Data:   map[string]string{"deeplink": deeplink},
+					Target: push.SubscriptionTopic(an.NotificationChannelValue),
+					Title:  tmpl.getTitle(an.Data),
+					Body:   tmpl.getBody(an.Data),
 				},
 				sa: &sentAnnouncement{
 					SentAt:   now,

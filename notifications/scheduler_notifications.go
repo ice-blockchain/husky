@@ -28,7 +28,6 @@ func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber 
 		invalidTokens               = make([]*invalidToken, 0)
 		toSendPushNotifications     = make([]*pushNotification, 0)
 		notifications               = make([]*scheduledNotificationInfo, schedulerBatchSize)
-		imageURLNotification        = s.pictureClient.DownloadURL("assets/push-notifications/batch-notification.png")
 		err                         error
 	)
 	resetVars := func(success bool) {
@@ -96,11 +95,10 @@ func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber 
 			for _, deviceToken := range *notification.PushNotificationTokens {
 				notif := &pushNotification{
 					pn: &push.Notification[push.DeviceToken]{
-						Data:     map[string]string{"deeplink": s.getDeeplink(NotificationType(notification.NotificationType), notification.Data)},
-						Target:   deviceToken,
-						Title:    tmpl.getTitle(notification.Data),
-						Body:     tmpl.getBody(notification.Data),
-						ImageURL: imageURLNotification,
+						Data:   map[string]string{"deeplink": s.getDeeplink(NotificationType(notification.NotificationType), notification.Data)},
+						Target: deviceToken,
+						Title:  tmpl.getTitle(notification.Data),
+						Body:   tmpl.getBody(notification.Data),
 					},
 					sn: &sentNotification{
 						SentAt:   now,
