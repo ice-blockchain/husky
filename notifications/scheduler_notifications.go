@@ -130,7 +130,7 @@ func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber 
 				})
 				s.schedulerNotificationsMX.Unlock()
 			} else {
-				log.Error(err, "can't send notification for:%v", arg.sn.UserID)
+				log.Error(errors.Wrapf(err, "can't send notification for:%v", arg.sn.UserID))
 			}
 		}, func(arg *pushNotification) {
 			s.schedulerNotificationsMX.Lock()

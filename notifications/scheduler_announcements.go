@@ -99,7 +99,7 @@ func (s *Scheduler) runAnnouncementsProcessor(ctx context.Context, workerNumber 
 		******************************************************************************************************************************************************/
 		reqCtx, reqCancel = context.WithTimeout(ctx, requestDeadline)
 		if rErr := runConcurrentlyBatch(reqCtx, s.broadcastPushNotification, toSendAnnouncements, func(arg *broadcastPushNotification[push.Notification[push.SubscriptionTopic]], err error) { //nolint:lll // .
-			log.Error(err, "can't send announcement for lang:%v, notificationChannel:%v, notificationChannelValue:%v, notificationType:%v", arg.sa.Language, arg.sa.NotificationChannel, arg.sa.NotificationChannelValue, arg.sa.NotificationType, arg.sa.NotificationType) //nolint:lll // .
+			log.Error(errors.Wrapf(err, "can't send announcement for lang:%v, notificationChannel:%v, notificationChannelValue:%v, notificationType:%v", arg.sa.Language, arg.sa.NotificationChannel, arg.sa.NotificationChannelValue, arg.sa.NotificationType)) //nolint:lll // .
 		}, func(arg *broadcastPushNotification[push.Notification[push.SubscriptionTopic]]) {
 			s.schedulerAnnouncementsMX.Lock()
 			defer s.schedulerAnnouncementsMX.Unlock()
