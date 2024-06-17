@@ -98,7 +98,7 @@ func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber 
 					pn: &push.Notification[push.DeviceToken]{
 						Data:     map[string]string{"deeplink": s.getDeeplink(NotificationType(notification.NotificationType), notification.Data)},
 						Target:   deviceToken,
-						Title:    tmpl.getTitle(nil),
+						Title:    tmpl.getTitle(notification.Data),
 						Body:     tmpl.getBody(notification.Data),
 						ImageURL: imageURLNotification,
 					},

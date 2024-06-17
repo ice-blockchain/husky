@@ -77,7 +77,7 @@ func (s *Scheduler) runAnnouncementsProcessor(ctx context.Context, workerNumber 
 				pn: &push.Notification[push.SubscriptionTopic]{
 					Data:     map[string]string{"deeplink": deeplink},
 					Target:   push.SubscriptionTopic(an.NotificationChannelValue),
-					Title:    tmpl.getTitle(nil),
+					Title:    tmpl.getTitle(an.Data),
 					Body:     tmpl.getBody(an.Data),
 					ImageURL: imageURLAnnouncement,
 				},
