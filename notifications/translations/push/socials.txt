@@ -1,6 +1,0 @@
-{
-   "en":{
-      "body":"Follow us on {{.SocialUrl}}",
-      "title":"Socials"
-   }
-}

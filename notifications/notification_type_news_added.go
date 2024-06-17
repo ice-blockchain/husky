@@ -74,12 +74,13 @@ func (s *newsTableSource) broadcastPushNotifications(ctx context.Context, newsAr
 	now := time.Now()
 	regularTarget := push.SubscriptionTopic(fmt.Sprintf("news_%v", newsArticle.Language))
 	delayedTarget := push.SubscriptionTopic(fmt.Sprintf("news_%v_v2", newsArticle.Language))
+	data := map[string]any{"TenantName": s.cfg.TenantName}
 	bpn := &broadcastPushNotification[push.Notification[push.SubscriptionTopic]]{
 		pn: &push.Notification[push.SubscriptionTopic]{
 			Data:     s.pushNotificationData(newsArticle),
 			Target:   regularTarget,
 			Title:    tmpl.getTitle(nil),
-			Body:     tmpl.getBody(nil),
+			Body:     tmpl.getBody(data),
 			ImageURL: newsArticle.ImageURL,
 		},
 		sa: &sentAnnouncement{

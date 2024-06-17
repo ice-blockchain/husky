@@ -1,206 +1,202 @@
 {
-   "af":{
-      "body":"Bly op hoogte van die jongste gebeure op ice.",
-      "title":"🚨 Nuuswaarskuwing"
-   },
-   "am":{
-      "body":"በ ice ላይ የቅርብ ጊዜ ክስተቶችን ይወቁ።",
-      "title":"🚨 የዜና ማንቂያ"
-   },
-   "ar":{
-      "body":"ابق على اطلاع بآخر الأحداث على ice.",
-      "title":"🚨 تنبيه الأخبار"
-   },
-   "az":{
-      "body":"ice-də ən son hadisələrdən xəbərdar olun.",
-      "title":"🚨 Xəbər Xəbərdarlığı"
-   },
-   "bg":{
-      "body":"Бъдете информирани за най-новите събития в ice",
-      "title":"🚨 Сигнал за новини"
-   },
-   "bn":{
-      "body":"ice-তে সাম্প্রতিক ঘটনা সম্পর্কে অবগত থাকুন।",
-      "title":"🚨 সংবাদ সতর্কতা"
-   },
-   "cs":{
-      "body":"Zůstaňte informováni o nejnovějším dění na ice.",
-      "title":"🚨 Upozornění na novinky"
-   },
-   "de":{
-      "body":"Bleiben Sie mit den neuesten Ereignissen auf ice auf dem Laufenden.",
-      "title":"🚨 Nachrichtenalarm"
-   },
-   "en":{
-      "body":"Stay informed with the latest happenings on ice.",
-      "title":"🚨 News Alert"
-   },
-   "es":{
-      "body":"Manténgase informado con los últimos acontecimientos en ice.",
-      "title":"🚨 Alerta de noticias"
-   },
-   "fa":{
-      "body":"از آخرین اتفاقات ice مطلع باشید.",
-      "title":"🚨 هشدار خبری"
-   },
-   "fil":{
-      "body":"Manatiling may alam sa mga pinakabagong pangyayari sa ice.",
-      "title":"🚨 Balitang Alerto"
-   },
-   "fr":{
-      "body":"Restez informé des derniers événements sur ice.",
-      "title":"🚨 Alerte actualité"
-   },
-   "ge":{
-      "body":"Μείνετε ενημερωμένοι με τα τελευταία γεγονότα στο ice.",
-      "title":"🚨 Ειδοποίηση ειδήσεων"
-   },
-   "gu":{
-      "body":"ice પર નવીનતમ ઘટનાઓથી માહિતગાર રહો.",
-      "title":"🚨 સમાચાર ચેતવણી"
-   },
-   "he":{
-      "body":"הישאר מעודכן לגבי ההתרחשויות האחרונות ב-ice.",
-      "title":"🚨 התראת חדשות"
-   },
-   "hi":{
-      "body":"ice पर नवीनतम घटनाओं से अवगत रहें।",
-      "title":"🚨 न्यूज अलर्ट"
-   },
-   "hu":{
-      "body":"Legyen tájékozott az ice legfrissebb eseményeiről.",
-      "title":"🚨 Hírértesítés"
-   },
-   "id":{
-      "body":"Tetap terinformasi dengan kejadian terbaru di ice.",
-      "title":"🚨 Peringatan Berita"
-   },
-   "it":{
-      "body":"Tieniti informato con gli ultimi avvenimenti su ice.",
-      "title":"🚨 Avviso notizie"
-   },
-   "ja":{
-      "body":"ice の最新情報を入手してください。",
-      "title":"🚨ニュースアラート"
-   },
-   "jv":{
-      "body":"Tetep ngerti babagan kedadeyan paling anyar ing ice.",
-      "title":"🚨 Tandha Warta"
-   },
-   "kn":{
-      "body":"ice ನಲ್ಲಿ ಇತ್ತೀಚಿನ ಘಟನೆಗಳ ಕುರಿತು ಮಾಹಿತಿಯಲ್ಲಿರಿ.",
-      "title":"🚨 ಸುದ್ದಿ ಎಚ್ಚರಿಕೆ"
-   },
-   "ko":{
-      "body":"ice의 최신 소식을 받아보세요.",
-      "title":"🚨 뉴스 알림"
-   },
-   "mr":{
-      "body":"ice वर ताज्या घडामोडींची माहिती ठेवा.",
-      "title":"🚨 न्यूज अलर्ट"
-   },
-   "ms":{
-      "body":"Kekal dimaklumkan dengan kejadian terkini di ice.",
-      "title":"🚨 Makluman Berita"
-   },
-   "no":{
-      "body":"Hold deg informert om de siste hendelsene på ice.",
-      "title":"🚨 Nyhetsvarsel"
-   },
-   "pa":{
-      "body":"ice 'ਤੇ ਨਵੀਨਤਮ ਘਟਨਾਵਾਂ ਨਾਲ ਸੂਚਿਤ ਰਹੋ।",
-      "title":"🚨 ਨਿਊਜ਼ ਅਲਰਟ"
-   },
-   "pl":{
-      "body":"Bądź na bieżąco z najnowszymi wydarzeniami na ice",
-      "title":"🚨 Powiadomienie o nowościach"
-   },
-   "ps":{
-      "body":"په ice کې د وروستي پیښو سره خبر اوسئ.",
-      "title":"🚨 خبرتیا"
-   },
-   "pt":{
-      "body":"Mantenha-se informado com os últimos acontecimentos no ice.",
-      "title":"🚨 Alerta de Novidades"
-   },
-   "ro":{
-      "body":"Rămâneți la curent cu cele mai recente evenimente de pe ice.",
-      "title":"🚨 Alertă de știri"
-   },
-   "ru":{
-      "body":"Будьте в курсе последних событий на ice.",
-      "title":"🚨 Оповещение о новостях"
-   },
-   "sd":{
-      "body":"ice تي تازي واقعن سان باخبر رھو.",
-      "title":"🚨 نيوز الرٽ"
-   },
-   "sk":{
-      "body":"Zostaňte informovaní o najnovšom dianí na ice.",
-      "title":"🚨 Upozornenie na novinky"
-   },
-   "sl":{
-      "body":"Bodite obveščeni o najnovejših dogodkih na ice.",
-      "title":"🚨 Obvestilo o novicah"
-   },
-   "sq":{
-      "body":"Qëndroni të informuar me ngjarjet më të fundit në ice.",
-      "title":"🚨 Lajmërim Lajmi"
-   },
-   "su":{
-      "body":"Tetep informed jeung kajadian panganyarna dina ice.",
-      "title":"🚨 Siaga Warta"
-   },
-   "sv":{
-      "body":"Håll dig informerad om de senaste händelserna på ice.",
-      "title":"🚨 Nyhetslarm"
-   },
-   "ta":{
-      "body":"ice இல் சமீபத்திய நிகழ்வுகள் குறித்து அறிந்திருங்கள்.",
-      "title":"🚨 செய்தி எச்சரிக்கை"
-   },
-   "te":{
-      "body":"iceలో తాజా సంఘటనల గురించి తెలుసుకుంటూ ఉండండి.",
-      "title":"🚨 వార్తల హెచ్చరిక"
-   },
-   "th":{
-      "body":"รับทราบข่าวสารล่าสุดเกี่ยวกับ ice",
-      "title":"🚨 แจ้งเตือนข่าวสาร"
-   },
-   "tr":{
-      "body":"ice'deki son gelişmelerden haberdar olun.",
-      "title":"🚨 Haber Uyarısı"
-   },
-   "uk":{
-      "body":"Будьте в курсі останніх подій на ice.",
-      "title":"🚨 Новини"
-   },
-   "ur":{
-      "body":"ice پر تازہ ترین واقعات سے باخبر رہیں۔",
-      "title":"🚨 نیوز الرٹ"
-   },
-   "vi":{
-      "body":"Được thông báo với những diễn biến mới nhất trên ice.",
-      "title":"🚨 Thông báo tin tức"
-   },
-   "yo":{
-      "body":"Duro si alaye pẹlu awọn iṣẹlẹ tuntun lori ice.",
-      "title":"🚨 Itaniji Iroyin"
-   },
-   "zh":{
-      "body":"隨時了解 ice 上的最新動態。",
-      "title":"🚨 新聞提醒"
-   },
-   "zh-hans":{
-      "body":"随时了解 ice 上的最新动态。",
-      "title":"🚨 新闻提醒"
-   },
-   "zh-hant":{
-      "body":"隨時了解 ice 上的最新動態。",
-      "title":"🚨 新聞提醒"
-   },
-   "zu":{
-      "body":"Hlala unolwazi ngezehlakalo zakamuva ku-ice.",
-      "title":"🚨 Isexwayiso Sezindaba"
-   }
+    "en": {
+        "title": "🚨 News Alert",
+        "body": "Stay informed with the latest updates on {{.TenantName}}."
+    },
+    "ro": {
+        "title": "🚨 Alertă de Știri",
+        "body": "Rămâi informat cu cele mai recente actualizări despre {{.TenantName}}."
+    },
+    "el": {
+        "title": "🚨 Ειδοποίηση Νέων",
+        "body": "Μείνετε ενημερωμένοι με τις τελευταίες ενημερώσεις για το {{.TenantName}}."
+    },
+    "af": {
+        "title": "🚨 Nuuswaarskuwing",
+        "body": "Bly ingelig met die jongste opdaterings oor {{.TenantName}}."
+    },
+    "am": {
+        "title": "🚨 ዜና ማስጠንቀቂያ",
+        "body": "እዚህ በላይ ከዚህ በኋላ ስንቃቸው ይሆናል እንደነበር"
+    },
+    "ar": {
+        "title": "🚨 تنبيه إخباري",
+        "body": "ابق على اطلاع بأحدث التحديثات على {{.TenantName}}."
+    },
+    "az": {
+        "title": "🚨 Xəbər Bildirişi",
+        "body": "{{.TenantName}} haqqında ən son yeniliklərlə məlumatlı olun."
+    },
+    "bg": {
+        "title": "🚨 Новинарско Известие",
+        "body": "Бъдете информирани с най-новите актуализации за {{.TenantName}}."
+    },
+    "bn": {
+        "title": "🚨 সংবাদ সতর্কতা",
+        "body": "{{.TenantName}}-এর সর্বশেষ আপডেটগুলি সম্পর্কে অবহিত থাকুন।"
+    },
+    "yo": {
+        "title": "🚨 Ikilọ Iroyin",
+        "body": "Wa ni imudojuiwọn pẹlu awọn imudojuiwọn tuntun lori {{.TenantName}}."
+    },
+    "cs": {
+        "title": "🚨 Upozornění na Novinky",
+        "body": "Buďte informováni o nejnovějších aktualizacích na {{.TenantName}}."
+    },
+    "de": {
+        "title": "🚨 Nachrichtenalarm",
+        "body": "Bleiben Sie mit den neuesten Updates zu {{.TenantName}} informiert."
+    },
+    "es": {
+        "title": "🚨 Alerta de Noticias",
+        "body": "Mantente informado con las últimas actualizaciones sobre {{.TenantName}}."
+    },
+    "fa": {
+        "title": "🚨 هشدار خبری",
+        "body": "با جدیدترین به‌روزرسانی‌ها در مورد {{.TenantName}} آگاه باشید."
+    },
+    "tl": {
+        "title": "🚨 Alerto ng Balita",
+        "body": "Manatiling alam sa pinakabagong mga update sa {{.TenantName}}."
+    },
+    "fr": {
+        "title": "🚨 Alerte Info",
+        "body": "Restez informé des dernières mises à jour sur {{.TenantName}}."
+    },
+    "gu": {
+        "title": "🚨 સમાચાર ચેતવણી",
+        "body": "{{.TenantName}} પર તાજેતરના અપડેટ્સ સાથે માહિતગાર રહો."
+    },
+    "he": {
+        "title": "🚨 התראת חדשות",
+        "body": "הישאר מעודכן עם העדכונים האחרונים על {{.TenantName}}."
+    },
+    "hi": {
+        "title": "🚨 समाचार अलर्ट",
+        "body": "{{.TenantName}} पर नवीनतम अपडेट के साथ सूचित रहें।"
+    },
+    "hu": {
+        "title": "🚨 Hírrisztás",
+        "body": "Maradj naprakész a {{.TenantName}} legújabb frissítéseivel."
+    },
+    "id": {
+        "title": "🚨 Peringatan Berita",
+        "body": "Tetap mendapat informasi dengan pembaruan terbaru di {{.TenantName}}."
+    },
+    "it": {
+        "title": "🚨 Avviso di Notizie",
+        "body": "Rimani informato con gli ultimi aggiornamenti su {{.TenantName}}."
+    },
+    "ja": {
+        "title": "🚨 ニュースアラート",
+        "body": "{{.TenantName}}に関する最新情報をお届けします。"
+    },
+    "jv": {
+        "title": "🚨 Warta Kabar",
+        "body": "Tetep informed karo nganyari paling anyar ing {{.TenantName}}."
+    },
+    "ko": {
+        "title": "🚨 뉴스 알림",
+        "body": "{{.TenantName}}의 최신 업데이트를 확인하세요."
+    },
+    "mr": {
+        "title": "🚨 बातमी अलर्ट",
+        "body": "{{.TenantName}} वरील ताज्या अद्यतनांसह माहितीपूर्ण रहा."
+    },
+    "ms": {
+        "title": "🚨 Amaran Berita",
+        "body": "Kekal dimaklumkan dengan kemas kini terkini mengenai {{.TenantName}}."
+    },
+    "no": {
+        "title": "🚨 Nyhetsvarsel",
+        "body": "Hold deg informert med de siste oppdateringene om {{.TenantName}}."
+    },
+    "pa": {
+        "title": "🚨 ਖ਼ਬਰਾਂ ਦੀ ਚੇਤਾਵਨੀ",
+        "body": "{{.TenantName}} ਦੇ ਤਾਜ਼ਾ ਅੱਪਡੇਟਾਂ ਨਾਲ ਸੂਚਿਤ ਰਹੋ।"
+    },
+    "pl": {
+        "title": "🚨 Powiadomienie o Nowościach",
+        "body": "Bądź na bieżąco z najnowszymi aktualizacjami na temat {{.TenantName}}."
+    },
+    "ps": {
+        "title": "🚨 د خبرتیا خبرتیا",
+        "body": "د سنویوز په اړه د وروستي تازه معلوماتو سره خبر اوسئ."
+    },
+    "pt": {
+        "title": "🚨 Alerta de Notícias",
+        "body": "Fique informado com as últimas atualizações sobre {{.TenantName}}."
+    },
+    "ru": {
+        "title": "🚨 Оповещение о Новостях",
+        "body": "Будьте в курсе последних обновлений о {{.TenantName}}."
+    },
+    "sd": {
+        "title": "🚨 خبر جي خبرداري",
+        "body": "{{.TenantName}} تي جديد تازه ڪاري سان باخبر رهو."
+    },
+    "sk": {
+        "title": "🚨 Upozornenie na Novinky",
+        "body": "Buďte informovaní o najnovších aktualizáciách na {{.TenantName}}."
+    },
+    "sl": {
+        "title": "🚨 Novička",
+        "body": "Ostanite obveščeni z najnovejšimi posodobitvami o {{.TenantName}}."
+    },
+    "sq": {
+        "title": "🚨 Alarm për Lajme",
+        "body": "Qëndroni të informuar me përditësimet më të fundit mbi {{.TenantName}}."
+    },
+    "sv": {
+        "title": "🚨 Nyhetsvarning",
+        "body": "Håll dig informerad med de senaste uppdateringarna om {{.TenantName}}."
+    },
+    "ta": {
+        "title": "🚨 செய்தி எச்சரிக்கை",
+        "body": "{{.TenantName}} பற்றிய சமீபத்திய புதுப்பிப்புகளுடன் தகவலறிந்து இருங்கள்."
+    },
+    "te": {
+        "title": "🚨 వార్తా హెచ్చరిక",
+        "body": "{{.TenantName}} పై తాజా నవీకరణలతో సమాచారం పొందండి."
+    },
+    "th": {
+        "title": "🚨 แจ้งเตือนข่าวสาร",
+        "body": "รับข้อมูลล่าสุดเกี่ยวกับ {{.TenantName}} อยู่เสมอ"
+    },
+    "su": {
+        "title": "🚨 Warta Warta",
+        "body": "Tetep informed kalawan apdet panganyarna dina {{.TenantName}}."
+    },
+    "kn": {
+        "title": "🚨 ಸುದ್ದಿ ಎಚ್ಚರಿಕೆ",
+        "body": "{{.TenantName}}ನ ಇತ್ತೀಚಿನ ನವೀಕರಣಗಳೊಂದಿಗೆ ಮಾಹಿತಿ ಹೊಂದಿರಿ."
+    },
+    "tr": {
+        "title": "🚨 Haber Uyarısı",
+        "body": "{{.TenantName}} hakkındaki en son güncellemelerle bilgili kalın."
+    },
+    "zh-hant": {
+        "title": "🚨 新聞提示",
+        "body": "隨時了解有關 {{.TenantName}} 的最新消息。"
+    },
+    "uk": {
+        "title": "🚨 Сповіщення про Новини",
+        "body": "Будьте в курсі останніх оновлень про {{.TenantName}}."
+    },
+    "ur": {
+        "title": "🚨 خبر الرٹ",
+        "body": "{{.TenantName}} پر تازہ ترین اپ ڈیٹس کے ساتھ باخبر رہیں۔"
+    },
+    "vi": {
+        "title": "🚨 Cảnh Báo Tin Tức",
+        "body": "Cập nhật những thông tin mới nhất về {{.TenantName}}."
+    },
+    "zh": {
+        "title": "🚨 新闻提示",
+        "body": "随时了解有关 {{.TenantName}} 的最新消息。"
+    },
+    "zu": {
+        "title": "🚨 Izexwayiso Zezindaba",
+        "body": "Hlala unolwazi ngolwazi lwakamuva mayelana ne-{{.TenantName}}."
+    }
 }

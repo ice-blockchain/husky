@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	stdlibtime "time"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
@@ -39,6 +40,8 @@ func (s *Scheduler) runAnnouncementsProcessor(ctx context.Context, workerNumber 
 		announcements = announcements[:0]
 		successedAnnouncements = successedAnnouncements[:0]
 		lastIterationStartedAt = now
+
+		stdlibtime.Sleep(1 * stdlibtime.Second)
 	}
 	for ctx.Err() == nil {
 		/******************************************************************************************************************************************************
