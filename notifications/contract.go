@@ -46,23 +46,28 @@ const (
 )
 
 const (
-	AdoptionChangedNotificationType     NotificationType = "adoption_changed"
-	DailyBonusNotificationType          NotificationType = "daily_bonus"
-	NewContactNotificationType          NotificationType = "new_contact"
-	NewReferralNotificationType         NotificationType = "new_referral"
-	NewsAddedNotificationType           NotificationType = "news_added"
-	PingNotificationType                NotificationType = "ping"
-	LevelBadgeUnlockedNotificationType  NotificationType = "level_badge_unlocked"
-	CoinBadgeUnlockedNotificationType   NotificationType = "coin_badge_unlocked"
-	SocialBadgeUnlockedNotificationType NotificationType = "social_badge_unlocked"
-	RoleChangedNotificationType         NotificationType = "role_changed"
-	LevelChangedNotificationType        NotificationType = "level_changed"
-	MiningExtendNotificationType        NotificationType = "mining_extend"
-	MiningEndingSoonNotificationType    NotificationType = "mining_ending_soon"
-	MiningExpiredNotificationType       NotificationType = "mining_expired"
-	InviteFriendNotificationType        NotificationType = "invite_friend"
-	SocialsNotificationType             NotificationType = "socials"
-	WeeklyStatsNotificationType         NotificationType = "weekly_stats"
+	AdoptionChangedNotificationType            NotificationType = "adoption_changed"
+	DailyBonusNotificationType                 NotificationType = "daily_bonus"
+	NewContactNotificationType                 NotificationType = "new_contact"
+	NewReferralNotificationType                NotificationType = "new_referral"
+	NewsAddedNotificationType                  NotificationType = "news_added"
+	PingNotificationType                       NotificationType = "ping"
+	LevelBadgeUnlockedNotificationType         NotificationType = "level_badge_unlocked"
+	CoinBadgeUnlockedNotificationType          NotificationType = "coin_badge_unlocked"
+	SocialBadgeUnlockedNotificationType        NotificationType = "social_badge_unlocked"
+	RoleChangedNotificationType                NotificationType = "role_changed"
+	LevelChangedNotificationType               NotificationType = "level_changed"
+	MiningExtendNotificationType               NotificationType = "mining_extend"
+	MiningEndingSoonNotificationType           NotificationType = "mining_ending_soon"
+	MiningExpiredNotificationType              NotificationType = "mining_expired"
+	MiningNotActiveNotificationType            NotificationType = "mining_not_active"
+	InviteFriendNotificationType               NotificationType = "invite_friend"
+	SocialsFollowIceOnXNotificationType        NotificationType = "follow_ion_on_x"
+	SocialsFollowUsOnXNotificationType         NotificationType = "follow_us_on_x"
+	SocialsFollowZeusOnXNotificationType       NotificationType = "follow_zeus_on_x"
+	SocialsFollowIONOnTelegramNotificationType NotificationType = "join_ion_on_telegram"
+	SocialsFollowOurTelegramNotificationType   NotificationType = "join_our_telegram"
+	WeeklyStatsNotificationType                NotificationType = "weekly_stats"
 )
 
 var (
@@ -94,8 +99,13 @@ var (
 		MiningExtendNotificationType,
 		MiningEndingSoonNotificationType,
 		MiningExpiredNotificationType,
+		MiningNotActiveNotificationType,
 		InviteFriendNotificationType,
-		SocialsNotificationType,
+		SocialsFollowIceOnXNotificationType,
+		SocialsFollowUsOnXNotificationType,
+		SocialsFollowZeusOnXNotificationType,
+		SocialsFollowIONOnTelegramNotificationType,
+		SocialsFollowOurTelegramNotificationType,
 		WeeklyStatsNotificationType,
 	}
 	//nolint:gochecknoglobals // It's just for more descriptive validation messages.
@@ -301,8 +311,8 @@ type (
 	config struct {
 		TenantName string `yaml:"tenantName"`
 		Socials    []struct {
-			Name string `yaml:"name"`
-			Link string `yaml:"link"`
+			NotificationType string `yaml:"notificationType"`
+			Link             string `yaml:"link"`
 		} `yaml:"socials"`
 		DisabledAchievementsNotifications struct {
 			Badges []string `yaml:"badges"`

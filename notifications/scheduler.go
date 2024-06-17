@@ -123,15 +123,12 @@ func runConcurrentlyBatch[ARG any](
 //nolint:exhaustive // We know what cases need to be handled only.
 func (s *Scheduler) getDeeplink(nt NotificationType, data *users.JSON) string {
 	switch nt {
-	case MiningExtendNotificationType:
-		return fmt.Sprintf("%v://home", s.cfg.DeeplinkScheme)
-	case MiningEndingSoonNotificationType:
-		return fmt.Sprintf("%v://home", s.cfg.DeeplinkScheme)
-	case MiningExpiredNotificationType:
+	case MiningExtendNotificationType, MiningEndingSoonNotificationType, MiningExpiredNotificationType, MiningNotActiveNotificationType:
 		return fmt.Sprintf("%v://home", s.cfg.DeeplinkScheme)
 	case InviteFriendNotificationType:
 		return fmt.Sprintf("%v://invite", s.cfg.DeeplinkScheme)
-	case SocialsNotificationType:
+	case SocialsFollowIceOnXNotificationType, SocialsFollowUsOnXNotificationType, SocialsFollowZeusOnXNotificationType,
+		SocialsFollowIONOnTelegramNotificationType, SocialsFollowOurTelegramNotificationType:
 		return fmt.Sprintf("%v://browser?url=%v", s.cfg.DeeplinkScheme, url.QueryEscape(fmt.Sprintf("%v", (*data)["SocialUrl"])))
 	case WeeklyStatsNotificationType:
 		return fmt.Sprintf("%v://stats", s.cfg.DeeplinkScheme)
@@ -145,15 +142,12 @@ func (s *Scheduler) getDeeplink(nt NotificationType, data *users.JSON) string {
 //nolint:exhaustive // We know what cases need to be handled only.
 func getDomainByNotificationType(nt NotificationType) NotificationDomain {
 	switch nt {
-	case MiningExtendNotificationType:
-		return MiningNotificationDomain
-	case MiningEndingSoonNotificationType:
-		return MiningNotificationDomain
-	case MiningExpiredNotificationType:
+	case MiningExtendNotificationType, MiningEndingSoonNotificationType, MiningExpiredNotificationType, MiningNotActiveNotificationType:
 		return MiningNotificationDomain
 	case InviteFriendNotificationType:
 		return MicroCommunityNotificationDomain
-	case SocialsNotificationType:
+	case SocialsFollowIceOnXNotificationType, SocialsFollowUsOnXNotificationType, SocialsFollowZeusOnXNotificationType,
+		SocialsFollowIONOnTelegramNotificationType, SocialsFollowOurTelegramNotificationType:
 		return PromotionsNotificationDomain
 	case WeeklyStatsNotificationType:
 		return WeeklyStatsNotificationDomain

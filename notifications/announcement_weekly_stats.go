@@ -37,7 +37,9 @@ func (s *Scheduler) addScheduledWeeklyStatsAnnouncement(ctx context.Context) err
 			NotificationType:         string(WeeklyStatsNotificationType),
 			NotificationChannel:      string(PushNotificationChannel),
 			NotificationChannelValue: fmt.Sprintf("system_%v", language),
-			Data:                     &users.JSON{},
+			Data: &users.JSON{
+				"TenantName": s.cfg.TenantName,
+			},
 		})
 	}
 

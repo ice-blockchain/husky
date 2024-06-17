@@ -31,13 +31,12 @@ func (r *repository) addScheduledSocialsNotifications(ctx context.Context, us *u
 			ScheduledFor:             time.New(us.CreatedAt.Add(stdlibtime.Duration((ix + 1)) * dayDuration)),
 			Language:                 us.Language,
 			UserID:                   us.ID,
-			NotificationType:         string(SocialsNotificationType),
-			Uniqueness:               fmt.Sprintf("%v_%v_%vd", us.ID, SocialsNotificationType, ix+1),
+			NotificationType:         r.cfg.Socials[ix].NotificationType,
+			Uniqueness:               fmt.Sprintf("%v_%v_%vd", us.ID, r.cfg.Socials[ix].NotificationType, ix+1),
 			NotificationChannel:      string(PushNotificationChannel),
 			NotificationChannelValue: us.ID,
 			Data: &users.JSON{
-				"SocialName": r.cfg.Socials[ix].Name,
-				"SocialUrl":  r.cfg.Socials[ix].Link,
+				"SocialUrl": r.cfg.Socials[ix].Link,
 			},
 		})
 	}

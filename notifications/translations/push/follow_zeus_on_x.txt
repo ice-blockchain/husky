@@ -1,0 +1,202 @@
+{
+    "en": {
+        "title": "🙌 Follow Zeus on X",
+        "body": "Stay connected with the founder of Ice Open Network on X"
+    },
+    "ro": {
+        "title": "🙌 Urmărește-l pe Zeus pe X",
+        "body": "Rămâi conectat cu fondatorul Ice Open Network pe X"
+    },
+    "el": {
+        "title": "🙌 Ακολουθήστε τον Zeus στο X",
+        "body": "Μείνετε συνδεδεμένοι με τον ιδρυτή του Ice Open Network στο X"
+    },
+    "af": {
+        "title": "🙌 Volg Zeus op X",
+        "body": "Bly verbind met die stigter van Ice Open Network op X"
+    },
+    "am": {
+        "title": "🙌 በ X ላይ ዘውስን ይከተሉ",
+        "body": "በ X ላይ ከ Ice Open Network ባለቤት ጋር ይገናኙ"
+    },
+    "ar": {
+        "title": "🙌 تابع زيوس على X",
+        "body": "ابق على اتصال مع مؤسس Ice Open Network على X"
+    },
+    "az": {
+        "title": "🙌 Zeus-u X-də izləyin",
+        "body": "Ice Open Network-in təsisçisi ilə X-də əlaqədə olun"
+    },
+    "bg": {
+        "title": "🙌 Следвайте Зевс в X",
+        "body": "Останете свързани с основателя на Ice Open Network в X"
+    },
+    "bn": {
+        "title": "🙌 X এ Zeus কে অনুসরণ করুন",
+        "body": "Ice Open Network এর প্রতিষ্ঠাতার সাথে X এ সংযুক্ত থাকুন"
+    },
+    "yo": {
+        "title": "🙌 Tẹle Zeus lori X",
+        "body": "Duro mọ oludasilẹ Ice Open Network lori X"
+    },
+    "cs": {
+        "title": "🙌 Sledujte Zeuse na X",
+        "body": "Zůstaňte ve spojení se zakladatelem Ice Open Network na X"
+    },
+    "de": {
+        "title": "🙌 Folgen Sie Zeus auf X",
+        "body": "Bleiben Sie mit dem Gründer von Ice Open Network auf X verbunden"
+    },
+    "es": {
+        "title": "🙌 Sigue a Zeus en X",
+        "body": "Mantente conectado con el fundador de Ice Open Network en X"
+    },
+    "fa": {
+        "title": "🙌 زئوس را در X دنبال کنید",
+        "body": "با بنیان‌گذار Ice Open Network در X در ارتباط باشید"
+    },
+    "tl": {
+        "title": "🙌 Sundan si Zeus sa X",
+        "body": "Manatiling konektado sa tagapagtatag ng Ice Open Network sa X"
+    },
+    "fr": {
+        "title": "🙌 Suivez Zeus sur X",
+        "body": "Restez connecté avec le fondateur de Ice Open Network sur X"
+    },
+    "gu": {
+        "title": "🙌 X પર Zeusને અનુસરો",
+        "body": "X પર Ice Open Networkના સ્થાપક સાથે જોડાયેલા રહો"
+    },
+    "he": {
+        "title": "🙌 עקוב אחר זאוס בטוויטר",
+        "body": "הישאר מחובר עם מייסד Ice Open Network בטוויטר"
+    },
+    "hi": {
+        "title": "🙌 ट्विटर पर Zeus को फॉलो करें",
+        "body": "ट्विटर पर Ice Open Network के संस्थापक से जुड़े रहें"
+    },
+    "hu": {
+        "title": "🙌 Kövessd Zeust a Xen",
+        "body": "Maradj kapcsolatban az Ice Open Network alapítójával a Xen"
+    },
+    "id": {
+        "title": "🙌 Ikuti Zeus di X",
+        "body": "Tetap terhubung dengan pendiri Ice Open Network di X"
+    },
+    "it": {
+        "title": "🙌 Segui Zeus su X",
+        "body": "Rimani connesso con il fondatore di Ice Open Network su X"
+    },
+    "ja": {
+        "title": "🙌 X で Zeus をフォローしてください",
+        "body": "X で Ice Open Network の創設者とつながりを保ちましょう"
+    },
+    "jv": {
+        "title": "🙌 Tindakake Zeus ing X",
+        "body": "Tetep nyambung karo pangadeg Ice Open Network ing X"
+    },
+    "ko": {
+        "title": "🙌 X에서 Zeus를 팔로우하세요",
+        "body": "X에서 Ice Open Network의 창립자와 연결 상태를 유지하세요"
+    },
+    "mr": {
+        "title": "🙌 X वर Zeus चे अनुसरण करा",
+        "body": "X वर Ice Open Network च्या संस्थापकाशी कनेक्टेड रहा"
+    },
+    "ms": {
+        "title": "🙌 Ikuti Zeus di X",
+        "body": "Kekal berhubung dengan pengasas Ice Open Network di X"
+    },
+    "no": {
+        "title": "🙌 Følg Zeus på X",
+        "body": "Hold deg koblet med grunnleggeren av Ice Open Network på X"
+    },
+    "pa": {
+        "title": "🙌 X 'ਤੇ Zeus ਦਾ ਪਾਲਣਾ ਕਰੋ",
+        "body": "X 'ਤੇ Ice Open Network ਦੇ ਸੰਸਥਾਪਕ ਨਾਲ ਜੁੜੇ ਰਹੋ"
+    },
+    "pl": {
+        "title": "🙌 Śledź Zeusa na Xze",
+        "body": "Bądź w kontakcie z założycielem Ice Open Network na Xze"
+    },
+    "ps": {
+        "title": "🙌 په X کې زيوس تعقیب کړئ",
+        "body": "په X کې د Ice Open Network بنسټ ایښودونکي سره په اړیکه کې پاتې شئ"
+    },
+    "pt": {
+        "title": "🙌 Siga Zeus no X",
+        "body": "Mantenha-se conectado com o fundador do Ice Open Network no X"
+    },
+    "ru": {
+        "title": "🙌 Следите за Зевсом в Твиттере",
+        "body": "Оставайтесь на связи с основателем Ice Open Network в Твиттере"
+    },
+    "sd": {
+        "title": "🙌 X تي Zeus جي پيروي ڪريو",
+        "body": "X تي Ice Open Network جي باني سان ڳنڍيل رهو"
+    },
+    "sk": {
+        "title": "🙌 Sledujte Zeusa na Xi",
+        "body": "Zostaňte v kontakte so zakladateľom Ice Open Network na Xi"
+    },
+    "sl": {
+        "title": "🙌 Sledite Zeusu na Xju",
+        "body": "Ostanite povezani z ustanoviteljem Ice Open Network na Xju"
+    },
+    "sq": {
+        "title": "🙌 Ndiqni Zeus në X",
+        "body": "Qëndroni të lidhur me themeluesin e Ice Open Network në X"
+    },
+    "sv": {
+        "title": "🙌 Följ Zeus på X",
+        "body": "Håll kontakten med grundaren av Ice Open Network på X"
+    },
+    "ta": {
+        "title": "🙌 X இல் Zeus ஐப் பின்தொடரவும்",
+        "body": "X இல் Ice Open Network இன் நிறுவியுடன் இணைந்திருங்கள்"
+    },
+    "te": {
+        "title": "🙌 Xలో Zeusను అనుసరించండి",
+        "body": "Xలో Ice Open Network స్థాపకుడితో కనెక్ట్ అవ్వండి"
+    },
+    "th": {
+        "title": "🙌 ติดตาม Zeus บน X",
+        "body": "เชื่อมต่อกับผู้ก่อตั้ง Ice Open Network บน X"
+    },
+    "su": {
+        "title": "🙌 Tuturkeun Zeus dina X",
+        "body": "Tetep nyambung sareng pangadeg Ice Open Network dina X"
+    },
+    "kn": {
+        "title": "🙌 X ನಲ್ಲಿ Zeus ಅನ್ನು ಅನುಸರಿಸಿ",
+        "body": "X ನಲ್ಲಿ Ice Open Network ಸ್ಥಾಪಕರೊಂದಿಗೆ ಸಂಪರ್ಕದಲ್ಲಿರಿ"
+    },
+    "tr": {
+        "title": "🙌 X'de Zeus'u takip edin",
+        "body": "X'de Ice Open Network'in kurucusu ile bağlantıda kalın"
+    },
+    "zh-hant": {
+        "title": "🙌 在 X 上關注 Zeus",
+        "body": "在 X 上與 Ice Open Network 的創始人保持聯繫"
+    },
+    "uk": {
+        "title": "🙌 Підписуйтесь на Зевса у X",
+        "body": "Залишайтеся на зв'язку із засновником Ice Open Network у X"
+    },
+    "ur": {
+        "title": "🙌 X پر Zeus کو فالو کریں۔",
+        "body": "X پر Ice Open Network کے بانی سے جڑے رہیں"
+    },
+    "vi": {
+        "title": "🙌 Theo dõi Zeus trên X",
+        "body": "Giữ liên lạc với người sáng lập Ice Open Network trên X"
+    },
+    "zh": {
+        "title": "🙌 在 X 上关注 Zeus",
+        "body": "在 X 上与 Ice Open Network 的创始人保持联系"
+    },
+    "zu": {
+        "title": "🙌 Landela uZeus ku-X",
+        "body": "Hlala uxhumekile nomsunguli we-Ice Open Network ku-X"
+    }
+}

@@ -1,0 +1,202 @@
+{
+    "en": {
+        "title": "❄️ Follow Ice Open Network on X",
+        "body": "Stay updated with the latest news and insights from Ice Open Network on X"
+    },
+    "ro": {
+        "title": "❄️ Urmărește Ice Open Network pe X",
+        "body": "Rămâi la curent cu cele mai recente știri și perspective de la Ice Open Network pe X"
+    },
+    "el": {
+        "title": "❄️ Ακολουθήστε το Ice Open Network στο X",
+        "body": "Μείνετε ενημερωμένοι με τα τελευταία νέα και πληροφορίες από το Ice Open Network στο X"
+    },
+    "af": {
+        "title": "❄️ Volg Ice Open Network op X",
+        "body": "Bly op hoogte van die jongste nuus en insigte van Ice Open Network op X"
+    },
+    "am": {
+        "title": "❄️ በ X ላይ የ Ice Open Network ይከተሉ",
+        "body": "በ X ላይ ከ Ice Open Network ጋር የቅርብ ጊዜ ዜናዎችና ግምገማዎች ተገናኝ"
+    },
+    "ar": {
+        "title": "❄️ تابع شبكة Ice Open على X",
+        "body": "ابق على اطلاع بأحدث الأخبار والرؤى من شبكة Ice Open على X"
+    },
+    "az": {
+        "title": "❄️ Ice Open Network-i X-də izləyin",
+        "body": "Ice Open Network-dən ən son xəbərlər və məlumatlarla X-də yenilənmiş qalın"
+    },
+    "bg": {
+        "title": "❄️ Следвайте Ice Open Network в X",
+        "body": "Останете в крак с последните новини и прозрения от Ice Open Network в X"
+    },
+    "bn": {
+        "title": "❄️ X এ Ice Open Network অনুসরণ করুন",
+        "body": "X এ Ice Open Network থেকে সর্বশেষ খবর এবং অন্তর্দৃষ্টি সম্পর্কে আপডেট থাকুন"
+    },
+    "yo": {
+        "title": "❄️ Tẹle Ice Open Network lori X",
+        "body": "Duro mọ awọn iroyin tuntun ati awọn imọ inu lati Ice Open Network lori X"
+    },
+    "cs": {
+        "title": "❄️ Sledujte Ice Open Network na X",
+        "body": "Zůstaňte aktualizováni s nejnovějšími zprávami a poznatky od Ice Open Network na X"
+    },
+    "de": {
+        "title": "❄️ Folgen Sie Ice Open Network auf X",
+        "body": "Bleiben Sie mit den neuesten Nachrichten und Einblicken von Ice Open Network auf X auf dem Laufenden"
+    },
+    "es": {
+        "title": "❄️ Sigue a Ice Open Network en X",
+        "body": "Mantente actualizado con las últimas noticias e ideas de Ice Open Network en X"
+    },
+    "fa": {
+        "title": "❄️ شبکه Ice Open را در X دنبال کنید",
+        "body": "با آخرین اخبار و دیدگاه‌ها از شبکه Ice Open در X به‌روز بمانید"
+    },
+    "tl": {
+        "title": "❄️ Sundan ang Ice Open Network sa X",
+        "body": "Manatiling updated sa pinakabagong balita at pananaw mula sa Ice Open Network sa X"
+    },
+    "fr": {
+        "title": "❄️ Suivez Ice Open Network sur X",
+        "body": "Restez à jour avec les dernières nouvelles et idées de Ice Open Network sur X"
+    },
+    "gu": {
+        "title": "❄️ X પર Ice Open Network ને અનુસરો",
+        "body": "X પર Ice Open Network માંથી તાજી સમાચાર અને આંતરદૃષ્ટિઓ સાથે અપડેટ રહો"
+    },
+    "he": {
+        "title": "❄️ עקוב אחרי Ice Open Network בטוויטר",
+        "body": "הישאר מעודכן עם החדשות והתובנות האחרונות מ- Ice Open Network בטוויטר"
+    },
+    "hi": {
+        "title": "❄️ ट्विटर पर Ice Open Network को फॉलो करें",
+        "body": "ट्विटर पर Ice Open Network से नवीनतम समाचार और अंतर्दृष्टि के साथ अद्यतित रहें"
+    },
+    "hu": {
+        "title": "❄️ Kövessd az Ice Open Network-et a Xen",
+        "body": "Maradj naprakész az Ice Open Network legfrissebb híreivel és betekintéseivel a Xen"
+    },
+    "id": {
+        "title": "❄️ Ikuti Ice Open Network di X",
+        "body": "Tetap update dengan berita dan wawasan terbaru dari Ice Open Network di X"
+    },
+    "it": {
+        "title": "❄️ Segui Ice Open Network su X",
+        "body": "Rimani aggiornato con le ultime notizie e intuizioni di Ice Open Network su X"
+    },
+    "ja": {
+        "title": "❄️ X で Ice Open Network をフォローしてください",
+        "body": "X で Ice Open Network からの最新ニュースと洞察を確認してください"
+    },
+    "jv": {
+        "title": "❄️ Tindakake Ice Open Network ing X",
+        "body": "Tetep dianyari karo berita paling anyar lan wawasan saka Ice Open Network ing X"
+    },
+    "ko": {
+        "title": "❄️ X에서 Ice Open Network 팔로우하기",
+        "body": "X에서 Ice Open Network의 최신 뉴스 및 통찰력으로 업데이트하세요"
+    },
+    "mr": {
+        "title": "❄️ X वर Ice Open Network चे अनुसरण करा",
+        "body": "X वर Ice Open Network कडून ताज्या बातम्या आणि अंतर्दृष्टींसह अद्ययावत रहा"
+    },
+    "ms": {
+        "title": "❄️ Ikuti Ice Open Network di X",
+        "body": "Dapatkan berita terkini dan wawasan terbaru dari Ice Open Network di X"
+    },
+    "no": {
+        "title": "❄️ Følg Ice Open Network på X",
+        "body": "Hold deg oppdatert med de siste nyhetene og innsiktene fra Ice Open Network på X"
+    },
+    "pa": {
+        "title": "❄️ X 'ਤੇ Ice Open Network ਦਾ ਪਾਲਣਾ ਕਰੋ",
+        "body": "X 'ਤੇ Ice Open Network ਤੋਂ ਨਵੀਆਂ ਖਬਰਾਂ ਅਤੇ ਅੰਦਰੂਨੀ ਜਾਣਕਾਰੀਆਂ ਨਾਲ ਅਪਡੇਟ ਰਹੋ"
+    },
+    "pl": {
+        "title": "❄️ Śledź Ice Open Network na Xze",
+        "body": "Bądź na bieżąco z najnowszymi wiadomościami i spostrzeżeniami z Ice Open Network na Xze"
+    },
+    "ps": {
+        "title": "❄️ په X کې د Ice Open Network تعقیب کړئ",
+        "body": "د Ice Open Network څخه د وروستي خبرونو او لیدونو سره په X کې تازه اوسئ"
+    },
+    "pt": {
+        "title": "❄️ Siga Ice Open Network no X",
+        "body": "Fique atualizado com as últimas notícias e insights da Ice Open Network no X"
+    },
+    "ru": {
+        "title": "❄️ Следите за Ice Open Network в Твиттере",
+        "body": "Оставайтесь в курсе последних новостей и взглядов от Ice Open Network в Твиттере"
+    },
+    "sd": {
+        "title": "❄️ X تي Ice Open Network جي تابعداري ڪريو",
+        "body": "X تي Ice Open Network کان جديد خبرن ۽ بصيرت سان تازه ڪاري ڪريو"
+    },
+    "sk": {
+        "title": "❄️ Sledujte Ice Open Network na Xi",
+        "body": "Zostaňte aktualizovaní s najnovšími správami a poznatkami od Ice Open Network na Xi"
+    },
+    "sl": {
+        "title": "❄️ Sledite Ice Open Network na Xju",
+        "body": "Ostanite na tekočem z najnovejšimi novicami in vpogledi iz Ice Open Network na Xju"
+    },
+    "sq": {
+        "title": "❄️ Ndiqni Ice Open Network në X",
+        "body": "Qëndroni të përditësuar me lajmet dhe njohuritë më të fundit nga Ice Open Network në X"
+    },
+    "sv": {
+        "title": "❄️ Följ Ice Open Network på X",
+        "body": "Håll dig uppdaterad med de senaste nyheterna och insikterna från Ice Open Network på X"
+    },
+    "ta": {
+        "title": "❄️ X இல் Ice Open Network ஐப் பின்தொடரவும்",
+        "body": "X இல் Ice Open Network இன் சமீபத்திய செய்திகள் மற்றும் கருத்துக்களுடன் புதுப்பிக்கவும்"
+    },
+    "te": {
+        "title": "❄️ Xలో Ice Open Network ను అనుసరించండి",
+        "body": "Xలో Ice Open Network నుండి తాజా వార్తలు మరియు అంతర్దృష్టులతో అప్‌డేట్ అవ్వండి"
+    },
+    "th": {
+        "title": "❄️ ติดตาม Ice Open Network บน X",
+        "body": "ติดตามข่าวสารล่าสุดและข้อมูลเชิงลึกจาก Ice Open Network บน X"
+    },
+    "su": {
+        "title": "❄️ Tuturkeun Ice Open Network dina X",
+        "body": "Tetep diénggalan ku warta panganyarna sareng wawasan ti Ice Open Network dina X"
+    },
+    "kn": {
+        "title": "❄️ X ನಲ್ಲಿ Ice Open Network ಅನ್ನು ಅನುಸರಿಸಿ",
+        "body": "X ನಲ್ಲಿ Ice Open Network ನ ತಾಜಾ ಸುದ್ದಿ ಮತ್ತು ಒಳನೋಟಗಳಿಂದ ನವೀಕರಿಸಿ"
+    },
+    "tr": {
+        "title": "❄️ Ice Open Network'i X'de takip edin",
+        "body": "X'de Ice Open Network'ten en son haberler ve bilgilerle güncel kalın"
+    },
+    "zh-hant": {
+        "title": "❄️ 在 X 上關注 Ice Open Network",
+        "body": "在 X 上關注 Ice Open Network 的最新消息和見解"
+    },
+    "uk": {
+        "title": "❄️ Підписуйтесь на Ice Open Network у X",
+        "body": "Залишайтеся в курсі останніх новин та інсайтів від Ice Open Network у X"
+    },
+    "ur": {
+        "title": "❄️ X پر Ice Open Network کو فالو کریں۔",
+        "body": "X پر Ice Open Network سے تازہ ترین خبروں اور بصیرت کے ساتھ اپ ڈیٹ رہیں"
+    },
+    "vi": {
+        "title": "❄️ Theo dõi Ice Open Network trên X",
+        "body": "Cập nhật những tin tức và thông tin chi tiết mới nhất từ Ice Open Network trên X"
+    },
+    "zh": {
+        "title": "❄️ 在 X 上关注 Ice Open Network",
+        "body": "在 X 上关注 Ice Open Network 的最新消息和见解"
+    },
+    "zu": {
+        "title": "❄️ Silandele ku-X ku-Ice Open Network",
+        "body": "Hlala ubuyekeziwe ngezindaba zakamuva namagama aphuma ku-Ice Open Network ku-X"
+    }
+}
