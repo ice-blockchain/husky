@@ -37,7 +37,8 @@ func (r *repository) addScheduledSocialsNotifications(ctx context.Context, us *u
 				NotificationChannel:      string(channel),
 				NotificationChannelValue: us.ID,
 				Data: &users.JSON{
-					"SocialUrl": r.cfg.Socials[ix].Link,
+					"SocialUrl":  r.cfg.Socials[ix].Link,
+					"TenantName": r.cfg.TenantName,
 				},
 			})
 		}

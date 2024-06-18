@@ -192,15 +192,17 @@ type (
 		CheckHealth(ctx context.Context) error
 	}
 	Scheduler struct {
-		pictureClient               picture.Client
-		pushNotificationsClient     push.Client
-		telegramNotificationsClient telegram.Client
-		cfg                         *config
-		schedulerAnnouncementsMX    *sync.Mutex
-		schedulerNotificationsMX    *sync.Mutex
-		telemetryNotifications      *telemetry
-		telemetryAnnouncements      *telemetry
-		db                          *storage.DB
+		pictureClient                    picture.Client
+		pushNotificationsClient          push.Client
+		telegramNotificationsClient      telegram.Client
+		cfg                              *config
+		schedulerAnnouncementsMX         *sync.Mutex
+		schedulerPushNotificationsMX     *sync.Mutex
+		schedulerTelegramNotificationsMX *sync.Mutex
+		telemetryPushNotifications       *telemetry
+		telemetryTelegramNotifications   *telemetry
+		telemetryAnnouncements           *telemetry
+		db                               *storage.DB
 	}
 )
 
@@ -211,8 +213,9 @@ const (
 	requestingUserIDCtxValueKey = "requestingUserIDCtxValueKey"
 	requestDeadline             = 30 * stdlibtime.Second
 
-	schedulerWorkersCount int64 = 10
-	schedulerBatchSize    int64 = 100
+	schedulerWorkersCount      int64 = 10
+	schedulerPushBatchSize     int64 = 250
+	schedulerTelegramBatchSize int64 = 100
 )
 
 var (

@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS scheduled_notifications  (
                     notification_channel_value  TEXT NOT NULL,
                     primary key(user_id,uniqueness,notification_type,notification_channel,notification_channel_value));
 CREATE UNIQUE INDEX IF NOT EXISTS scheduled_notifications_i_ix ON scheduled_notifications (i);
-CREATE INDEX IF NOT EXISTS scheduled_notifications_mod_i_ix ON scheduled_notifications (MOD(i, %[1]v), scheduled_for ASC);
+CREATE INDEX IF NOT EXISTS scheduled_notifications_mod_i_ix ON scheduled_notifications (MOD(i, %[1]v), scheduled_for, notification_channel ASC);
 CREATE INDEX IF NOT EXISTS scheduled_notifications_user_id_notification_type_ix ON scheduled_notifications (user_id,notification_type);
 --************************************************************************************************************************************
 -- sent_announcements

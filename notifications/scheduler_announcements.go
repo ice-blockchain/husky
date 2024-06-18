@@ -23,13 +23,13 @@ func (s *Scheduler) runAnnouncementsProcessor(ctx context.Context, workerNumber 
 		batchNumber                 int64
 		now, lastIterationStartedAt = time.Now(), time.Now()
 		errs                        = make([]error, 0)
-		successedAnnouncements      = make([]*broadcastPushNotification[push.Notification[push.SubscriptionTopic]], 0, schedulerBatchSize)
-		announcements               = make([]*scheduledAnnouncement, schedulerBatchSize)
-		toSendAnnouncements         = make([]*broadcastPushNotification[push.Notification[push.SubscriptionTopic]], 0, schedulerBatchSize)
+		successedAnnouncements      = make([]*broadcastPushNotification[push.Notification[push.SubscriptionTopic]], 0, schedulerPushBatchSize)
+		announcements               = make([]*scheduledAnnouncement, schedulerPushBatchSize)
+		toSendAnnouncements         = make([]*broadcastPushNotification[push.Notification[push.SubscriptionTopic]], 0, schedulerPushBatchSize)
 		err                         error
 	)
 	resetVars := func(success bool) {
-		if success && len(announcements) < int(schedulerBatchSize) {
+		if success && len(announcements) < int(schedulerPushBatchSize) {
 			go s.telemetryAnnouncements.collectElapsed(0, *lastIterationStartedAt.Time)
 			batchNumber = 0
 		}
@@ -152,7 +152,7 @@ func (s *Scheduler) fetchScheduledAnnouncements(ctx context.Context, now *time.T
 						WHERE MOD(i, %[1]v) = %[2]v
 					  		  AND scheduled_for <= $1
 						ORDER BY MOD(i, %[1]v), scheduled_for ASC
-						LIMIT %[3]v;`, schedulerWorkersCount, workerNumber, schedulerBatchSize)
+						LIMIT %[3]v;`, schedulerWorkersCount, workerNumber, schedulerPushBatchSize)
 	resp, err = storage.ExecMany[scheduledAnnouncement](ctx, s.db, sql, now.Time)
 
 	return resp, errors.Wrapf(err, "failed to fetch scheduled announcements for worker:%v", workerNumber)
