@@ -1,0 +1,7 @@
+{
+    "en": {
+        "body": "🙌 <b>Follow Zeus on X</b>\n\nStay connected with the <b>founder of Ice Open Network</b> on X",
+        "buttonText": "🌟 Follow Zeus on X",
+        "buttonLink": "https://x.com/ice_z3us"
+    }
+}

@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/goccy/go-json"
 	"github.com/hashicorp/go-multierror"
@@ -15,10 +16,11 @@ import (
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/notifications/inapp"
 	"github.com/ice-blockchain/wintr/notifications/push"
+	"github.com/ice-blockchain/wintr/notifications/telegram"
 	"github.com/ice-blockchain/wintr/time"
 )
 
-func (s *completedLevelsSource) Process(ctx context.Context, msg *messagebroker.Message) error { //nolint:funlen // .
+func (s *completedLevelsSource) Process(ctx context.Context, msg *messagebroker.Message) error { //nolint:funlen,gocognit,gocyclo,revive,cyclop // .
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline while processing message")
 	}
@@ -79,39 +81,78 @@ func (s *completedLevelsSource) Process(ctx context.Context, msg *messagebroker.
 			errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", LevelChangedNotificationType, in),
 		).ErrorOrNil()
 	}
-	tmpl, found := allPushNotificationTemplates[LevelChangedNotificationType][tokens.Language]
-	if !found {
-		log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` push config", tokens.Language, LevelChangedNotificationType))
+	var exConcurrently []func() error
+	if tokens.PushNotificationTokens != nil && len(*tokens.PushNotificationTokens) != 0 { //nolint:dupl // .
+		tmpl, found := allPushNotificationTemplates[LevelChangedNotificationType][tokens.Language]
+		if !found {
+			log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` push config", tokens.Language, LevelChangedNotificationType))
 
-		return errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", LevelChangedNotificationType, in)
-	}
-	pn := make([]*pushNotification, 0, len(*tokens.PushNotificationTokens))
-	for _, token := range *tokens.PushNotificationTokens {
-		pn = append(pn, &pushNotification{
-			pn: &push.Notification[push.DeviceToken]{
-				Data:     map[string]string{"deeplink": deeplink},
-				Target:   token,
-				Title:    tmpl.getTitle(nil),
-				Body:     tmpl.getBody(nil),
-				ImageURL: imageURL,
-			},
-			sn: &sentNotification{
-				SentAt:   now,
-				Language: tokens.Language,
-				sentNotificationPK: sentNotificationPK{
-					UserID:                   message.UserID,
-					Uniqueness:               message.Type,
-					NotificationType:         LevelChangedNotificationType,
-					NotificationChannel:      PushNotificationChannel,
-					NotificationChannelValue: string(token),
+			return errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", LevelChangedNotificationType, in)
+		}
+		pn := make([]*pushNotification, 0, len(*tokens.PushNotificationTokens))
+		for _, token := range *tokens.PushNotificationTokens {
+			pn = append(pn, &pushNotification{
+				pn: &push.Notification[push.DeviceToken]{
+					Data:     map[string]string{"deeplink": deeplink},
+					Target:   token,
+					Title:    tmpl.getTitle(nil),
+					Body:     tmpl.getBody(nil),
+					ImageURL: imageURL,
 				},
-			},
+				sn: &sentNotification{
+					SentAt:   now,
+					Language: tokens.Language,
+					sentNotificationPK: sentNotificationPK{
+						UserID:                   message.UserID,
+						Uniqueness:               message.Type,
+						NotificationType:         LevelChangedNotificationType,
+						NotificationChannel:      PushNotificationChannel,
+						NotificationChannelValue: string(token),
+					},
+				},
+			})
+		}
+		exConcurrently = append(exConcurrently, func() error {
+			return errors.Wrapf(runConcurrently(ctx, s.sendPushNotification, pn), "failed to sendPushNotifications atleast to some devices for %v, args:%#v", LevelChangedNotificationType, pn) //nolint:lll // .
+		}, func() error {
+			return errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", LevelChangedNotificationType, in)
 		})
 	}
+	if tmplTelegram, found := allTelegramNotificationTemplates[LevelChangedNotificationType][tokens.Language]; !found { //nolint:nestif // .
+		log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` telegram config", tokens.Language, LevelChangedNotificationType))
+	} else {
+		if botInfo, botFound := s.cfg.TelegramBots[strings.ToLower(tokens.TelegramBotID)]; botFound {
+			tn := &telegramNotification{
+				tn: &telegram.Notification{
+					ChatID:   tokens.TelegramUserID,
+					Text:     tmplTelegram.getBody(nil),
+					BotToken: botInfo.BotToken,
+				},
+				sn: &sentNotification{
+					SentAt:   now,
+					Language: tokens.Language,
+					sentNotificationPK: sentNotificationPK{
+						UserID:                   message.UserID,
+						Uniqueness:               message.Type,
+						NotificationType:         LevelChangedNotificationType,
+						NotificationChannel:      TelegramNotificationChannel,
+						NotificationChannelValue: message.UserID,
+					},
+				},
+			}
+			buttonText := tmplTelegram.getButtonText(nil)
+			buttonLink := formatButtonLink(tmplTelegram.getButtonLink(nil), s.cfg.WebAppLink)
+			if buttonText != "" && buttonLink != "" {
+				tn.tn.Buttons = append(tn.tn.Buttons, struct {
+					Text string `json:"text,omitempty"`
+					URL  string `json:"url,omitempty"`
+				}{})
+			}
+			exConcurrently = append(exConcurrently, func() error {
+				return errors.Wrapf(s.sendTelegramNotification(ctx, tn), "failed to send telegram notification for %v, notif:%#v", LevelChangedNotificationType, in)
+			})
+		}
+	}
 
-	return errors.Wrap(executeConcurrently(func() error {
-		return errors.Wrapf(runConcurrently(ctx, s.sendPushNotification, pn), "failed to sendPushNotifications atleast to some devices for %v, args:%#v", LevelChangedNotificationType, pn) //nolint:lll // .
-	}, func() error {
-		return errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", LevelChangedNotificationType, in)
-	}), "failed to executeConcurrently")
+	return errors.Wrap(executeConcurrently(exConcurrently...), "failed to executeConcurrently")
 }

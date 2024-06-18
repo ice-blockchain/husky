@@ -16,8 +16,12 @@ CREATE TABLE IF NOT EXISTS users  (
                     profile_picture_name                    TEXT,
                     referred_by                             TEXT,
                     phone_number_hash                       TEXT,
+                    telegram_user_id                        TEXT NOT NULL,
+                    telegram_bot_id                         TEXT NOT NULL,
                     language                                TEXT NOT NULL default 'en'
                   );
+ALTER TABLE users ADD COLUMN IF NOT EXISTS telegram_user_id text NOT NULL;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS telegram_bot_id text NOT NULL;
 --************************************************************************************************************************************
 -- sent_notifications
 CREATE TABLE IF NOT EXISTS sent_notifications  (

@@ -18,6 +18,7 @@ import (
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/multimedia/picture"
 	"github.com/ice-blockchain/wintr/notifications/push"
+	"github.com/ice-blockchain/wintr/notifications/telegram"
 )
 
 func MustStartScheduler(ctx context.Context) *Scheduler {
@@ -25,16 +26,16 @@ func MustStartScheduler(ctx context.Context) *Scheduler {
 	appcfg.MustLoadFromKey(applicationYamlKey, &cfg)
 	ddlWorkersParam := fmt.Sprintf(ddl, schedulerWorkersCount)
 	sh := Scheduler{
-		cfg:                      &cfg,
-		db:                       storage.MustConnect(context.Background(), ddlWorkersParam, applicationYamlKey), //nolint:contextcheck // .
-		pictureClient:            picture.New(applicationYamlKey),
-		pushNotificationsClient:  push.New(applicationYamlKey),
-		telemetryNotifications:   new(telemetry).mustInit([]string{"scheduler notifications[full iteration]", "get_scheduled_notifications", "process_notifications", "clear_invalid_tokens", "delete_scheduled_notifications"}), //nolint:lll // .
-		telemetryAnnouncements:   new(telemetry).mustInit([]string{"scheduler announcements[full iteration]", "get_scheduled_announcements", "process_announcements", "delete_scheduled_announcements"}),                         //nolint:lll // .
-		schedulerAnnouncementsMX: &sync.Mutex{},
-		schedulerNotificationsMX: &sync.Mutex{},
+		cfg:                         &cfg,
+		db:                          storage.MustConnect(context.Background(), ddlWorkersParam, applicationYamlKey), //nolint:contextcheck // .
+		pictureClient:               picture.New(applicationYamlKey),
+		pushNotificationsClient:     push.New(applicationYamlKey),
+		telegramNotificationsClient: telegram.New(applicationYamlKey),
+		telemetryNotifications:      new(telemetry).mustInit([]string{"scheduler notifications[full iteration]", "get_scheduled_notifications", "process_notifications", "clear_invalid_tokens", "delete_scheduled_notifications"}), //nolint:lll // .
+		telemetryAnnouncements:      new(telemetry).mustInit([]string{"scheduler announcements[full iteration]", "get_scheduled_announcements", "process_announcements", "delete_scheduled_announcements"}),                         //nolint:lll // .
+		schedulerAnnouncementsMX:    &sync.Mutex{},
+		schedulerNotificationsMX:    &sync.Mutex{},
 	}
-	loadPushNotificationTranslationTemplates()
 	go sh.startWeeklyStatsUpdater(ctx)
 	wg := new(sync.WaitGroup)
 	wg.Add(2 * int(schedulerWorkersCount)) //nolint:gomnd,mnd // .

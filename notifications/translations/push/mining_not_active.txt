@@ -1,202 +1,202 @@
 {
     "en": {
-        "title": "💔 Don't lose more coins!",
-        "body": "You're losing coins for inactivity, come back and start your check-in session again."
+        "title": "⏰  Tick-tock, tick-tock!",
+        "body": "Keep your coins safe by starting a new check-in session now."
     },
     "ro": {
-        "title": "💔 Nu pierde mai multe monede!",
-        "body": "Pierzi monede pentru inactivitate, revino și începe din nou sesiunea de check-in."
+        "title": "⏰ Tic-tac, tic-tac!",
+        "body": "Păstrați-vă monedele în siguranță, pornind acum o nouă sesiune de check-in."
     },
     "el": {
-        "title": "💔 Μην χάσετε περισσότερα νομίσματα!",
-        "body": "Χάνετε νομίσματα λόγω αδράνειας, επιστρέψτε και ξεκινήστε ξανά τη συνεδρία check-in."
+        "title": "⏰ Τικ-τακ, τικ-τακ!",
+        "body": "Διατηρήστε τα νομίσματά σας ασφαλή ξεκινώντας μια νέα συνεδρία check-in τώρα."
     },
     "af": {
-        "title": "💔 Moenie meer munte verloor nie!",
-        "body": "Jy verloor munte vir onaktiwiteit, kom terug en begin jou inkloksessie weer."
+        "title": "⏰ Tik-tok, tik-tok!",
+        "body": "Hou jou munte veilig deur nou 'n nuwe inkloksessie te begin."
     },
     "am": {
-        "title": "💔 ተጨማሪ ሳንቲሞችን እንዳያጡ!",
-        "body": "ለእንቅስቃሴ-አልባነት ሳንቲሞች እያጡ ነው፣ ተመልሰው ይምጡና ተመዝግቦ መግቢያ ክፍለ ጊዜዎን እንደገና ይጀምሩ።"
+        "title": "⏰ ቲክ-ቶክ፣ ቲክ-ቶክ!",
+        "body": "አሁን አዲስ የመመዝገቢያ ክፍለ ጊዜ በመጀመር የሳንቲሞችዎን ደህንነት ይጠብቁ።"
     },
     "ar": {
-        "title": "💔 لا تفقد المزيد من العملات المعدنية!",
-        "body": "أنت تخسر عملات معدنية لعدم النشاط ، عد وابدأ جلسة تسجيل الوصول مرة أخرى."
+        "title": "⏰ تيك توك ، تيك توك!",
+        "body": "حافظ على أمان عملاتك عن طريق بدء جلسة تسجيل وصول جديدة الآن."
     },
     "az": {
-        "title": "💔 Daha çox pul itirməyin!",
-        "body": "Siz hərəkətsizliyə görə sikkələr itirirsiniz, geri qayıdın və qeydiyyat seansına yenidən başlayın."
+        "title": "⏰ Tik-tak, tik-tak!",
+        "body": "İndi yeni qeydiyyat seansına başlamaqla pullarınızı təhlükəsiz saxlayın."
     },
     "bg": {
-        "title": "💔 Не губете повече монети!",
-        "body": "Губите монети поради неактивност, върнете се и започнете сесията си за чекиране отново."
+        "title": "⏰ Тик-так, тик-так!",
+        "body": "Пазете вашите монети в безопасност, като започнете нова сесия за регистрация сега."
     },
     "bn": {
-        "title": "💔 আরো কয়েন হারাবেন না!",
-        "body": "আপনি নিষ্ক্রিয়তার জন্য কয়েন হারাচ্ছেন, ফিরে আসুন এবং আপনার চেক-ইন সেশন আবার শুরু করুন।"
+        "title": "⏰ টিক-টক, টিক-টক!",
+        "body": "এখনই একটি নতুন চেক-ইন সেশন শুরু করে আপনার কয়েনগুলিকে সুরক্ষিত রাখুন৷"
     },
     "yo": {
-        "title": "💔 Maṣe padanu awọn owó diẹ sii!",
-        "body": "O n padanu awọn owó fun aiṣiṣẹ, pada wa ki o tun bẹrẹ igba ayẹwo rẹ lẹẹkansi."
+        "title": "⏰ Tiki-toki, tiki-toki!",
+        "body": "Tọju awọn owó rẹ lailewu nipa bibẹrẹ igba iṣayẹwo tuntun ni bayi."
     },
     "cs": {
-        "title": "💔 Neztrácejte další mince!",
-        "body": "Ztrácíte coiny kvůli nečinnosti, vraťte se a zahajte svou relaci znovu."
+        "title": "⏰ Tik-tak, tik-tak!",
+        "body": "Udržujte své coiny v bezpečí tím, že nyní zahájíte novou relaci odbavení."
     },
     "de": {
-        "title": "💔 Verliere keine Münzen mehr!",
-        "body": "Du verlierst Münzen wegen Inaktivität, komm zurück und starte deine Check-in-Sitzung erneut."
+        "title": "⏰ Tick-Tack, Tick-Tack!",
+        "body": "Schützen Sie Ihre Münzen, indem Sie jetzt eine neue Check-in-Sitzung starten."
     },
     "es": {
-        "title": "💔 ¡No pierdas más monedas!",
-        "body": "Estás perdiendo monedas por inactividad, vuelve y vuelve a iniciar tu sesión de check-in."
+        "title": "⏰ ¡Tic-tac, tic-tac!",
+        "body": "Mantenga sus monedas seguras iniciando una nueva sesión de registro ahora."
     },
     "fa": {
-        "title": "💔 سکه های بیشتری را از دست ندهید!",
-        "body": "شما در حال از دست دادن سکه به دلیل عدم فعالیت هستید، برگردید و جلسه بررسی خود را دوباره شروع کنید."
+        "title": "⏰ تیک تاک، تیک تاک!",
+        "body": "سکه های خود را با شروع یک جلسه بررسی جدید از هم اکنون ایمن نگه دارید."
     },
     "tl": {
-        "title": "💔 Huwag mawalan ng mas maraming barya!",
-        "body": "Nawawalan ka ng mga barya dahil sa kawalan ng aktibidad, bumalik at simulan muli ang iyong check-in session."
+        "title": "⏰ Tik-tok, tik-tok!",
+        "body": "Panatilihing ligtas ang iyong mga barya sa pamamagitan ng pagsisimula ng bagong sesyon ng check-in ngayon."
     },
     "fr": {
-        "title": "💔 Ne perdez plus de pièces !",
-        "body": "Vous perdez des pièces pour inactivité, revenez et recommencez votre session d'enregistrement."
+        "title": "⏰ Tic-tac, tic-tac !",
+        "body": "Protégez vos pièces en démarrant une nouvelle session d'enregistrement maintenant."
     },
     "gu": {
-        "title": "💔 વધુ સિક્કા ગુમાવશો નહીં!",
-        "body": "તમે નિષ્ક્રિયતા માટે સિક્કા ગુમાવી રહ્યાં છો, પાછા આવો અને તમારું ચેક-ઇન સત્ર ફરી શરૂ કરો."
+        "title": "⏰ ટિક-ટોક, ટિક-ટોક!",
+        "body": "હમણાં એક નવું ચેક-ઇન સત્ર શરૂ કરીને તમારા સિક્કાઓને સુરક્ષિત રાખો."
     },
     "he": {
-        "title": "💔 אל תפסיד עוד מטבעות!",
-        "body": "אתה מפסיד מטבעות בגלל חוסר פעילות, חזור והתחל את סשן הצ'ק-אין שלך שוב."
+        "title": "⏰ טיק-טק, טיק-טק!",
+        "body": "שמרו על המטבעות שלכם על ידי התחלת מפגש צ'ק-אין חדש עכשיו."
     },
     "hi": {
-        "title": "💔 और सिक्के न खोएं!",
-        "body": "आप निष्क्रियता के कारण सिक्के खो रहे हैं, वापस आएं और अपना चेक-इन सत्र फिर से शुरू करें।"
+        "title": "⏰ टिक-टॉक, टिक-टॉक!",
+        "body": "अभी नया चेक-इन सत्र शुरू करके अपने सिक्कों को सुरक्षित रखें।"
     },
     "hu": {
-        "title": "💔 Ne veszítsen több érmét!",
-        "body": "Érméket veszít az inaktivitás miatt, térjen vissza, és kezdje újra a bejelentkezést."
+        "title": "⏰ Tick-tock, tic-tock!",
+        "body": "Tartsa biztonságban érméit, ha most új bejelentkezést indít."
     },
     "id": {
-        "title": "💔 Jangan kehilangan lebih banyak koin!",
-        "body": "Anda kehilangan koin karena tidak aktif, kembali dan mulai sesi check-in Anda lagi."
+        "title": "⏰ Tik-tok, tik-tok!",
+        "body": "Amankan koin Anda dengan memulai sesi check-in baru sekarang."
     },
     "it": {
-        "title": "💔 Non perdere più monete!",
-        "body": "Stai perdendo monete per inattività, torna indietro e ricomincia la tua sessione di check-in."
+        "title": "⏰ Tic tac, tic tac!",
+        "body": "Mantieni le tue monete al sicuro avviando subito una nuova sessione di check-in."
     },
     "ja": {
-        "title": "💔 これ以上コインを失わないでください！",
-        "body": "非アクティブのためにコインを失っています。戻って、チェックイン セッションをもう一度開始してください。"
+        "title": "⏰ チクタク、チクタク！",
+        "body": "今すぐ新しいチェックイン セッションを開始して、コインを安全に保管してください。"
     },
     "jv": {
-        "title": "💔 Aja kelangan dhuwit recehan liyane!",
-        "body": "Sampeyan kelangan dhuwit recehan amarga ora aktif, bali lan miwiti sesi mriksa maneh."
+        "title": "⏰ Tik tok, tik tok!",
+        "body": "Tansah dhuwit recehan sampeyan kanthi miwiti sesi check-in anyar saiki."
     },
     "ko": {
-        "title": "💔 더 이상 코인을 잃지 마세요!",
-        "body": "활동이 없으면 코인을 잃게 됩니다. 돌아와서 체크인 세션을 다시 시작하세요."
+        "title": "⏰ 틱톡, 틱톡!",
+        "body": "지금 새로운 체크인 세션을 시작하여 코인을 안전하게 보관하세요."
     },
     "mr": {
-        "title": "💔 अधिक नाणी गमावू नका!",
-        "body": "तुम्ही निष्क्रियतेसाठी नाणी गमावत आहात, परत या आणि तुमचे चेक-इन सत्र पुन्हा सुरू करा."
+        "title": "⏰ टिक-टॉक, टिक-टॉक!",
+        "body": "आता नवीन चेक-इन सत्र सुरू करून तुमची नाणी सुरक्षित ठेवा."
     },
     "ms": {
-        "title": "💔 Jangan kehilangan lebih banyak syiling!",
-        "body": "Anda kehilangan syiling kerana tidak aktif, kembali dan mulakan sesi daftar masuk anda sekali lagi."
+        "title": "⏰ Tik-tok, tik-tok!",
+        "body": "Pastikan syiling anda selamat dengan memulakan sesi daftar masuk baharu sekarang."
     },
     "no": {
-        "title": "💔 Ikke tap flere mynter!",
-        "body": "Du taper mynter på grunn av inaktivitet, kom tilbake og start innsjekkingsøkten på nytt."
+        "title": "⏰ Tikk-takk, tikk-takk!",
+        "body": "Hold myntene dine trygge ved å starte en ny innsjekkingsøkt nå."
     },
     "pa": {
-        "title": "💔 ਹੋਰ ਸਿੱਕੇ ਨਾ ਗੁਆਓ!",
-        "body": "ਤੁਸੀਂ ਅਕਿਰਿਆਸ਼ੀਲਤਾ ਲਈ ਸਿੱਕੇ ਗੁਆ ਰਹੇ ਹੋ, ਵਾਪਸ ਆਓ ਅਤੇ ਆਪਣਾ ਚੈੱਕ-ਇਨ ਸੈਸ਼ਨ ਦੁਬਾਰਾ ਸ਼ੁਰੂ ਕਰੋ।"
+        "title": "⏰ ਟਿੱਕ-ਟੌਕ, ਟਿੱਕ-ਟੌਕ!",
+        "body": "ਹੁਣੇ ਇੱਕ ਨਵਾਂ ਚੈੱਕ-ਇਨ ਸੈਸ਼ਨ ਸ਼ੁਰੂ ਕਰਕੇ ਆਪਣੇ ਸਿੱਕਿਆਂ ਨੂੰ ਸੁਰੱਖਿਅਤ ਰੱਖੋ।"
     },
     "pl": {
-        "title": "💔 Nie trać więcej monet!",
-        "body": "Tracisz monety za brak aktywności, wróć i ponownie rozpocznij sesję odprawy."
+        "title": "⏰ Tik-tak, tik-tak!",
+        "body": "Chroń swoje monety, rozpoczynając teraz nową sesję odprawy."
     },
     "ps": {
-        "title": "💔 نور سکې له لاسه مه ورکوئ!",
-        "body": "تاسو د غیر فعالیت لپاره سکې له لاسه ورکوئ، بیرته راشئ او خپل د چیک ان سیشن بیا پیل کړئ."
+        "title": "⏰ ټک ټک، ټک ټک!",
+        "body": "همدا اوس د نوي چیک ان سیشن په پیل کولو سره خپلې سکې خوندي وساتئ."
     },
     "pt": {
-        "title": "💔 Não perca mais moedas!",
-        "body": "Você está perdendo moedas por inatividade, volte e inicie sua sessão de check-in novamente."
+        "title": "⏰ Tic-tac, tic-tac!",
+        "body": "Mantenha suas moedas seguras iniciando uma nova sessão de check-in agora."
     },
     "ru": {
-        "title": "💔 Не теряйте больше монет!",
-        "body": "Вы теряете монеты из-за бездействия, вернитесь и снова начните сеанс регистрации."
+        "title": "⏰ Тик-так, тик-так!",
+        "body": "Защитите свои монеты, начав новую сессию регистрации прямо сейчас."
     },
     "sd": {
-        "title": "💔 وڌيڪ سڪا نه وڃايو!",
-        "body": "توهان غيرفعاليت لاءِ سڪا وڃائي رهيا آهيو، واپس اچو ۽ پنهنجو چيڪ ان سيشن ٻيهر شروع ڪريو."
+        "title": "⏰ ٽڪ ٽڪ، ٽڪ ٽڪ!",
+        "body": "ھاڻي ھڪڙو نئون چيڪ-ان سيشن شروع ڪندي پنھنجي سڪن کي محفوظ رکو."
     },
     "sk": {
-        "title": "💔 Nestratia viac mincí!",
-        "body": "Pre nečinnosť prichádzate o mince, vráťte sa a znova začnite svoju registráciu."
+        "title": "⏰ Tik-tak, tik-tak!",
+        "body": "Udržujte svoje mince v bezpečí tým, že teraz začnete novú reláciu registrácie."
     },
     "sl": {
-        "title": "💔 Ne izgubite več kovancev!",
-        "body": "Zaradi nedejavnosti izgubljate kovance, vrnite se in znova začnite sejo prijave."
+        "title": "⏰ Tik-tak, tik-tak!",
+        "body": "Poskrbite za svoje kovance tako, da zdaj začnete novo sejo prijave."
     },
     "sq": {
-        "title": "💔 Mos humb më shumë monedha!",
-        "body": "Po humbisni monedha për mungesë aktiviteti, kthehuni dhe filloni përsëri seancën e regjistrimit."
+        "title": "⏰ Tik-tak, tik-tak!",
+        "body": "Mbani monedhat tuaja të sigurta duke filluar një seancë të re check-in tani."
     },
     "sv": {
-        "title": "💔 Förlora inte fler mynt!",
-        "body": "Du förlorar mynt för inaktivitet, kom tillbaka och starta din incheckningssession igen."
+        "title": "⏰ Tick-tack, tick-tack!",
+        "body": "Håll dina mynt säkra genom att starta en ny incheckningssession nu."
     },
     "ta": {
-        "title": "💔 அதிக நாணயங்களை இழக்காதீர்கள்!",
-        "body": "செயலற்ற நிலையில் நாணயங்களை இழக்கிறீர்கள், திரும்பி வந்து உங்கள் செக்-இன் அமர்வை மீண்டும் தொடங்கவும்."
+        "title": "⏰ டிக்-டாக், டிக்-டாக்!",
+        "body": "இப்போது புதிய செக்-இன் அமர்வைத் தொடங்கி உங்கள் நாணயங்களைப் பாதுகாப்பாக வைத்திருங்கள்."
     },
     "te": {
-        "title": "💔 మరిన్ని నాణేలను పోగొట్టుకోకండి!",
-        "body": "మీరు నిష్క్రియాత్మకత కారణంగా నాణేలను కోల్పోతున్నారు, తిరిగి వచ్చి మీ చెక్-ఇన్ సెషన్‌ను మళ్లీ ప్రారంభించండి."
+        "title": "⏰ టిక్-టాక్, టిక్-టాక్!",
+        "body": "ఇప్పుడే కొత్త చెక్-ఇన్ సెషన్‌ను ప్రారంభించడం ద్వారా మీ నాణేలను సురక్షితంగా ఉంచండి."
     },
     "th": {
-        "title": "💔 อย่าเสียเหรียญเพิ่ม!",
-        "body": "คุณกำลังสูญเสียเหรียญเนื่องจากไม่ได้ใช้งาน กลับมาและเริ่มเซสชันการเช็คอินอีกครั้ง"
+        "title": "⏰ ติ๊กต็อก ติ๊กต็อก!",
+        "body": "รักษาเหรียญของคุณให้ปลอดภัยโดยเริ่มเซสชันการเช็คอินใหม่ทันที"
     },
     "su": {
-        "title": "💔 Entong kaleungitan deui koin!",
-        "body": "Anjeun kaleungitan koin kusabab teu aktip, uih deui sareng ngamimitian sési pariksa deui."
+        "title": "⏰ Tiktok, tiktok!",
+        "body": "Jaga koin anjeun aman ku ngamimitian sési cek-in énggal ayeuna."
     },
     "kn": {
-        "title": "💔 ಹೆಚ್ಚು ನಾಣ್ಯಗಳನ್ನು ಕಳೆದುಕೊಳ್ಳಬೇಡಿ!",
-        "body": "ನಿಷ್ಕ್ರಿಯತೆಗಾಗಿ ನೀವು ನಾಣ್ಯಗಳನ್ನು ಕಳೆದುಕೊಳ್ಳುತ್ತಿರುವಿರಿ, ಹಿಂತಿರುಗಿ ಮತ್ತು ನಿಮ್ಮ ಚೆಕ್-ಇನ್ ಸೆಶನ್ ಅನ್ನು ಮತ್ತೆ ಪ್ರಾರಂಭಿಸಿ."
+        "title": "⏰ ಟಿಕ್-ಟಾಕ್, ಟಿಕ್-ಟಾಕ್!",
+        "body": "ಇದೀಗ ಹೊಸ ಚೆಕ್-ಇನ್ ಸೆಶನ್ ಅನ್ನು ಪ್ರಾರಂಭಿಸುವ ಮೂಲಕ ನಿಮ್ಮ ನಾಣ್ಯಗಳನ್ನು ಸುರಕ್ಷಿತವಾಗಿರಿಸಿಕೊಳ್ಳಿ."
     },
     "tr": {
-        "title": "💔 Daha fazla jeton kaybetmeyin!",
-        "body": "İşlem yapmadığınız için jeton kaybediyorsunuz, geri gelin ve check-in oturumunuzu tekrar başlatın."
+        "title": "⏰ Tik-tak, tik-tak!",
+        "body": "Şimdi yeni bir check-in oturumu başlatarak madeni paralarınızı güvende tutun."
     },
     "zh-hant": {
-        "title": "💔 不要損失更多金幣！",
-        "body": "您因不活動而丟失硬幣，請返回並重新開始您的簽到會話。"
+        "title": "⏰ 滴答，滴答！",
+        "body": "立即開始新的簽到會話，確保您的硬幣安全。"
     },
     "uk": {
-        "title": "💔 Не втрачайте більше монет!",
-        "body": "Ви втрачаєте монети через бездіяльність, поверніться та почніть сеанс реєстрації знову."
+        "title": "⏰ Тік-так, тік-так!",
+        "body": "Збережіть свої монети в безпеці, розпочавши новий сеанс реєстрації зараз."
     },
     "ur": {
-        "title": "💔 مزید سکے نہ گنوائیں!",
-        "body": "آپ غیرفعالیت کی وجہ سے سکے کھو رہے ہیں، واپس آئیں اور اپنا چیک ان سیشن دوبارہ شروع کریں۔"
+        "title": "⏰ ٹک ٹاک، ٹک ٹاک!",
+        "body": "ابھی ایک نیا چیک ان سیشن شروع کر کے اپنے سکوں کو محفوظ رکھیں۔"
     },
     "vi": {
-        "title": "💔 Đừng mất thêm xu!",
-        "body": "Bạn đang mất tiền do không hoạt động, hãy quay lại và bắt đầu lại phiên đăng ký của mình."
+        "title": "⏰ Tích tắc, tích tắc!",
+        "body": "Giữ tiền của bạn an toàn bằng cách bắt đầu phiên đăng ký mới ngay bây giờ."
     },
     "zh": {
-        "title": "💔 不要损失更多金币！",
-        "body": "您因不活动而丢失硬币，请返回并重新开始您的签到会话。"
+        "title": "⏰ 滴答，滴答！",
+        "body": "立即开始新的签到会话，确保您的硬币安全。"
     },
     "zu": {
-        "title": "💔 Ungalahlekelwa izinhlamvu zemali ezengeziwe!",
-        "body": "Ulahlekelwa yizinhlamvu zemali ngenxa yokungasebenzi, buya futhi uqale isikhathi sakho sokungena futhi."
+        "title": "⏰ Thikha-tock, umaka-tock!",
+        "body": "Gcina izinhlamvu zemali zakho ziphephile ngokuqala iseshini entsha yokungena manje."
     }
 }

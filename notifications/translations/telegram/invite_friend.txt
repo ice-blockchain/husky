@@ -1,0 +1,7 @@
+{
+    "en": {
+        "body": "👋  <b>Invite friends, earn more {{.TenantName}}!</b>\n\nBring your friends to the network and watch your {{.TenantName}} balance grow!",
+        "buttonText": "⭐️ Invite Now",
+        "buttonLink": "/invite"
+    }
+}

@@ -1,0 +1,7 @@
+{
+   "en":{
+      "body":"🚀 <b>A new level achieved!</b>\n\nCongratulations! Your hard work is paying off, keep leveling up! 🏆",
+      "buttonText": "🙌 Check Your Level",
+      "buttonLink": "/profile"
+   }
+}

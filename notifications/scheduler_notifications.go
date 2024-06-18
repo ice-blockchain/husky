@@ -14,20 +14,24 @@ import (
 	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/notifications/push"
+	"github.com/ice-blockchain/wintr/notifications/telegram"
 	"github.com/ice-blockchain/wintr/time"
 )
 
-//nolint:funlen,gocognit,gocyclo,revive,cyclop // .
+//nolint:funlen,gocognit,gocyclo,revive,cyclop,maintidx // .
 func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber int64) {
 	var (
 		batchNumber                 int64
 		now, lastIterationStartedAt = time.Now(), time.Now()
 		errs                        = make([]error, 0)
-		successedNotifications      = make([]*pushNotification, 0, schedulerBatchSize)
-		emptyTokensNotifications    = make([]*scheduledNotificationInfo, 0, schedulerBatchSize)
+		successedNotifications      = make([]*sentNotification, 0, schedulerBatchSize)
+		emptyTokensNotifications    = make([]*scheduledNotification, 0, schedulerBatchSize)
 		invalidTokens               = make([]*invalidToken, 0)
 		toSendPushNotifications     = make([]*pushNotification, 0)
+		toSendTelegramNotifications = make([]*telegramNotification, 0)
 		notifications               = make([]*scheduledNotificationInfo, schedulerBatchSize)
+		failedTelegramNotifications = make([]*scheduledNotification, 0, schedulerBatchSize)
+		exConcurrently              = make([]func() error, 0, 2) //nolint:gomnd,mnd // .
 		err                         error
 	)
 	resetVars := func(success bool) {
@@ -39,9 +43,12 @@ func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber 
 		errs = errs[:0]
 		successedNotifications = successedNotifications[:0]
 		toSendPushNotifications = toSendPushNotifications[:0]
+		toSendTelegramNotifications = toSendTelegramNotifications[:0]
 		invalidTokens = invalidTokens[:0]
 		notifications = notifications[:0]
 		emptyTokensNotifications = emptyTokensNotifications[:0]
+		failedTelegramNotifications = failedTelegramNotifications[:0]
+		exConcurrently = exConcurrently[:0]
 		lastIterationStartedAt = now
 
 		stdlibtime.Sleep(1 * stdlibtime.Second)
@@ -71,72 +78,144 @@ func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber 
 		before = time.Now()
 	out:
 		for _, notification := range notifications {
-			tmpl, found := allPushNotificationTemplates[NotificationType(notification.NotificationType)][notification.Language]
-			if !found {
-				log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` push config", notification.Language, notification.NotificationType))
+			switch notification.NotificationChannel {
+			case string(PushNotificationChannel):
+				tmpl, found := allPushNotificationTemplates[NotificationType(notification.NotificationType)][notification.Language]
+				if !found {
+					log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` push config", notification.Language, notification.NotificationType))
 
-				continue
-			}
-			if notification.DisabledPushNotificationDomains != nil {
-				domain := getDomainByNotificationType(NotificationType(notification.NotificationType))
-				for _, disabledDomain := range *notification.DisabledPushNotificationDomains {
-					if disabledDomain == domain {
-						log.Warn(fmt.Sprintf("notification with disabled notification domain:%v with notification type:%v for notification:%#v", domain, notification.NotificationType, notification)) //nolint:lll // .
+					continue
+				}
+				if notification.DisabledPushNotificationDomains != nil {
+					domain := getDomainByNotificationType(NotificationType(notification.NotificationType))
+					for _, disabledDomain := range *notification.DisabledPushNotificationDomains {
+						if disabledDomain == domain {
+							log.Warn(fmt.Sprintf("notification with disabled notification domain:%v with notification type:%v for notification:%#v", domain, notification.NotificationType, notification)) //nolint:lll // .
 
-						continue out
+							continue out
+						}
 					}
 				}
-			}
-			if notification.PushNotificationTokens == nil || len(*notification.PushNotificationTokens) == 0 {
-				emptyTokensNotifications = append(emptyTokensNotifications, notification)
+				if notification.PushNotificationTokens == nil || len(*notification.PushNotificationTokens) == 0 {
+					emptyTokensNotifications = append(emptyTokensNotifications, &notification.scheduledNotification)
 
-				continue
-			}
-			for _, deviceToken := range *notification.PushNotificationTokens {
-				notif := &pushNotification{
-					pn: &push.Notification[push.DeviceToken]{
-						Data:   map[string]string{"deeplink": s.getDeeplink(NotificationType(notification.NotificationType), notification.Data)},
-						Target: deviceToken,
-						Title:  tmpl.getTitle(notification.Data),
-						Body:   tmpl.getBody(notification.Data),
-					},
-					sn: &sentNotification{
-						SentAt:   now,
-						Language: notification.Language,
-						sentNotificationPK: sentNotificationPK{
-							UserID:                   notification.UserID,
-							Uniqueness:               notification.Uniqueness,
-							NotificationType:         NotificationType(notification.NotificationType),
-							NotificationChannel:      NotificationChannel(notification.NotificationChannel),
-							NotificationChannelValue: notification.NotificationChannelValue,
-						},
-					},
+					continue
 				}
-				toSendPushNotifications = append(toSendPushNotifications, notif)
+				for _, deviceToken := range *notification.PushNotificationTokens {
+					notif := &pushNotification{
+						pn: &push.Notification[push.DeviceToken]{
+							Data:   map[string]string{"deeplink": s.getDeeplink(NotificationType(notification.NotificationType), notification.Data)},
+							Target: deviceToken,
+							Title:  tmpl.getTitle(notification.Data),
+							Body:   tmpl.getBody(notification.Data),
+						},
+						sn: &sentNotification{
+							SentAt:   now,
+							Language: notification.Language,
+							sentNotificationPK: sentNotificationPK{
+								UserID:                   notification.UserID,
+								Uniqueness:               notification.Uniqueness,
+								NotificationType:         NotificationType(notification.NotificationType),
+								NotificationChannel:      NotificationChannel(notification.NotificationChannel),
+								NotificationChannelValue: notification.NotificationChannelValue,
+							},
+						},
+					}
+					toSendPushNotifications = append(toSendPushNotifications, notif)
+				}
+			case string(TelegramNotificationChannel):
+				tmpl, found := allTelegramNotificationTemplates[NotificationType(notification.NotificationType)][notification.Language]
+				if !found {
+					log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` telegram notifications config", notification.Language, notification.NotificationType))
+
+					continue
+				}
+				botInfo, found := s.cfg.TelegramBots[strings.ToLower(notification.TelegramBotID)]
+				if !found || notification.TelegramBotID == notification.UserID || notification.TelegramUserID == notification.UserID {
+					log.Warn(fmt.Sprintf("no bot token for bot id:%v for user:%v", notification.TelegramBotID, notification.UserID))
+					failedTelegramNotifications = append(failedTelegramNotifications, &notification.scheduledNotification)
+				} else {
+					tn := &telegramNotification{
+						tn: &telegram.Notification{
+							ChatID:   notification.TelegramUserID,
+							Text:     tmpl.getBody(notification.Data),
+							BotToken: botInfo.BotToken,
+						},
+						sn: &sentNotification{
+							SentAt:   now,
+							Language: notification.Language,
+							sentNotificationPK: sentNotificationPK{
+								UserID:                   notification.UserID,
+								Uniqueness:               notification.Uniqueness,
+								NotificationType:         NotificationType(notification.NotificationType),
+								NotificationChannel:      TelegramNotificationChannel,
+								NotificationChannelValue: notification.NotificationChannelValue,
+							},
+						},
+						scheduled: notification.scheduledNotification,
+					}
+					buttonText := tmpl.getButtonText(notification.Data)
+					buttonLink := tmpl.getButtonLink(nil)
+					buttonLink = formatButtonLink(buttonLink, s.cfg.WebAppLink)
+					if buttonText != "" && buttonLink != "" {
+						tn.tn.Buttons = append(tn.tn.Buttons, struct {
+							Text string `json:"text,omitempty"`
+							URL  string `json:"url,omitempty"`
+						}{
+							Text: buttonText,
+							URL:  buttonLink,
+						})
+					}
+					toSendTelegramNotifications = append(toSendTelegramNotifications, tn)
+				}
+			default:
+				log.Panic("not implemented")
 			}
 		}
 
 		/******************************************************************************************************************************************************
 			3. Send all notifications concurrently.
 		******************************************************************************************************************************************************/
-		if eErr := runConcurrentlyBatch(ctx, s.sendPushNotification, toSendPushNotifications, func(arg *pushNotification, err error) {
-			if errors.Is(err, push.ErrInvalidDeviceToken) {
-				s.schedulerNotificationsMX.Lock()
-				invalidTokens = append(invalidTokens, &invalidToken{
-					UserID: arg.sn.UserID,
-					Token:  arg.pn.Target,
-				})
-				s.schedulerNotificationsMX.Unlock()
-			} else {
-				log.Error(errors.Wrapf(err, "can't send notification for:%v", arg.sn.UserID))
-			}
-		}, func(arg *pushNotification) {
-			s.schedulerNotificationsMX.Lock()
-			defer s.schedulerNotificationsMX.Unlock()
+		if eErr := executeConcurrently(
+			func() error {
+				return errors.Wrapf(runConcurrentlyBatch(ctx, s.sendPushNotification, toSendPushNotifications, func(arg *pushNotification, err error) {
+					if errors.Is(err, push.ErrInvalidDeviceToken) {
+						s.schedulerNotificationsMX.Lock()
+						invalidTokens = append(invalidTokens, &invalidToken{
+							UserID: arg.sn.UserID,
+							Token:  arg.pn.Target,
+						})
+						s.schedulerNotificationsMX.Unlock()
+					} else {
+						log.Error(errors.Wrapf(err, "can't send push notification for:%v", arg.sn.UserID))
+					}
+				}, func(arg *pushNotification) {
+					s.schedulerNotificationsMX.Lock()
+					defer s.schedulerNotificationsMX.Unlock()
 
-			successedNotifications = append(successedNotifications, arg)
-		}); eErr != nil {
-			log.Error(errors.Wrapf(eErr, "[scheduler] failed to execute concurrently sending push notifications for batchNumber:%v,workerNumber:%v", batchNumber, workerNumber)) //nolint:lll // .
+					successedNotifications = append(successedNotifications, arg.sn)
+				}), "[scheduler] failed to execute concurrently sending push notifications for batchNumber:%v,workerNumber:%v", batchNumber, workerNumber)
+			},
+			func() error {
+				return errors.Wrapf(runConcurrentlyBatch(ctx, s.sendTelegramNotification, toSendTelegramNotifications, func(arg *telegramNotification, err error) {
+					if errors.Is(err, telegram.ErrTelegramNotificationBadRequest) || errors.Is(err, telegram.ErrTelegramNotificationChatNotFound) ||
+						errors.Is(err, telegram.ErrTelegramNotificationForbidden) {
+						s.schedulerNotificationsMX.Lock()
+						defer s.schedulerNotificationsMX.Unlock()
+
+						failedTelegramNotifications = append(failedTelegramNotifications, &arg.scheduled)
+					} else {
+						log.Error(errors.Wrapf(err, "can't send telegram notification for:%v", arg.sn.UserID))
+					}
+				}, func(arg *telegramNotification) {
+					s.schedulerNotificationsMX.Lock()
+					defer s.schedulerNotificationsMX.Unlock()
+
+					successedNotifications = append(successedNotifications, arg.sn)
+				}), "[scheduler] failed to execute concurrently sending telegram notifications for batchNumber:%v,workerNumber:%v", batchNumber, workerNumber)
+			},
+		); eErr != nil {
+			log.Error(errors.Wrapf(eErr, "can't execute concurrenly push and telegram sending batch for batchNumber:%v,workerNumber:%v", batchNumber, workerNumber)) //nolint:lll // .
 		}
 		if len(toSendPushNotifications) > 0 {
 			go s.telemetryNotifications.collectElapsed(2, *before.Time) //nolint:gomnd,mnd // .
@@ -163,10 +242,13 @@ func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber 
 		if dErr := s.markScheduledNotificationAsSent(reqCtx, now, successedNotifications); dErr != nil {
 			errs = append(errs, errors.Wrapf(dErr, "can't insert sent scheduled notification"))
 		}
-		if dErr := s.deleteScheduledNotifications(reqCtx, emptyTokensNotifications); dErr != nil {
-			errs = append(errs, errors.Wrapf(dErr, "can't delete scheduled notifications for:%#v", emptyTokensNotifications))
+		var toDelete []*scheduledNotification
+		toDelete = append(toDelete, emptyTokensNotifications...)
+		toDelete = append(toDelete, failedTelegramNotifications...)
+		if dErr := s.deleteScheduledNotifications(reqCtx, toDelete); dErr != nil {
+			errs = append(errs, errors.Wrapf(dErr, "can't delete scheduled notifications for:%#v", toDelete))
 		}
-		if len(successedNotifications)+len(emptyTokensNotifications) > 0 {
+		if len(successedNotifications)+len(toDelete) > 0 {
 			go s.telemetryNotifications.collectElapsed(4, *before.Time) //nolint:gomnd,mnd // .
 		}
 		if err = multierror.Append(nil, errs...).ErrorOrNil(); err != nil {
@@ -216,7 +298,7 @@ func (s *Scheduler) clearInvalidPushNotificationTokens(ctx context.Context, pnIn
 	return errors.Wrapf(err, "failed to update push_notification_token to empty for userID:%v and token %v", userIDs, tokens)
 }
 
-func (s *Scheduler) markScheduledNotificationAsSent(ctx context.Context, now *time.Time, notifications []*pushNotification) error {
+func (s *Scheduler) markScheduledNotificationAsSent(ctx context.Context, now *time.Time, notifications []*sentNotification) error {
 	if len(notifications) == 0 {
 		return nil
 	}
@@ -225,7 +307,7 @@ func (s *Scheduler) markScheduledNotificationAsSent(ctx context.Context, now *ti
 	params := make([]any, 0, numFields*len(notifications))
 	for idx, n := range notifications {
 		values = append(values, fmt.Sprintf("($%[1]v, $%[2]v, $%[3]v, $%[4]v, $%[5]v, $%[6]v, $%[7]v)", idx*numFields+1, idx*numFields+2, idx*numFields+3, idx*numFields+4, idx*numFields+5, idx*numFields+6, idx*numFields+7)) //nolint:gomnd,mnd,lll // .
-		params = append(params, now.Time, n.sn.Language, n.sn.UserID, n.sn.Uniqueness, n.sn.NotificationType, n.sn.NotificationChannel, n.sn.NotificationChannelValue)
+		params = append(params, now.Time, n.Language, n.UserID, n.Uniqueness, n.NotificationType, n.NotificationChannel, n.NotificationChannelValue)
 	}
 	sql := fmt.Sprintf(`WITH sent AS (
 		INSERT INTO sent_notifications(sent_at, language, user_id, uniqueness, notification_type, notification_channel, notification_channel_value)
@@ -240,7 +322,7 @@ func (s *Scheduler) markScheduledNotificationAsSent(ctx context.Context, now *ti
 	return errors.Wrapf(err, "failed to delete scheduled notifications %#v", notifications)
 }
 
-func (s *Scheduler) deleteScheduledNotifications(ctx context.Context, notifications []*scheduledNotificationInfo) error {
+func (s *Scheduler) deleteScheduledNotifications(ctx context.Context, notifications []*scheduledNotification) error {
 	if len(notifications) == 0 {
 		return nil
 	}
@@ -261,7 +343,9 @@ func (s *Scheduler) deleteScheduledNotifications(ctx context.Context, notificati
 func (s *Scheduler) fetchScheduledNotifications(ctx context.Context, now *time.Time, workerNumber int64) (resp []*scheduledNotificationInfo, err error) {
 	sql := fmt.Sprintf(`SELECT sn.*,
 				   array_agg(dm.push_notification_token) filter (where dm.push_notification_token is not null)  AS push_notification_tokens,
-				   u.disabled_push_notification_domains
+				   u.disabled_push_notification_domains,
+				   u.telegram_user_id,
+				   u.telegram_bot_id
 			FROM scheduled_notifications sn
 				JOIN users u
 					ON sn.user_id = u.user_id
@@ -275,11 +359,20 @@ func (s *Scheduler) fetchScheduledNotifications(ctx context.Context, now *time.T
 				WHERE MOD(i, %[2]v) = %[3]v 
 				      AND scheduled_for <= $1
 				GROUP BY sn.i, sn.scheduled_at, sn.scheduled_for, sn.data, sn.language, sn.user_id, sn.uniqueness, sn.notification_type,
-						 sn.notification_channel, sn.notification_channel_value, u.disabled_push_notification_domains
+						 sn.notification_channel, sn.notification_channel_value, u.disabled_push_notification_domains,
+						 u.telegram_user_id, u.telegram_bot_id
 				ORDER BY MOD(i, %[2]v), scheduled_for ASC
 				LIMIT %[4]v`,
 		AllNotificationDomain, schedulerWorkersCount, workerNumber, schedulerBatchSize)
 	resp, err = storage.ExecMany[scheduledNotificationInfo](ctx, s.db, sql, now.Time)
 
 	return resp, errors.Wrapf(err, "failed to fetch scheduled notifications worker:%v", workerNumber)
+}
+
+func (s *Scheduler) sendTelegramNotification(ctx context.Context, tn *telegramNotification) error {
+	if ctx.Err() != nil {
+		return errors.Wrap(ctx.Err(), "unexpected deadline")
+	}
+
+	return errors.Wrapf(s.telegramNotificationsClient.Send(ctx, tn.tn), "can't send telegram notification for pn:%#v", tn)
 }
