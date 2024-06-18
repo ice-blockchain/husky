@@ -21,6 +21,7 @@ import (
 	"github.com/ice-blockchain/wintr/notifications/telegram"
 )
 
+//nolint:funlen // .
 func MustStartScheduler(ctx context.Context) *Scheduler {
 	var cfg config
 	appcfg.MustLoadFromKey(applicationYamlKey, &cfg)

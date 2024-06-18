@@ -16,7 +16,7 @@ import (
 	"github.com/ice-blockchain/wintr/time"
 )
 
-//nolint:funlen,gocognit,gocyclo,revive,cyclop,maintidx // .
+//nolint:funlen,gocognit,gocyclo,revive,cyclop // .
 func (s *Scheduler) runTelegramNotificationsProcessor(ctx context.Context, workerNumber int64) {
 	var (
 		batchNumber                 int64

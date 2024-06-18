@@ -13,6 +13,7 @@ import (
 	"github.com/ice-blockchain/wintr/time"
 )
 
+//nolint:funlen // .
 func (r *repository) addScheduledSocialsNotifications(ctx context.Context, us *users.User) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")

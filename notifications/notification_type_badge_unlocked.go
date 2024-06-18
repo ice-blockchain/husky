@@ -141,7 +141,7 @@ func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.M
 		})
 	}
 	tmplTelegram, found := allTelegramNotificationTemplates[notifType][tokens.Language]
-	if !found { //nolint:dupl,nestif // .
+	if !found { //nolint:dupl // .
 		log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` telegram config", tokens.Language, notifType))
 	} else {
 		if botInfo, botFound := s.cfg.TelegramBots[strings.ToLower(tokens.TelegramBotID)]; botFound {

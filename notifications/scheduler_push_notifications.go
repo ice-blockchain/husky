@@ -17,7 +17,7 @@ import (
 	"github.com/ice-blockchain/wintr/time"
 )
 
-//nolint:funlen,gocognit,gocyclo,revive,cyclop,maintidx // .
+//nolint:funlen,gocognit,gocyclo,revive,cyclop // .
 func (s *Scheduler) runPushNotificationsProcessor(ctx context.Context, workerNumber int64) {
 	var (
 		batchNumber                 int64
@@ -185,15 +185,14 @@ func (s *Scheduler) runPushNotificationsProcessor(ctx context.Context, workerNum
 }
 
 func (s *Scheduler) sendPushNotification(ctx context.Context, pn *pushNotification) error {
-	// if ctx.Err() != nil {
-	// 	return errors.Wrap(ctx.Err(), "unexpected deadline")
-	// }
-	// responder := make(chan error, 1)
-	// defer close(responder)
-	// s.pushNotificationsClient.Send(ctx, pn.pn, responder)
+	if ctx.Err() != nil {
+		return errors.Wrap(ctx.Err(), "unexpected deadline")
+	}
+	responder := make(chan error, 1)
+	defer close(responder)
+	s.pushNotificationsClient.Send(ctx, pn.pn, responder)
 
-	// return errors.Wrapf(<-responder, "can't send push notification for pn:%#v", pn)
-	return nil
+	return errors.Wrapf(<-responder, "can't send push notification for pn:%#v", pn)
 }
 
 func (s *Scheduler) clearInvalidPushNotificationTokens(ctx context.Context, pnInvalidTokens []*invalidToken) error {
@@ -260,7 +259,9 @@ func (s *Scheduler) deleteScheduledNotifications(ctx context.Context, notificati
 	return errors.Wrapf(err, "failed to delete scheduled notifications %#v", notifications)
 }
 
-func (s *Scheduler) fetchScheduledNotifications(ctx context.Context, now *time.Time, notificationChannel NotificationChannel, batchSize, workerNumber int64) (resp []*scheduledNotificationInfo, err error) {
+func (s *Scheduler) fetchScheduledNotifications(
+	ctx context.Context, now *time.Time, notificationChannel NotificationChannel, batchSize, workerNumber int64,
+) (resp []*scheduledNotificationInfo, err error) {
 	sql := fmt.Sprintf(`SELECT sn.*,
 				   array_agg(dm.push_notification_token) filter (where dm.push_notification_token is not null)  AS push_notification_tokens,
 				   u.disabled_push_notification_domains,

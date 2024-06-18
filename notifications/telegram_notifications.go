@@ -86,9 +86,10 @@ func loadTelegramNotificationTranslationTemplates() {
 }
 
 func formatButtonLink(link, url string) string {
+	result := link
 	if !strings.HasPrefix(link, "https") {
-		link = fmt.Sprintf("%v%v", url, link)
+		result = fmt.Sprintf("%v%v", url, link)
 	}
 
-	return link
+	return result
 }

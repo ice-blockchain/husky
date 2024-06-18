@@ -118,7 +118,7 @@ func (s *completedLevelsSource) Process(ctx context.Context, msg *messagebroker.
 			return errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", LevelChangedNotificationType, in)
 		})
 	}
-	if tmplTelegram, found := allTelegramNotificationTemplates[LevelChangedNotificationType][tokens.Language]; !found { //nolint:nestif // .
+	if tmplTelegram, found := allTelegramNotificationTemplates[LevelChangedNotificationType][tokens.Language]; !found {
 		log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` telegram config", tokens.Language, LevelChangedNotificationType))
 	} else {
 		if botInfo, botFound := s.cfg.TelegramBots[strings.ToLower(tokens.TelegramBotID)]; botFound {
