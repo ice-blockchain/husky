@@ -101,10 +101,10 @@ func (m *miningSessionSource) insertMiningScheduledNotifications(ctx context.Con
 	var uniquenessTime string
 	if m.cfg.Development {
 		dayDuration = 1 * stdlibtime.Minute
-		uniquenessTime = fmt.Sprintf("%v:%02d:%02d %02d:%02d:%02d", now.Year(), int(now.Month()), now.Day(), now.Hour(), now.Minute(), 0)
+		uniquenessTime = fmt.Sprintf("%v:%02d:%02d %02d:%02d:%02d", now.Year(), int(now.Month()), now.Day(), now.Hour(), now.Minute(), now.Second())
 	} else {
 		dayDuration = 24 * stdlibtime.Hour
-		uniquenessTime = fmt.Sprintf("%v:%02d:%02d", now.Year(), int(now.Month()), now.Day())
+		uniquenessTime = fmt.Sprintf("%v:%02d:%02d %02d:%02d:%02d", now.Year(), int(now.Month()), now.Day(), now.Hour(), 0, 0)
 	}
 	scheduled := make([]*scheduledNotification, 0, notificationsNum)
 	scheduled = append(scheduled, &scheduledNotification{
