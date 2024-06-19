@@ -42,7 +42,7 @@ require (
 	github.com/bits-and-blooms/bitset v1.13.0 // indirect
 	github.com/bsm/redislock v0.9.4 // indirect
 	github.com/btcsuite/btcd/btcec/v2 v2.3.3 // indirect
-	github.com/bytedance/sonic v1.11.8 // indirect
+	github.com/bytedance/sonic v1.11.9 // indirect
 	github.com/bytedance/sonic/loader v0.1.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect

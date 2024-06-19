@@ -18,6 +18,7 @@ import (
 
 //nolint:funlen,gocognit,gocyclo,revive,cyclop // .
 func (s *Scheduler) runTelegramNotificationsProcessor(ctx context.Context, workerNumber int64) {
+	schedulerTelegramBatchSize := s.getTelegramBatchSize()
 	var (
 		batchNumber                 int64
 		now, lastIterationStartedAt = time.Now(), time.Now()
@@ -171,4 +172,12 @@ func (s *Scheduler) sendTelegramNotification(ctx context.Context, tn *telegramNo
 	}
 
 	return errors.Wrapf(s.telegramNotificationsClient.Send(ctx, tn.tn), "can't send telegram notification for pn:%#v", tn)
+}
+
+func (s *Scheduler) getTelegramBatchSize() int64 {
+	if len(s.cfg.TelegramBots) < 5 { //nolint:gomnd,mnd // .
+		return 10 //nolint:gomnd,mnd // .
+	}
+
+	return int64(len(s.cfg.TelegramBots))
 }

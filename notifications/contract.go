@@ -213,9 +213,8 @@ const (
 	requestingUserIDCtxValueKey = "requestingUserIDCtxValueKey"
 	requestDeadline             = 30 * stdlibtime.Second
 
-	schedulerWorkersCount      int64 = 10
-	schedulerPushBatchSize     int64 = 250
-	schedulerTelegramBatchSize int64 = 100
+	schedulerWorkersCount  int64 = 10
+	schedulerPushBatchSize int64 = 250
 )
 
 var (
