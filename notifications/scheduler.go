@@ -34,8 +34,8 @@ func MustStartScheduler(ctx context.Context) *Scheduler {
 		telegramNotificationsClient:      telegram.New(applicationYamlKey),
 		telemetryPushNotifications:       new(telemetry).mustInit([]string{"scheduler push notifications[full iteration]", "get_push_scheduled_notifications", "process_push_notifications", "clear_invalid_tokens", "delete_push_scheduled_notifications"}), //nolint:lll // .
 		telemetryTelegramNotifications:   new(telemetry).mustInit([]string{"scheduler telegram notifications[full iteration]", "get_telegram_scheduled_notifications", "process_telegram_notifications", "delete_telegram_scheduled_notifications"}),         //nolint:lll // .
-		telemetryAnnouncements:           new(telemetry).mustInit([]string{"scheduler announcements[full iteration]", "get_scheduled_announcements", "process_announcements", "delete_scheduled_announcements"}),                                             //nolint:lll // .
-		schedulerAnnouncementsMX:         &sync.Mutex{},
+		telemetryAnnouncements:           new(telemetry).mustInit([]string{"scheduler push announcements[full iteration]", "get_scheduled_push_announcements", "process_push_announcements", "delete_scheduled_push_announcements"}),                         //nolint:lll // .
+		schedulerPushAnnouncementsMX:     &sync.Mutex{},
 		schedulerPushNotificationsMX:     &sync.Mutex{},
 		schedulerTelegramNotificationsMX: &sync.Mutex{},
 	}
@@ -50,7 +50,7 @@ func MustStartScheduler(ctx context.Context) *Scheduler {
 		}(workerNumber)
 		go func(wn int64) {
 			defer wg.Done()
-			sh.runAnnouncementsProcessor(ctx, wn)
+			sh.runPushAnnouncementsProcessor(ctx, wn)
 		}(workerNumber)
 		go func(wn int64) {
 			defer wg.Done()

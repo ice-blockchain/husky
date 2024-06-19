@@ -196,7 +196,7 @@ type (
 		pushNotificationsClient          push.Client
 		telegramNotificationsClient      telegram.Client
 		cfg                              *config
-		schedulerAnnouncementsMX         *sync.Mutex
+		schedulerPushAnnouncementsMX     *sync.Mutex
 		schedulerPushNotificationsMX     *sync.Mutex
 		schedulerTelegramNotificationsMX *sync.Mutex
 		telemetryPushNotifications       *telemetry
@@ -235,7 +235,7 @@ var (
 
 type (
 	languageCode     = string
-	telegramUserID   = string
+	telegramBotID    = string
 	telegramBotToken = string
 	user             struct {
 		LastPingCooldownEndedAt          *time.Time                      `json:"lastPingCooldownEndedAt,omitempty"`
@@ -360,7 +360,7 @@ type (
 			Roles  []string `yaml:"roles"`
 		} `yaml:"disabledAchievementsNotifications" `
 		NotificationDelaysByTopic map[push.SubscriptionTopic]notificationDelayConfig `yaml:"notificationDelaysByTopic" mapstructure:"notificationDelaysByTopic"` //nolint:lll // .
-		TelegramBots              map[telegramUserID]struct {
+		TelegramBots              map[telegramBotID]struct {
 			BotToken telegramBotToken `yaml:"botToken"`
 		} `yaml:"telegramBots" mapstructure:"telegramBots"`
 		DeeplinkScheme          string                   `yaml:"deeplinkScheme"`

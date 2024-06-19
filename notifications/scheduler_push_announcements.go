@@ -18,7 +18,7 @@ import (
 )
 
 //nolint:funlen,gocognit,revive // .
-func (s *Scheduler) runAnnouncementsProcessor(ctx context.Context, workerNumber int64) {
+func (s *Scheduler) runPushAnnouncementsProcessor(ctx context.Context, workerNumber int64) {
 	var (
 		batchNumber                 int64
 		now, lastIterationStartedAt = time.Now(), time.Now()
@@ -99,8 +99,8 @@ func (s *Scheduler) runAnnouncementsProcessor(ctx context.Context, workerNumber 
 		if rErr := runConcurrentlyBatch(reqCtx, s.broadcastPushNotification, toSendAnnouncements, func(arg *broadcastPushNotification[push.Notification[push.SubscriptionTopic]], err error) { //nolint:lll // .
 			log.Error(errors.Wrapf(err, "can't send announcement for lang:%v, notificationChannel:%v, notificationChannelValue:%v, notificationType:%v", arg.sa.Language, arg.sa.NotificationChannel, arg.sa.NotificationChannelValue, arg.sa.NotificationType)) //nolint:lll // .
 		}, func(arg *broadcastPushNotification[push.Notification[push.SubscriptionTopic]]) {
-			s.schedulerAnnouncementsMX.Lock()
-			defer s.schedulerAnnouncementsMX.Unlock()
+			s.schedulerPushAnnouncementsMX.Lock()
+			defer s.schedulerPushAnnouncementsMX.Unlock()
 
 			successedAnnouncements = append(successedAnnouncements, arg)
 		}); rErr != nil {
