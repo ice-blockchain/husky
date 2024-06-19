@@ -1,7 +1,6 @@
 {
     "en": {
         "body": "🚨 <b>Time's Running Out</b> 🚨\n\nYou've got 1 hour left to extend your check-in session.",
-        "buttonText": "👉 Extend Session",
-        "buttonLink": "/home"
+        "buttonText": "👉 Extend Session"
     }
 }

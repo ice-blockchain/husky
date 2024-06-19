@@ -1,7 +1,6 @@
 {
     "en": {
         "body": "⏰  <b>Tick-tock, tick-tock!</b>\n\nKeep your coins safe by starting a new check-in session now.",
-        "buttonText": "👉 Start Session",
-        "buttonLink": "/home"
+        "buttonText": "👉 Start Session"
     }
 }

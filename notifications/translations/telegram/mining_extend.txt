@@ -1,7 +1,6 @@
 {
     "en": {
         "body": "🚀  <b>Extend your check-in session!</b>🔓\n\n Press and hold the <b>{{.TenantName}}</b> logo button to keep earning <b>{{.TokenName}}</b> tokens. 💰",
-        "buttonText": "👉 Extend Session",
-        "buttonLink": "/home"
+        "buttonText": "👉 Extend Session"
     }
 }

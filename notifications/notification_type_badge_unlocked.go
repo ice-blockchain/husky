@@ -164,7 +164,7 @@ func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.M
 				},
 			}
 			buttonText := tmplTelegram.getButtonText(nil)
-			buttonLink := formatButtonLink(tmplTelegram.getButtonLink(nil), s.cfg.WebAppLink)
+			buttonLink := getTelegramDeeplink(notifType, s.cfg)
 			if buttonText != "" && buttonLink != "" {
 				tn.tn.Buttons = append(tn.tn.Buttons, struct {
 					Text string `json:"text,omitempty"`

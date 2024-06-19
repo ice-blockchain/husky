@@ -6,7 +6,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"strings"
 	"text/template"
 
 	"github.com/pkg/errors"
@@ -16,10 +15,9 @@ import (
 
 type (
 	telegramNotificationTemplate struct {
-		body, buttonText, buttonLink *template.Template
-		Body                         string `json:"body"`       //nolint:revive // That's intended.
-		ButtonText                   string `json:"buttonText"` //nolint:revive // That's intended.
-		ButtonLink                   string `json:"buttonLink"` //nolint:revive // That's intended.
+		body, buttonText *template.Template
+		Body             string `json:"body"`       //nolint:revive // That's intended.
+		ButtonText       string `json:"buttonText"` //nolint:revive // That's intended.
 	}
 )
 
@@ -29,16 +27,6 @@ func (t *telegramNotificationTemplate) getButtonText(data any) string {
 	}
 	bf := new(bytes.Buffer)
 	log.Panic(errors.Wrapf(t.buttonText.Execute(bf, data), "failed to execute button text template for data:%#v", data))
-
-	return bf.String()
-}
-
-func (t *telegramNotificationTemplate) getButtonLink(data any) string { //nolint:unparam // To be more generic.
-	if data == nil {
-		return t.ButtonLink
-	}
-	bf := new(bytes.Buffer)
-	log.Panic(errors.Wrapf(t.buttonLink.Execute(bf, data), "failed to execute button url template for data:%#v", data))
 
 	return bf.String()
 }
@@ -75,21 +63,51 @@ func loadTelegramNotificationTranslationTemplates() {
 			var tmpl telegramNotificationTemplate
 			tmpl.Body = data.Body
 			tmpl.ButtonText = data.ButtonText
-			tmpl.ButtonLink = data.ButtonLink
 
 			tmpl.buttonText = template.Must(template.New(fmt.Sprintf("telegram_%v_%v_button_text", notificationType, language)).Parse(data.ButtonText))
-			tmpl.buttonLink = template.Must(template.New(fmt.Sprintf("telegram_%v_%v_button_link", notificationType, language)).Parse(data.ButtonLink))
 			tmpl.body = template.Must(template.New(fmt.Sprintf("telegram_%v_%v_body", notificationType, language)).Parse(data.Body))
 			allTelegramNotificationTemplates[notificationType][language] = &tmpl
 		}
 	}
 }
 
-func formatButtonLink(link, url string) string {
-	result := link
-	if !strings.HasPrefix(link, "https") {
-		result = fmt.Sprintf("%v%v", url, link)
+//nolint:exhaustive // We know what cases need to be handled only.
+func getTelegramDeeplink(nt NotificationType, cfg *config) string {
+	urls := getSocialsMapURL(cfg)
+	switch nt {
+	case MiningExtendNotificationType, MiningEndingSoonNotificationType, MiningExpiredNotificationType, MiningNotActiveNotificationType:
+		return fmt.Sprintf("%v/home", cfg.WebAppLink)
+	case InviteFriendNotificationType:
+		return fmt.Sprintf("%v/invite", cfg.WebAppLink)
+	case SocialsFollowIceOnXNotificationType:
+		return urls[string(SocialsFollowIceOnXNotificationType)]
+	case SocialsFollowUsOnXNotificationType:
+		return urls[string(SocialsFollowUsOnXNotificationType)]
+	case SocialsFollowZeusOnXNotificationType:
+		return urls[string(SocialsFollowZeusOnXNotificationType)]
+	case SocialsFollowIONOnTelegramNotificationType:
+		return urls[string(SocialsFollowIONOnTelegramNotificationType)]
+	case SocialsFollowOurTelegramNotificationType:
+		return urls[string(SocialsFollowOurTelegramNotificationType)]
+	case CoinBadgeUnlockedNotificationType, LevelBadgeUnlockedNotificationType, SocialBadgeUnlockedNotificationType:
+		return fmt.Sprintf("%v/profile/badges", cfg.WebAppLink)
+	case LevelChangedNotificationType:
+		return fmt.Sprintf("%v/profile", cfg.WebAppLink)
+	default:
+		log.Panic(fmt.Sprintf("wrong notification type:%v", nt))
 	}
 
-	return result
+	return ""
+}
+
+func getSocialsMapURL(cfg *config) map[string]string {
+	if len(cfg.Socials) == 0 {
+		log.Panic("no urls for socials")
+	}
+	urls := make(map[string]string, len(cfg.Socials))
+	for ix := range cfg.Socials {
+		urls[cfg.Socials[ix].NotificationType] = cfg.Socials[ix].Link
+	}
+
+	return urls
 }

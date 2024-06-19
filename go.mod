@@ -9,7 +9,7 @@ require (
 	github.com/ice-blockchain/eskimo v1.326.0
 	github.com/ice-blockchain/freezer v1.447.0
 	github.com/ice-blockchain/go-tarantool-client v0.0.0-20230327200757-4fc71fa3f7bb
-	github.com/ice-blockchain/wintr v1.140.0
+	github.com/ice-blockchain/wintr v1.141.0
 	github.com/imroc/req/v3 v3.43.7
 	github.com/pkg/errors v0.9.1
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475
