@@ -286,7 +286,7 @@ func (s *Scheduler) fetchScheduledNotifications(
 				ORDER BY MOD(i, %[2]v), scheduled_for, notification_channel ASC
 				LIMIT %[4]v`,
 		AllNotificationDomain, schedulerWorkersCount, workerNumber, batchSize)
-	resp, err = storage.ExecMany[scheduledNotificationInfo](ctx, s.db, sql, now.Time, notificationChannel)
+	resp, err = storage.Select[scheduledNotificationInfo](ctx, s.db, sql, now.Time, notificationChannel)
 
 	return resp, errors.Wrapf(err, "failed to fetch scheduled notifications worker:%v", workerNumber)
 }

@@ -22,7 +22,7 @@ import (
 )
 
 //nolint:funlen // .
-func MustStartScheduler(ctx context.Context) *Scheduler {
+func MustStartScheduler(ctx context.Context, cancel context.CancelFunc) *Scheduler {
 	var cfg config
 	appcfg.MustLoadFromKey(applicationYamlKey, &cfg)
 	ddlWorkersParam := fmt.Sprintf(ddl, schedulerWorkersCount)
@@ -38,22 +38,23 @@ func MustStartScheduler(ctx context.Context) *Scheduler {
 		schedulerPushAnnouncementsMX:     &sync.Mutex{},
 		schedulerPushNotificationsMX:     &sync.Mutex{},
 		schedulerTelegramNotificationsMX: &sync.Mutex{},
+		wg:                               new(sync.WaitGroup),
 	}
 	go sh.startWeeklyStatsUpdater(ctx)
-	wg := new(sync.WaitGroup)
-	wg.Add(3 * int(schedulerWorkersCount)) //nolint:gomnd,mnd // .
-	defer wg.Wait()
+	sh.wg = new(sync.WaitGroup)
+	sh.wg.Add(3 * int(schedulerWorkersCount)) //nolint:gomnd,mnd // .
+	sh.cancel = cancel
 	for workerNumber := range schedulerWorkersCount {
 		go func(wn int64) {
-			defer wg.Done()
+			defer sh.wg.Done()
 			sh.runPushNotificationsProcessor(ctx, wn)
 		}(workerNumber)
 		go func(wn int64) {
-			defer wg.Done()
+			defer sh.wg.Done()
 			sh.runPushAnnouncementsProcessor(ctx, wn)
 		}(workerNumber)
 		go func(wn int64) {
-			defer wg.Done()
+			defer sh.wg.Done()
 			sh.runTelegramNotificationsProcessor(ctx, wn)
 		}(workerNumber)
 	}
@@ -88,9 +89,10 @@ func (s *Scheduler) startWeeklyStatsUpdater(ctx context.Context) {
 }
 
 func (s *Scheduler) Close() error {
-	return errors.Wrap(multierror.Append(
-		errors.Wrap(s.db.Close(), "failed to close db"),
-	).ErrorOrNil(), "can't close the scheduler")
+	s.cancel()
+	s.wg.Wait()
+
+	return errors.Wrap(s.db.Close(), "failed to close db")
 }
 
 //nolint:funlen // .

@@ -203,6 +203,8 @@ type (
 		telemetryTelegramNotifications   *telemetry
 		telemetryAnnouncements           *telemetry
 		db                               *storage.DB
+		wg                               *sync.WaitGroup
+		cancel                           context.CancelFunc
 	}
 )
 

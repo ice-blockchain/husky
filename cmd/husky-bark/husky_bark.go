@@ -36,8 +36,8 @@ type (
 func (*service) RegisterRoutes(_ *server.Router) {
 }
 
-func (s *service) Init(ctx context.Context, _ context.CancelFunc) {
-	s.notificationsScheduler = notifications.MustStartScheduler(ctx)
+func (s *service) Init(ctx context.Context, cancel context.CancelFunc) {
+	s.notificationsScheduler = notifications.MustStartScheduler(ctx, cancel)
 }
 
 func (s *service) Close(_ context.Context) error {

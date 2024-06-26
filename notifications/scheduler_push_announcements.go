@@ -153,7 +153,7 @@ func (s *Scheduler) fetchScheduledAnnouncements(ctx context.Context, now *time.T
 					  		  AND scheduled_for <= $1
 						ORDER BY MOD(i, %[1]v), scheduled_for ASC
 						LIMIT %[3]v;`, schedulerWorkersCount, workerNumber, schedulerPushBatchSize)
-	resp, err = storage.ExecMany[scheduledAnnouncement](ctx, s.db, sql, now.Time)
+	resp, err = storage.Select[scheduledAnnouncement](ctx, s.db, sql, now.Time)
 
 	return resp, errors.Wrapf(err, "failed to fetch scheduled announcements for worker:%v", workerNumber)
 }
