@@ -88,7 +88,7 @@ func (m *miningSessionSource) getMiningScheduledNotifications(ctx context.Contex
 				FROM scheduled_notifications
 				WHERE user_id = $1
 				      AND notification_type = ANY($2)`
-	resp, err = storage.Select[scheduledNotification](ctx, m.db, sql, userID, notificationTypes)
+	resp, err = storage.ExecMany[scheduledNotification](ctx, m.db, sql, userID, notificationTypes)
 
 	return resp, errors.Wrapf(err, "failed to get mining scheduled notifications for userID:%v", userID)
 }
