@@ -74,8 +74,10 @@ func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber 
 			tmpl, found := allPushNotificationTemplates[NotificationType(notification.NotificationType)][notification.Language]
 			if !found {
 				log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` push config", notification.Language, notification.NotificationType))
-
-				continue
+				tmpl, found = allPushNotificationTemplates[NotificationType(notification.NotificationType)][defaultLanguage]
+				if !found {
+					log.Panic(fmt.Sprintf("no default translations provided for notification, lang:%v, notificationType:%v", notification.Language, notification.NotificationType)) //nolint:lll // .
+				}
 			}
 			if notification.DisabledPushNotificationDomains != nil {
 				domain := getDomainByNotificationType(NotificationType(notification.NotificationType))

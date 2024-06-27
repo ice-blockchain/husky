@@ -68,8 +68,9 @@ func (s *Scheduler) runAnnouncementsProcessor(ctx context.Context, workerNumber 
 			tmpl, found := allPushNotificationTemplates[NotificationType(an.NotificationType)][an.Language]
 			if !found {
 				log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` push config", an.Language, an.NotificationType))
-
-				continue
+				if tmpl, found = allPushNotificationTemplates[NotificationType(an.NotificationType)][defaultLanguage]; !found {
+					log.Panic(fmt.Sprintf("no default translations provided for announcement, lang:%v, notificationType:%v", an.Language, an.NotificationType))
+				}
 			}
 			deeplink := s.getDeeplink(NotificationType(an.NotificationType), an.Data)
 			toSendAnnouncements = append(toSendAnnouncements, &broadcastPushNotification[push.Notification[push.SubscriptionTopic]]{

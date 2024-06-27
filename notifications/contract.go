@@ -193,6 +193,8 @@ const (
 
 	schedulerWorkersCount int64 = 10
 	schedulerBatchSize    int64 = 250
+
+	defaultLanguage = "en"
 )
 
 var (
