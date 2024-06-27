@@ -24,7 +24,7 @@ func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber 
 		now, lastIterationStartedAt = time.Now(), time.Now()
 		errs                        = make([]error, 0)
 		successedNotifications      = make([]*pushNotification, 0, schedulerBatchSize)
-		emptyTokensNotifications    = make([]*scheduledNotificationInfo, 0, schedulerBatchSize)
+		toDelete                    = make([]*scheduledNotificationInfo, 0, schedulerBatchSize)
 		invalidTokens               = make([]*invalidToken, 0)
 		toSendPushNotifications     = make([]*pushNotification, 0)
 		notifications               = make([]*scheduledNotificationInfo, schedulerBatchSize)
@@ -41,7 +41,7 @@ func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber 
 		toSendPushNotifications = toSendPushNotifications[:0]
 		invalidTokens = invalidTokens[:0]
 		notifications = notifications[:0]
-		emptyTokensNotifications = emptyTokensNotifications[:0]
+		toDelete = toDelete[:0]
 		lastIterationStartedAt = now
 
 		stdlibtime.Sleep(1 * stdlibtime.Second)
@@ -81,6 +81,7 @@ func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber 
 				domain := getDomainByNotificationType(NotificationType(notification.NotificationType))
 				for _, disabledDomain := range *notification.DisabledPushNotificationDomains {
 					if disabledDomain == domain {
+						toDelete = append(toDelete, notification)
 						log.Warn(fmt.Sprintf("notification with disabled notification domain:%v with notification type:%v for notification:%#v", domain, notification.NotificationType, notification)) //nolint:lll // .
 
 						continue out
@@ -88,7 +89,7 @@ func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber 
 				}
 			}
 			if notification.PushNotificationTokens == nil || len(*notification.PushNotificationTokens) == 0 {
-				emptyTokensNotifications = append(emptyTokensNotifications, notification)
+				toDelete = append(toDelete, notification)
 
 				continue
 			}
@@ -163,10 +164,10 @@ func (s *Scheduler) runNotificationsProcessor(ctx context.Context, workerNumber 
 		if dErr := s.markScheduledNotificationAsSent(reqCtx, now, successedNotifications); dErr != nil {
 			errs = append(errs, errors.Wrapf(dErr, "can't insert sent scheduled notification"))
 		}
-		if dErr := s.deleteScheduledNotifications(reqCtx, emptyTokensNotifications); dErr != nil {
-			errs = append(errs, errors.Wrapf(dErr, "can't delete scheduled notifications for:%#v", emptyTokensNotifications))
+		if dErr := s.deleteScheduledNotifications(reqCtx, toDelete); dErr != nil {
+			errs = append(errs, errors.Wrapf(dErr, "can't delete scheduled notifications for:%#v", toDelete))
 		}
-		if len(successedNotifications)+len(emptyTokensNotifications) > 0 {
+		if len(successedNotifications)+len(toDelete) > 0 {
 			go s.telemetryNotifications.collectElapsed(4, *before.Time) //nolint:gomnd,mnd // .
 		}
 		if err = multierror.Append(nil, errs...).ErrorOrNil(); err != nil {

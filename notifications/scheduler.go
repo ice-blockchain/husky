@@ -44,11 +44,11 @@ func MustStartScheduler(ctx context.Context, cancel context.CancelFunc) *Schedul
 	for workerNumber := range schedulerWorkersCount {
 		go func(wn int64) {
 			defer sh.wg.Done()
-			sh.runPushNotificationsProcessor(ctx, wn)
+			sh.runNotificationsProcessor(ctx, wn)
 		}(workerNumber)
 		go func(wn int64) {
 			defer sh.wg.Done()
-			sh.runPushAnnouncementsProcessor(ctx, wn)
+			sh.runAnnouncementsProcessor(ctx, wn)
 		}(workerNumber)
 	}
 
