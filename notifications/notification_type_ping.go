@@ -70,7 +70,7 @@ func (s *userPingSource) Process(ctx context.Context, msg *messagebroker.Message
 		},
 	}
 	tokens, err := s.getPushNotificationTokens(ctx, MicroCommunityNotificationDomain, message.UserID)
-	if err != nil || tokens == nil || tokens.PushNotificationTokens == nil || len(*tokens.PushNotificationTokens) == 0 {
+	if err != nil || tokens == nil {
 		return multierror.Append( //nolint:wrapcheck // .
 			err,
 			errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", PingNotificationType, in),

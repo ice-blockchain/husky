@@ -16,12 +16,8 @@ CREATE TABLE IF NOT EXISTS users  (
                     profile_picture_name                    TEXT,
                     referred_by                             TEXT,
                     phone_number_hash                       TEXT,
-                    telegram_user_id                        TEXT NOT NULL,
-                    telegram_bot_id                         TEXT NOT NULL,
                     language                                TEXT NOT NULL default 'en'
                   );
-ALTER TABLE users ADD COLUMN IF NOT EXISTS telegram_user_id text NOT NULL;
-ALTER TABLE users ADD COLUMN IF NOT EXISTS telegram_bot_id text NOT NULL;
 --************************************************************************************************************************************
 -- sent_notifications
 CREATE TABLE IF NOT EXISTS sent_notifications  (
@@ -49,7 +45,7 @@ CREATE TABLE IF NOT EXISTS scheduled_notifications  (
                     notification_channel_value  TEXT NOT NULL,
                     primary key(user_id,uniqueness,notification_type,notification_channel,notification_channel_value));
 CREATE UNIQUE INDEX IF NOT EXISTS scheduled_notifications_i_ix ON scheduled_notifications (i);
-CREATE INDEX IF NOT EXISTS scheduled_notifications_mod_i_ix ON scheduled_notifications (MOD(i, %[1]v), scheduled_for, notification_channel ASC);
+CREATE INDEX IF NOT EXISTS scheduled_notifications_mod_i_ix ON scheduled_notifications (MOD(i, %[1]v), scheduled_for ASC);
 CREATE INDEX IF NOT EXISTS scheduled_notifications_user_id_notification_type_ix ON scheduled_notifications (user_id,notification_type);
 --************************************************************************************************************************************
 -- sent_announcements

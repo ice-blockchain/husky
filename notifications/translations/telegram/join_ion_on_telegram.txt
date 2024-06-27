@@ -1,6 +1,0 @@
-{
-    "en": {
-        "body": "🤩 <b>Join Ice Open Network on Telegram</b>\n\nStay connected and follow the latest updates from <b>Ice Open Network</b> on Telegram",
-        "buttonText": "💙 Join Now"
-    }
-}

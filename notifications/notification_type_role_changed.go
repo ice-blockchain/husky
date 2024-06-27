@@ -5,7 +5,6 @@ package notifications
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/goccy/go-json"
 	"github.com/hashicorp/go-multierror"
@@ -15,11 +14,10 @@ import (
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/notifications/inapp"
 	"github.com/ice-blockchain/wintr/notifications/push"
-	"github.com/ice-blockchain/wintr/notifications/telegram"
 	"github.com/ice-blockchain/wintr/time"
 )
 
-func (s *enabledRolesSource) Process(ctx context.Context, msg *messagebroker.Message) error { //nolint:funlen,gocognit,gocyclo,revive,cyclop // .
+func (s *enabledRolesSource) Process(ctx context.Context, msg *messagebroker.Message) error { //nolint:funlen // .
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline while processing message")
 	}
@@ -79,82 +77,39 @@ func (s *enabledRolesSource) Process(ctx context.Context, msg *messagebroker.Mes
 			errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", RoleChangedNotificationType, in),
 		).ErrorOrNil()
 	}
-	var exConcurrently []func() error
-	if tokens.PushNotificationTokens != nil && len(*tokens.PushNotificationTokens) != 0 { //nolint:dupl // .
-		tmpl, found := allPushNotificationTemplates[RoleChangedNotificationType][tokens.Language]
-		if !found {
-			log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` push config", tokens.Language, RoleChangedNotificationType))
+	tmpl, found := allPushNotificationTemplates[RoleChangedNotificationType][tokens.Language]
+	if !found {
+		log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` push config", tokens.Language, RoleChangedNotificationType))
 
-			return errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", RoleChangedNotificationType, in)
-		}
-		pn := make([]*pushNotification, 0, len(*tokens.PushNotificationTokens))
-		for _, token := range *tokens.PushNotificationTokens {
-			pn = append(pn, &pushNotification{
-				pn: &push.Notification[push.DeviceToken]{
-					Data:     map[string]string{"deeplink": deeplink},
-					Target:   token,
-					Title:    tmpl.getTitle(nil),
-					Body:     tmpl.getBody(nil),
-					ImageURL: imageURL,
+		return errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", RoleChangedNotificationType, in)
+	}
+	pn := make([]*pushNotification, 0, len(*tokens.PushNotificationTokens))
+	for _, token := range *tokens.PushNotificationTokens {
+		pn = append(pn, &pushNotification{
+			pn: &push.Notification[push.DeviceToken]{
+				Data:     map[string]string{"deeplink": deeplink},
+				Target:   token,
+				Title:    tmpl.getTitle(nil),
+				Body:     tmpl.getBody(nil),
+				ImageURL: imageURL,
+			},
+			sn: &sentNotification{
+				SentAt:   now,
+				Language: tokens.Language,
+				sentNotificationPK: sentNotificationPK{
+					UserID:                   message.UserID,
+					Uniqueness:               message.Type,
+					NotificationType:         RoleChangedNotificationType,
+					NotificationChannel:      PushNotificationChannel,
+					NotificationChannelValue: string(token),
 				},
-				sn: &sentNotification{
-					SentAt:   now,
-					Language: tokens.Language,
-					sentNotificationPK: sentNotificationPK{
-						UserID:                   message.UserID,
-						Uniqueness:               message.Type,
-						NotificationType:         RoleChangedNotificationType,
-						NotificationChannel:      PushNotificationChannel,
-						NotificationChannelValue: string(token),
-					},
-				},
-			})
-		}
-		exConcurrently = append(exConcurrently, func() error {
-			return errors.Wrapf(runConcurrently(ctx, s.sendPushNotification, pn), "failed to sendPushNotifications atleast to some devices for %v, args:%#v", RoleChangedNotificationType, pn) //nolint:lll // .
-		}, func() error {
-			return errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", RoleChangedNotificationType, in)
+			},
 		})
 	}
-	tmplTelegram, found := allTelegramNotificationTemplates[RoleChangedNotificationType][tokens.Language]
-	if !found { //nolint:dupl // .
-		log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` telegram config", tokens.Language, RoleChangedNotificationType))
-	} else {
-		if botInfo, botFound := s.cfg.TelegramBots[strings.ToLower(tokens.TelegramBotID)]; botFound {
-			tn := &telegramNotification{
-				tn: &telegram.Notification{
-					ChatID:   tokens.TelegramUserID,
-					Text:     tmplTelegram.getBody(nil),
-					BotToken: botInfo.BotToken,
-				},
-				sn: &sentNotification{
-					SentAt:   now,
-					Language: tokens.Language,
-					sentNotificationPK: sentNotificationPK{
-						UserID:                   message.UserID,
-						Uniqueness:               message.Type,
-						NotificationType:         RoleChangedNotificationType,
-						NotificationChannel:      TelegramNotificationChannel,
-						NotificationChannelValue: message.UserID,
-					},
-				},
-			}
-			buttonText := tmplTelegram.getButtonText(nil)
-			buttonLink := getTelegramDeeplink(LevelChangedNotificationType, s.cfg)
-			if buttonText != "" && buttonLink != "" {
-				tn.tn.Buttons = append(tn.tn.Buttons, struct {
-					Text string `json:"text,omitempty"`
-					URL  string `json:"url,omitempty"`
-				}{
-					Text: buttonText,
-					URL:  buttonLink,
-				})
-			}
-			exConcurrently = append(exConcurrently, func() error {
-				return errors.Wrapf(s.sendTelegramNotification(ctx, tn), "failed to send telegram notification for %v, notif:%#v", RoleChangedNotificationType, in)
-			})
-		}
-	}
 
-	return errors.Wrap(executeConcurrently(exConcurrently...), "failed to executeConcurrently")
+	return errors.Wrap(executeConcurrently(func() error {
+		return errors.Wrapf(runConcurrently(ctx, s.sendPushNotification, pn), "failed to sendPushNotifications atleast to some devices for %v, args:%#v", RoleChangedNotificationType, pn) //nolint:lll // .
+	}, func() error {
+		return errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", RoleChangedNotificationType, in)
+	}), "failed to executeConcurrently")
 }

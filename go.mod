@@ -42,7 +42,7 @@ require (
 	github.com/bits-and-blooms/bitset v1.13.0 // indirect
 	github.com/bsm/redislock v0.9.4 // indirect
 	github.com/btcsuite/btcd/btcec/v2 v2.3.3 // indirect
-	github.com/bytedance/sonic v1.11.9 // indirect
+	github.com/bytedance/sonic v1.11.8 // indirect
 	github.com/bytedance/sonic/loader v0.1.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
@@ -98,7 +98,7 @@ require (
 	github.com/google/pprof v0.0.0-20240625030939-27f56978b8b0 // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
-	github.com/googleapis/gax-go/v2 v2.12.5 // indirect
+	github.com/googleapis/gax-go/v2 v2.12.4 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-version v1.7.0 // indirect

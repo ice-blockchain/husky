@@ -1,6 +1,0 @@
-{
-   "en":{
-      "body":"🎉 <b>New badge earned!</b>\n\nYou've unlocked the {{.BadgeName}} coin badge! Check it out in your profile.",
-      "buttonText": "🤩 View Badge"
-   }
-}

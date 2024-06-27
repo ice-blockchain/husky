@@ -119,13 +119,6 @@ notifications: &notifications
     replicaURLs:
       - postgresql://root:pass@localhost:5434/husky
   tenantName: BogusName
-  tokenName: BN
-  wintr/notifications/telegram:
-    botToken: bogus
-  telegramBots:
-    bogusBot:
-      botToken: bogus
-  webAppLink: https://bogus.com/startapp
   messageBroker: &notificationsMessageBroker
     consumerGroup: husky-local-notifications-testing
     createTopics: true

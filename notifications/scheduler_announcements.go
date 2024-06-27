@@ -18,18 +18,18 @@ import (
 )
 
 //nolint:funlen,gocognit,revive // .
-func (s *Scheduler) runPushAnnouncementsProcessor(ctx context.Context, workerNumber int64) {
+func (s *Scheduler) runAnnouncementsProcessor(ctx context.Context, workerNumber int64) {
 	var (
 		batchNumber                 int64
 		now, lastIterationStartedAt = time.Now(), time.Now()
 		errs                        = make([]error, 0)
-		successedAnnouncements      = make([]*broadcastPushNotification[push.Notification[push.SubscriptionTopic]], 0, schedulerPushBatchSize)
-		announcements               = make([]*scheduledAnnouncement, schedulerPushBatchSize)
-		toSendAnnouncements         = make([]*broadcastPushNotification[push.Notification[push.SubscriptionTopic]], 0, schedulerPushBatchSize)
+		successedAnnouncements      = make([]*broadcastPushNotification[push.Notification[push.SubscriptionTopic]], 0, schedulerBatchSize)
+		announcements               = make([]*scheduledAnnouncement, schedulerBatchSize)
+		toSendAnnouncements         = make([]*broadcastPushNotification[push.Notification[push.SubscriptionTopic]], 0, schedulerBatchSize)
 		err                         error
 	)
 	resetVars := func(success bool) {
-		if success && len(announcements) < int(schedulerPushBatchSize) {
+		if success && len(announcements) < int(schedulerBatchSize) {
 			go s.telemetryAnnouncements.collectElapsed(0, *lastIterationStartedAt.Time)
 			batchNumber = 0
 		}
@@ -99,8 +99,8 @@ func (s *Scheduler) runPushAnnouncementsProcessor(ctx context.Context, workerNum
 		if rErr := runConcurrentlyBatch(reqCtx, s.broadcastPushNotification, toSendAnnouncements, func(arg *broadcastPushNotification[push.Notification[push.SubscriptionTopic]], err error) { //nolint:lll // .
 			log.Error(errors.Wrapf(err, "can't send announcement for lang:%v, notificationChannel:%v, notificationChannelValue:%v, notificationType:%v", arg.sa.Language, arg.sa.NotificationChannel, arg.sa.NotificationChannelValue, arg.sa.NotificationType)) //nolint:lll // .
 		}, func(arg *broadcastPushNotification[push.Notification[push.SubscriptionTopic]]) {
-			s.schedulerPushAnnouncementsMX.Lock()
-			defer s.schedulerPushAnnouncementsMX.Unlock()
+			s.schedulerAnnouncementsMX.Lock()
+			defer s.schedulerAnnouncementsMX.Unlock()
 
 			successedAnnouncements = append(successedAnnouncements, arg)
 		}); rErr != nil {
@@ -152,7 +152,7 @@ func (s *Scheduler) fetchScheduledAnnouncements(ctx context.Context, now *time.T
 						WHERE MOD(i, %[1]v) = %[2]v
 					  		  AND scheduled_for <= $1
 						ORDER BY MOD(i, %[1]v), scheduled_for ASC
-						LIMIT %[3]v;`, schedulerWorkersCount, workerNumber, schedulerPushBatchSize)
+						LIMIT %[3]v;`, schedulerWorkersCount, workerNumber, schedulerBatchSize)
 	resp, err = storage.ExecMany[scheduledAnnouncement](ctx, s.db, sql, now.Time)
 
 	return resp, errors.Wrapf(err, "failed to fetch scheduled announcements for worker:%v", workerNumber)

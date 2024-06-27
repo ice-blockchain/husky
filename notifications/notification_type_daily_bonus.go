@@ -68,7 +68,7 @@ func (s *availableDailyBonusSource) Process(ctx context.Context, msg *messagebro
 		},
 	}
 	tokens, err := s.getPushNotificationTokens(ctx, DailyBonusNotificationDomain, message.UserID)
-	if err != nil || tokens == nil || tokens.PushNotificationTokens == nil || len(*tokens.PushNotificationTokens) == 0 {
+	if err != nil || tokens == nil {
 		return multierror.Append( //nolint:wrapcheck // .
 			err,
 			errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", DailyBonusNotificationType, in),

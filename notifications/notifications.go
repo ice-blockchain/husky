@@ -21,14 +21,12 @@ import (
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/multimedia/picture"
 	"github.com/ice-blockchain/wintr/notifications/push"
-	"github.com/ice-blockchain/wintr/notifications/telegram"
 	"github.com/ice-blockchain/wintr/time"
 )
 
 //nolint:gochecknoinits // We load embedded stuff at runtime.
 func init() {
 	loadPushNotificationTranslationTemplates()
-	loadTelegramNotificationTranslationTemplates()
 }
 
 func New(ctx context.Context, _ context.CancelFunc) Repository {
@@ -54,13 +52,12 @@ func StartProcessor(ctx context.Context, cancel context.CancelFunc) Processor { 
 
 	var mbConsumer messagebroker.Client
 	prc := &processor{repository: &repository{
-		cfg:                         &cfg,
-		db:                          storage.MustConnect(context.Background(), ddlWorkersParam, applicationYamlKey), //nolint:contextcheck,lll // We need to gracefully shut it down.
-		mb:                          messagebroker.MustConnect(ctx, applicationYamlKey),
-		pushNotificationsClient:     push.New(applicationYamlKey),
-		telegramNotificationsClient: telegram.New(applicationYamlKey),
-		pictureClient:               picture.New(applicationYamlKey),
-		emailClient:                 email.New(applicationYamlKey),
+		cfg:                     &cfg,
+		db:                      storage.MustConnect(context.Background(), ddlWorkersParam, applicationYamlKey), //nolint:contextcheck,lll // We need to gracefully shut it down.
+		mb:                      messagebroker.MustConnect(ctx, applicationYamlKey),
+		pushNotificationsClient: push.New(applicationYamlKey),
+		pictureClient:           picture.New(applicationYamlKey),
+		emailClient:             email.New(applicationYamlKey),
 		/*
 			personalInAppFeed:       inapp.New(applicationYamlKey, "notifications"),
 			globalInAppFeed:         inapp.New(applicationYamlKey, "announcements"),

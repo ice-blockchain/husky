@@ -283,10 +283,8 @@ func (s *userTableSource) upsertUser(ctx context.Context, us *users.UserSnapshot
                    REFERRED_BY,
                    PHONE_NUMBER_HASH,
                    LANGUAGE,
-                   USER_ID,
-				   TELEGRAM_USER_ID,
-				   TELEGRAM_BOT_ID
-    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+                   USER_ID
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
     ON CONFLICT(user_id)
       DO UPDATE
       	SET        PHONE_NUMBER = EXCLUDED.PHONE_NUMBER,
@@ -297,9 +295,7 @@ func (s *userTableSource) upsertUser(ctx context.Context, us *users.UserSnapshot
                    PROFILE_PICTURE_NAME = EXCLUDED.PROFILE_PICTURE_NAME,
                    REFERRED_BY = EXCLUDED.REFERRED_BY,
                    PHONE_NUMBER_HASH = EXCLUDED.PHONE_NUMBER_HASH,
-                   LANGUAGE = EXCLUDED.LANGUAGE,
-				   TELEGRAM_USER_ID = EXCLUDED.TELEGRAM_USER_ID,
-				   TELEGRAM_BOT_ID = EXCLUDED.TELEGRAM_BOT_ID`
+                   LANGUAGE = EXCLUDED.LANGUAGE`
 	_, err := storage.Exec(ctx, s.db, sql,
 		us.PhoneNumber,
 		us.Email,
@@ -311,8 +307,6 @@ func (s *userTableSource) upsertUser(ctx context.Context, us *users.UserSnapshot
 		us.PhoneNumberHash,
 		us.Language,
 		us.ID,
-		us.TelegramUserID,
-		us.TelegramBotID,
 	)
 
 	return errors.Wrapf(err, "failed to upsert %#v", us)
