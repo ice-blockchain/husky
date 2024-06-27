@@ -61,7 +61,6 @@ func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.M
 	}
 	now := time.Now()
 	deeplink := fmt.Sprintf("%v://profile?section=badges&userId=%v&category=%v", s.cfg.DeeplinkScheme, message.UserID, message.GroupType)
-	imageURL := s.pictureClient.DownloadURL(fmt.Sprintf("badges/%v.png", message.Type))
 	badgeIndex, err := strconv.Atoi(message.Type[1:])
 	log.Panic(err) //nolint:revive // Intended.
 	badgeIndex--
@@ -70,7 +69,6 @@ func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.M
 			Time: now,
 			Data: map[string]any{
 				"deeplink": deeplink,
-				"imageUrl": imageURL,
 			},
 			Action: string(notifType),
 			Actor: inapp.ID{
@@ -110,11 +108,10 @@ func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.M
 	for _, token := range *tokens.PushNotificationTokens {
 		pn = append(pn, &pushNotification{
 			pn: &push.Notification[push.DeviceToken]{
-				Data:     map[string]string{"deeplink": deeplink},
-				Target:   token,
-				Title:    tmpl.getTitle(nil),
-				Body:     tmpl.getBody(data),
-				ImageURL: imageURL,
+				Data:   map[string]string{"deeplink": deeplink},
+				Target: token,
+				Title:  tmpl.getTitle(nil),
+				Body:   tmpl.getBody(data),
 			},
 			sn: &sentNotification{
 				SentAt:   now,

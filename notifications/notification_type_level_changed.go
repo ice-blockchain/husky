@@ -44,13 +44,11 @@ func (s *completedLevelsSource) Process(ctx context.Context, msg *messagebroker.
 	}
 	now := time.Now()
 	deeplink := fmt.Sprintf("%v://profile?userId=%v", s.cfg.DeeplinkScheme, message.UserID)
-	imageURL := s.pictureClient.DownloadURL("assets/push-notifications/level-change.png")
 	in := &inAppNotification{
 		in: &inapp.Parcel{
 			Time: now,
 			Data: map[string]any{
 				"deeplink": deeplink,
-				"imageUrl": imageURL,
 			},
 			Action: string(LevelChangedNotificationType),
 			Actor: inapp.ID{
@@ -89,11 +87,10 @@ func (s *completedLevelsSource) Process(ctx context.Context, msg *messagebroker.
 	for _, token := range *tokens.PushNotificationTokens {
 		pn = append(pn, &pushNotification{
 			pn: &push.Notification[push.DeviceToken]{
-				Data:     map[string]string{"deeplink": deeplink},
-				Target:   token,
-				Title:    tmpl.getTitle(nil),
-				Body:     tmpl.getBody(nil),
-				ImageURL: imageURL,
+				Data:   map[string]string{"deeplink": deeplink},
+				Target: token,
+				Title:  tmpl.getTitle(nil),
+				Body:   tmpl.getBody(nil),
 			},
 			sn: &sentNotification{
 				SentAt:   now,

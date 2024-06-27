@@ -282,8 +282,8 @@ github.com/holiman/uint256 v1.2.4 h1:jUc4Nk8fm9jZabQuqr2JzednajVmBpC+oiTiXZJEApU
 github.com/holiman/uint256 v1.2.4/go.mod h1:EOMSn4q6Nyt9P6efbI3bueV4e1b3dGlUCXeiRV4ng7E=
 github.com/huin/goupnp v1.3.0 h1:UvLUlWDNpoUdYzb2TCn+MuTWtcjXKSza2n6CBdQ0xXc=
 github.com/huin/goupnp v1.3.0/go.mod h1:gnGPsThkYa7bFi/KWmEysQRf48l2dvR5bxr2OFckNX8=
-github.com/ice-blockchain/eskimo v1.343.0 h1:GMIPNwVO283vLT2BW5w/27MlR6nnVndx4bV/EtWQjik=
-github.com/ice-blockchain/eskimo v1.343.0/go.mod h1:GgnXx4x78wpFt315Aj917+36aLU5g/94Ohpl+ft++6c=
+github.com/ice-blockchain/eskimo v1.345.0 h1:uYo4xdjLJhx7WsLkaZam1jwgAKLf92OkAYI0VHSoLA8=
+github.com/ice-blockchain/eskimo v1.345.0/go.mod h1:GgnXx4x78wpFt315Aj917+36aLU5g/94Ohpl+ft++6c=
 github.com/ice-blockchain/freezer v1.472.0 h1:YCI7btQuYb5R+1VBQf70OIJYkpshm8mujiSvbnjt9pw=
 github.com/ice-blockchain/freezer v1.472.0/go.mod h1:Ep+or4+G74x/r8XBG340v07ov1S+9BWnc2eHqOC+VIY=
 github.com/ice-blockchain/go-tarantool-client v0.0.0-20230327200757-4fc71fa3f7bb h1:8TnFP3mc7O+tc44kv2e0/TpZKnEVUaKH+UstwfBwRkk=

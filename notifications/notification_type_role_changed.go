@@ -87,11 +87,10 @@ func (s *enabledRolesSource) Process(ctx context.Context, msg *messagebroker.Mes
 	for _, token := range *tokens.PushNotificationTokens {
 		pn = append(pn, &pushNotification{
 			pn: &push.Notification[push.DeviceToken]{
-				Data:     map[string]string{"deeplink": deeplink},
-				Target:   token,
-				Title:    tmpl.getTitle(nil),
-				Body:     tmpl.getBody(nil),
-				ImageURL: imageURL,
+				Data:   map[string]string{"deeplink": deeplink},
+				Target: token,
+				Title:  tmpl.getTitle(nil),
+				Body:   tmpl.getBody(nil),
 			},
 			sn: &sentNotification{
 				SentAt:   now,
