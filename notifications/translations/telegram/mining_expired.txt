@@ -1,0 +1,6 @@
+{
+    "en": {
+        "body": "💔 <b>Don't lose more coins!</b>\n\nYou're losing coins for inactivity, come back and start your check-in session again.",
+        "buttonText": "👉 Start Session"
+    }
+}

@@ -27,33 +27,37 @@ func (r *repository) addScheduledInviteFriendNotifications(ctx context.Context, 
 		dayDuration = 24 * stdlibtime.Hour
 		firstNotificationDuration = 1 * stdlibtime.Hour
 	}
-	scheduled := []*scheduledNotification{
-		{
+	availableChannels := []NotificationChannel{PushNotificationChannel, TelegramNotificationChannel}
+	scheduled := make([]*scheduledNotification, 0, 2*len(availableChannels)) //nolint:gomnd,mnd // .
+	for _, channel := range availableChannels {
+		scheduled = append(scheduled, &scheduledNotification{
 			ScheduledAt:              now,
 			ScheduledFor:             time.New(us.CreatedAt.Add(firstNotificationDuration)),
 			Language:                 us.Language,
 			UserID:                   us.ID,
 			NotificationType:         string(InviteFriendNotificationType),
 			Uniqueness:               fmt.Sprintf("%v_%v_1h", us.ID, InviteFriendNotificationType),
-			NotificationChannel:      string(PushNotificationChannel),
+			NotificationChannel:      string(channel),
 			NotificationChannelValue: us.ID,
 			Data: &users.JSON{
 				"TenantName": r.cfg.TenantName,
+				"Username":   us.Username,
 			},
-		}, {
+		}, &scheduledNotification{
 			ScheduledAt:              now,
 			ScheduledFor:             time.New(us.CreatedAt.Add(7 * dayDuration)), //nolint:gomnd,mnd // .
 			Language:                 us.Language,
 			UserID:                   us.ID,
 			NotificationType:         string(InviteFriendNotificationType),
 			Uniqueness:               fmt.Sprintf("%v_%v_7d", us.ID, InviteFriendNotificationType),
-			NotificationChannel:      string(PushNotificationChannel),
+			NotificationChannel:      string(channel),
 			NotificationChannelValue: us.ID,
 			Data: &users.JSON{
 				"TenantName": r.cfg.TenantName,
+				"Username":   us.Username,
 			},
-		},
+		})
 	}
 
-	return errors.Wrapf(r.insertScheduledNotifications(ctx, scheduled), "can't execute insertScheduledNotifications:%#v", scheduled)
+	return errors.Wrapf(insertScheduledNotifications(ctx, r.db, scheduled), "can't execute insertScheduledNotifications:%#v", scheduled)
 }

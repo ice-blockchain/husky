@@ -1,0 +1,7 @@
+{
+    "en": {
+        "body": "👋  <b>Invite friends, earn more {{.TenantName}}!</b>\n\nBring your friends to the network and watch your <b>{{.TenantName}}</b> balance grow!",
+        "buttonText": "⭐️ Invite Now",
+        "inviteText": "🌟 One of the biggest and oldest electronic music festivals in the WORLD is launching their token on #IceOpenNetwork.\n\n Join {{.TenantName}} and receive 10 SW coins when you sign-up using my referral code: {{.Username}}\n\n 🎶 Music is the anSWer"
+    }
+}

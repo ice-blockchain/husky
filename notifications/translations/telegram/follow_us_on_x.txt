@@ -1,0 +1,6 @@
+{
+    "en": {
+        "body": "👋 <b>Follow us on X</b>\n\nConnect with us on X and join our fast-growing community.",
+        "buttonText": "🎉 Follow {{.TenantName}} on X"
+    }
+}

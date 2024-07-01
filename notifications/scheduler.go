@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 	"sync"
 	stdlibtime "time"
 
@@ -18,6 +19,8 @@ import (
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/multimedia/picture"
 	"github.com/ice-blockchain/wintr/notifications/push"
+	"github.com/ice-blockchain/wintr/notifications/telegram"
+	"github.com/ice-blockchain/wintr/time"
 )
 
 //nolint:funlen // .
@@ -26,29 +29,36 @@ func MustStartScheduler(ctx context.Context, cancel context.CancelFunc) *Schedul
 	appcfg.MustLoadFromKey(applicationYamlKey, &cfg)
 	ddlWorkersParam := fmt.Sprintf(ddl, schedulerWorkersCount)
 	sh := Scheduler{
-		cfg:                      &cfg,
-		db:                       storage.MustConnect(context.Background(), ddlWorkersParam, applicationYamlKey), //nolint:contextcheck // .
-		pictureClient:            picture.New(applicationYamlKey),
-		pushNotificationsClient:  push.New(applicationYamlKey),
-		telemetryNotifications:   new(telemetry).mustInit([]string{"scheduler notifications[full iteration]", "get_scheduled_notifications", "process_notifications", "clear_invalid_tokens", "delete_scheduled_notifications"}), //nolint:lll // .
-		telemetryAnnouncements:   new(telemetry).mustInit([]string{"scheduler announcements[full iteration]", "get_scheduled_announcements", "process_announcements", "delete_scheduled_announcements"}),                         //nolint:lll // .
-		schedulerAnnouncementsMX: &sync.Mutex{},
-		schedulerNotificationsMX: &sync.Mutex{},
-		wg:                       new(sync.WaitGroup),
+		cfg:                              &cfg,
+		db:                               storage.MustConnect(context.Background(), ddlWorkersParam, applicationYamlKey), //nolint:contextcheck // .
+		pictureClient:                    picture.New(applicationYamlKey),
+		pushNotificationsClient:          push.New(applicationYamlKey),
+		wg:                               new(sync.WaitGroup),
+		telegramNotificationsClient:      telegram.New(applicationYamlKey),
+		telemetryPushNotifications:       new(telemetry).mustInit([]string{"scheduler push notifications[full iteration]", "get_push_scheduled_notifications", "process_push_notifications", "clear_invalid_tokens", "delete_push_scheduled_notifications"}), //nolint:lll // .
+		telemetryTelegramNotifications:   new(telemetry).mustInit([]string{"scheduler telegram notifications[full iteration]", "get_telegram_scheduled_notifications", "process_telegram_notifications", "delete_telegram_scheduled_notifications"}),         //nolint:lll // .
+		telemetryAnnouncements:           new(telemetry).mustInit([]string{"scheduler announcements[full iteration]", "get_scheduled_announcements", "process_announcements", "delete_scheduled_announcements"}),                                             //nolint:lll // .
+		schedulerPushAnnouncementsMX:     &sync.Mutex{},
+		schedulerPushNotificationsMX:     &sync.Mutex{},
+		schedulerTelegramNotificationsMX: &sync.Mutex{},
 	}
-	loadPushNotificationTranslationTemplates()
 	go sh.startWeeklyStatsUpdater(ctx)
+	go sh.startGetUpdatesTelegramLongPolling(ctx)
 	sh.wg = new(sync.WaitGroup)
-	sh.wg.Add(2 * int(schedulerWorkersCount)) //nolint:gomnd,mnd // .
+	sh.wg.Add(3 * int(schedulerWorkersCount)) //nolint:gomnd,mnd // .
 	sh.cancel = cancel
 	for workerNumber := range schedulerWorkersCount {
 		go func(wn int64) {
 			defer sh.wg.Done()
-			sh.runNotificationsProcessor(ctx, wn)
+			sh.runPushNotificationsProcessor(ctx, wn)
 		}(workerNumber)
 		go func(wn int64) {
 			defer sh.wg.Done()
-			sh.runAnnouncementsProcessor(ctx, wn)
+			sh.runPushAnnouncementsProcessor(ctx, wn)
+		}(workerNumber)
+		go func(wn int64) {
+			defer sh.wg.Done()
+			sh.runTelegramNotificationsProcessor(ctx, wn)
 		}(workerNumber)
 	}
 
@@ -159,4 +169,79 @@ func getDomainByNotificationType(nt NotificationType) NotificationDomain {
 	}
 
 	return ""
+}
+
+func (s *Scheduler) fetchScheduledNotifications(
+	ctx context.Context, now *time.Time, notificationChannel NotificationChannel, batchSize, workerNumber int64,
+) (resp []*scheduledNotificationInfo, err error) {
+	sql := fmt.Sprintf(`SELECT sn.*,
+				   array_agg(dm.push_notification_token) filter (where dm.push_notification_token is not null)  AS push_notification_tokens,
+				   u.disabled_push_notification_domains,
+				   u.telegram_user_id,
+				   u.telegram_bot_id,
+				   u.username
+			FROM scheduled_notifications sn
+				JOIN users u
+					ON sn.user_id = u.user_id
+				LEFT JOIN device_metadata dm
+					ON (u.disabled_push_notification_domains IS NULL 
+						OR NOT (u.disabled_push_notification_domains && ARRAY['%v'] )
+					)
+					AND dm.user_id = u.user_id
+					AND dm.push_notification_token IS NOT NULL 
+					AND dm.push_notification_token != ''
+				WHERE MOD(i, %[2]v) = %[3]v 
+				      AND scheduled_for <= $1
+					  AND notification_channel = $2
+				GROUP BY sn.i, sn.scheduled_at, sn.scheduled_for, sn.data, sn.language, sn.user_id, sn.uniqueness, sn.notification_type,
+						 sn.notification_channel, sn.notification_channel_value, u.disabled_push_notification_domains,
+						 u.telegram_user_id,u.telegram_bot_id, u.username
+				ORDER BY MOD(i, %[2]v), scheduled_for ASC
+				LIMIT %[4]v`,
+		AllNotificationDomain, schedulerWorkersCount, workerNumber, batchSize)
+	resp, err = storage.ExecMany[scheduledNotificationInfo](ctx, s.db, sql, now.Time, notificationChannel)
+
+	return resp, errors.Wrapf(err, "failed to fetch scheduled notifications worker:%v", workerNumber)
+}
+
+func (s *Scheduler) markScheduledNotificationAsSent(ctx context.Context, now *time.Time, notifications []*sentNotification) error {
+	if len(notifications) == 0 {
+		return nil
+	}
+	const numFields = 7
+	values := make([]string, 0, numFields*len(notifications))
+	params := make([]any, 0, numFields*len(notifications))
+	for idx, n := range notifications {
+		values = append(values, fmt.Sprintf("($%[1]v, $%[2]v, $%[3]v, $%[4]v, $%[5]v, $%[6]v, $%[7]v)", idx*numFields+1, idx*numFields+2, idx*numFields+3, idx*numFields+4, idx*numFields+5, idx*numFields+6, idx*numFields+7)) //nolint:gomnd,mnd,lll // .
+		params = append(params, now.Time, n.Language, n.UserID, n.Uniqueness, n.NotificationType, n.NotificationChannel, n.NotificationChannelValue)
+	}
+	sql := fmt.Sprintf(`WITH sent AS (
+		INSERT INTO sent_notifications(sent_at, language, user_id, uniqueness, notification_type, notification_channel, notification_channel_value)
+			VALUES %[1]v
+			ON CONFLICT DO NOTHING
+			RETURNING user_id, uniqueness, notification_type, notification_channel, notification_channel_value
+		)
+		DELETE FROM scheduled_notifications 
+			WHERE (user_id, uniqueness, notification_type, notification_channel, notification_channel_value) IN (SELECT * FROM sent)`, strings.Join(values, ","))
+	_, err := storage.Exec(ctx, s.db, sql, params...)
+
+	return errors.Wrapf(err, "failed to delete scheduled notifications %#v", notifications)
+}
+
+func (s *Scheduler) deleteScheduledNotifications(ctx context.Context, notifications []*scheduledNotification) error {
+	if len(notifications) == 0 {
+		return nil
+	}
+	const numFields = 5
+	values := make([]string, 0, numFields*len(notifications))
+	params := make([]any, 0, numFields*len(notifications))
+	for idx, n := range notifications {
+		values = append(values, fmt.Sprintf("($%[1]v, $%[2]v, $%[3]v, $%[4]v, $%[5]v)", idx*numFields+1, idx*numFields+2, idx*numFields+3, idx*numFields+4, idx*numFields+5)) //nolint:gomnd,mnd,lll // .
+		params = append(params, n.UserID, n.Uniqueness, n.NotificationType, n.NotificationChannel, n.NotificationChannelValue)
+	}
+	sql := fmt.Sprintf(`DELETE FROM scheduled_notifications 
+							   WHERE (user_id, uniqueness, notification_type, notification_channel, notification_channel_value) IN (%v)`, strings.Join(values, ","))
+	_, err := storage.Exec(ctx, s.db, sql, params...)
+
+	return errors.Wrapf(err, "failed to delete scheduled notifications %#v", notifications)
 }

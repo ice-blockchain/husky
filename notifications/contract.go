@@ -18,6 +18,7 @@ import (
 	"github.com/ice-blockchain/wintr/multimedia/picture"
 	"github.com/ice-blockchain/wintr/notifications/inapp"
 	"github.com/ice-blockchain/wintr/notifications/push"
+	"github.com/ice-blockchain/wintr/notifications/telegram"
 	"github.com/ice-blockchain/wintr/time"
 )
 
@@ -28,6 +29,7 @@ const (
 	SMSNotificationChannel                   NotificationChannel = "sms"
 	EmailNotificationChannel                 NotificationChannel = "email"
 	PushNotificationChannel                  NotificationChannel = "push"
+	TelegramNotificationChannel              NotificationChannel = "telegram"
 	PushOrFallbackToEmailNotificationChannel NotificationChannel = "push||email"
 )
 
@@ -68,6 +70,7 @@ const (
 	SocialsFollowIONOnTelegramNotificationType NotificationType = "join_ion_on_telegram"
 	SocialsFollowOurTelegramNotificationType   NotificationType = "join_our_telegram"
 	WeeklyStatsNotificationType                NotificationType = "weekly_stats"
+	ReplyNotificationType                      NotificationType = "reply"
 )
 
 var (
@@ -82,6 +85,7 @@ var (
 		SMSNotificationChannel,
 		EmailNotificationChannel,
 		PushNotificationChannel,
+		TelegramNotificationChannel,
 	}
 	//nolint:gochecknoglobals // It's just for more descriptive validation messages.
 	AllNotificationTypes = users.Enum[NotificationType]{
@@ -107,6 +111,25 @@ var (
 		SocialsFollowIONOnTelegramNotificationType,
 		SocialsFollowOurTelegramNotificationType,
 		WeeklyStatsNotificationType,
+	}
+	//nolint:gochecknoglobals // It's just for more descriptive validation messages.
+	AllTelegramNotificationTypes = users.Enum[NotificationType]{
+		LevelBadgeUnlockedNotificationType,
+		CoinBadgeUnlockedNotificationType,
+		SocialBadgeUnlockedNotificationType,
+		RoleChangedNotificationType,
+		LevelChangedNotificationType,
+		MiningExtendNotificationType,
+		MiningEndingSoonNotificationType,
+		MiningExpiredNotificationType,
+		MiningNotActiveNotificationType,
+		InviteFriendNotificationType,
+		SocialsFollowIceOnXNotificationType,
+		SocialsFollowUsOnXNotificationType,
+		SocialsFollowZeusOnXNotificationType,
+		SocialsFollowIONOnTelegramNotificationType,
+		SocialsFollowOurTelegramNotificationType,
+		ReplyNotificationType,
 	}
 	//nolint:gochecknoglobals // It's just for more descriptive validation messages.
 	AllNotificationDomains = map[NotificationChannel][]NotificationDomain{
@@ -171,16 +194,19 @@ type (
 		CheckHealth(ctx context.Context) error
 	}
 	Scheduler struct {
-		pictureClient            picture.Client
-		pushNotificationsClient  push.Client
-		cfg                      *config
-		schedulerAnnouncementsMX *sync.Mutex
-		schedulerNotificationsMX *sync.Mutex
-		telemetryNotifications   *telemetry
-		telemetryAnnouncements   *telemetry
-		db                       *storage.DB
-		wg                       *sync.WaitGroup
-		cancel                   context.CancelFunc
+		pictureClient                    picture.Client
+		pushNotificationsClient          push.Client
+		telegramNotificationsClient      telegram.Client
+		cfg                              *config
+		schedulerPushAnnouncementsMX     *sync.Mutex
+		schedulerPushNotificationsMX     *sync.Mutex
+		schedulerTelegramNotificationsMX *sync.Mutex
+		telemetryPushNotifications       *telemetry
+		telemetryTelegramNotifications   *telemetry
+		telemetryAnnouncements           *telemetry
+		db                               *storage.DB
+		wg                               *sync.WaitGroup
+		cancel                           context.CancelFunc
 	}
 )
 
@@ -191,8 +217,8 @@ const (
 	requestingUserIDCtxValueKey = "requestingUserIDCtxValueKey"
 	requestDeadline             = 30 * stdlibtime.Second
 
-	schedulerWorkersCount int64 = 10
-	schedulerBatchSize    int64 = 250
+	schedulerWorkersCount  int64 = 10
+	schedulerPushBatchSize int64 = 250
 
 	defaultLanguage = "en"
 )
@@ -205,14 +231,19 @@ var (
 	//nolint:gochecknoglobals // Its loaded once at startup.
 	allPushNotificationTemplates map[NotificationType]map[languageCode]*pushNotificationTemplate
 	//nolint:gochecknoglobals // Its loaded once at startup.
+	allTelegramNotificationTemplates map[NotificationType]map[languageCode]*telegramNotificationTemplate
+	//nolint:gochecknoglobals // Its loaded once at startup.
 	internationalizedEmailDisplayNames = map[string]string{
 		"en": "ice: Decentralized Future",
 	}
 )
 
 type (
-	languageCode = string
-	user         struct {
+	languageCode     = string
+	telegramBotID    = string
+	telegramBotToken = string
+	telegramUserID   = string
+	user             struct {
 		LastPingCooldownEndedAt          *time.Time                      `json:"lastPingCooldownEndedAt,omitempty"`
 		DisabledPushNotificationDomains  *users.Enum[NotificationDomain] `json:"disabledPushNotificationDomains,omitempty"`
 		DisabledEmailNotificationDomains *users.Enum[NotificationDomain] `json:"disabledEmailNotificationDomains,omitempty"`
@@ -227,6 +258,8 @@ type (
 		ReferredBy                       string                          `json:"referredBy,omitempty"`
 		PhoneNumberHash                  string                          `json:"phoneNumberHash,omitempty"`
 		Language                         string                          `json:"language,omitempty"`
+		TelegramUserID                   string                          `json:"telegramUserId,omitempty"`
+		TelegramBotID                    string                          `json:"telegramBotId,omitempty"`
 		AgendaContactUserIDs             []string                        `json:"agendaContactUserIDs,omitempty" db:"agenda_contact_user_ids"`
 	}
 	userTableSource struct {
@@ -263,15 +296,16 @@ type (
 		*processor
 	}
 	repository struct {
-		cfg                     *config
-		shutdown                func() error
-		db                      *storage.DB
-		mb                      messagebroker.Client
-		pushNotificationsClient push.Client
-		emailClient             email.Client
-		pictureClient           picture.Client
-		personalInAppFeed       inapp.Client
-		globalInAppFeed         inapp.Client
+		cfg                         *config
+		shutdown                    func() error
+		db                          *storage.DB
+		mb                          messagebroker.Client
+		pushNotificationsClient     push.Client
+		telegramNotificationsClient telegram.Client
+		emailClient                 email.Client
+		pictureClient               picture.Client
+		personalInAppFeed           inapp.Client
+		globalInAppFeed             inapp.Client
 	}
 	processor struct {
 		*repository
@@ -281,6 +315,9 @@ type (
 		MaxNotificationDelaySec uint `yaml:"maxNotificationDelaySec"`
 	}
 	scheduledNotificationInfo struct {
+		TelegramUserID                  string
+		TelegramBotID                   string
+		Username                        string
 		PushNotificationTokens          *users.Enum[push.DeviceToken]
 		DisabledPushNotificationDomains *users.Enum[NotificationDomain]
 		scheduledNotification
@@ -312,8 +349,19 @@ type (
 		UserID string
 		Token  push.DeviceToken
 	}
+	telegramNotification struct {
+		tn        *telegram.Notification
+		sn        *sentNotification
+		scheduled scheduledNotification
+	}
+	telegramUserInfo struct {
+		UserID         string `json:"userId,omitempty"`
+		TelegramUserID string `json:"telegramUserId,omitempty"`
+		Language       string `json:"language,omitempty"`
+	}
 	config struct {
 		TenantName string `yaml:"tenantName"`
+		TokenName  string `yaml:"tokenName"`
 		Socials    []struct {
 			NotificationType string `yaml:"notificationType"`
 			Link             string `yaml:"link"`
@@ -324,11 +372,20 @@ type (
 			Roles  []string `yaml:"roles"`
 		} `yaml:"disabledAchievementsNotifications" `
 		NotificationDelaysByTopic map[push.SubscriptionTopic]notificationDelayConfig `yaml:"notificationDelaysByTopic" mapstructure:"notificationDelaysByTopic"` //nolint:lll // .
-		DeeplinkScheme            string                                             `yaml:"deeplinkScheme"`
-		messagebroker.Config      `mapstructure:",squash"`                           //nolint:tagliatelle // Nope.
-		notificationDelayConfig   `mapstructure:",squash"`
-		PingCooldown              stdlibtime.Duration `yaml:"pingCooldown"`
-		WeeklyStats               struct {
+		TelegramBots              map[telegramBotID]struct {
+			BotToken telegramBotToken `yaml:"botToken"`
+		} `yaml:"telegramBots" mapstructure:"telegramBots"`
+		Telegram struct {
+			BotToken telegramBotToken `yaml:"botToken"`
+		} `yaml:"wintr/notifications/telegram" mapstructure:"wintr/notifications/telegram"` //nolint:tagliatelle // Nope.
+		DeeplinkScheme          string                   `yaml:"deeplinkScheme"`
+		WebAppLink              string                   `yaml:"webAppLink"`
+		WebSiteURL              string                   `yaml:"webSiteUrl"`
+		InviteURL               string                   `yaml:"inviteUrl"`
+		messagebroker.Config    `mapstructure:",squash"` //nolint:tagliatelle // Nope.
+		notificationDelayConfig `mapstructure:",squash"`
+		PingCooldown            stdlibtime.Duration `yaml:"pingCooldown"`
+		WeeklyStats             struct {
 			Weekday stdlibtime.Weekday `yaml:"weekday"`
 			Hour    int                `yaml:"hour"`
 			Minutes int                `yaml:"minutes"`

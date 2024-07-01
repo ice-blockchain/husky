@@ -77,8 +77,9 @@ func loadPushNotificationTranslationTemplates() {
 
 type (
 	pushNotificationTokens struct {
-		PushNotificationTokens *users.Enum[push.DeviceToken]
-		Language, UserID       string
+		PushNotificationTokens        *users.Enum[push.DeviceToken]
+		Language, UserID              string
+		TelegramUserID, TelegramBotID string
 	}
 )
 
@@ -90,7 +91,9 @@ func (r *repository) getPushNotificationTokens(
 	}
 	sql := fmt.Sprintf(`SELECT array_agg(dm.push_notification_token) filter (where dm.push_notification_token is not null)  AS push_notification_tokens, 
 							   u.language,
-							   u.user_id
+							   u.user_id,
+							   u.telegram_user_id,
+							   u.telegram_bot_id
 						FROM users u
 							 LEFT JOIN device_metadata dm
 									ON ( u.disabled_push_notification_domains IS NULL 
@@ -104,9 +107,6 @@ func (r *repository) getPushNotificationTokens(
 	resp, err := storage.Get[pushNotificationTokens](ctx, r.db, sql, userID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to select for push notification tokens for `%v`, userID:%#v", domain, userID)
-	}
-	if resp.PushNotificationTokens == nil || len(*resp.PushNotificationTokens) == 0 {
-		return nil, nil //nolint:nilnil // .
 	}
 
 	return resp, nil
@@ -151,6 +151,25 @@ func (r *repository) sendPushNotification(ctx context.Context, pn *pushNotificat
 			errors.Wrapf(cErr, "failed to clearInvalidPushNotificationToken for userID:%#v, push token:%#v", pn.sn.UserID, pn.pn.Target),
 			errors.Wrapf(err, "failed to send push notification:%#v, desired to be sent:%#v", pn.pn, pn.sn),
 			errors.Wrapf(r.deleteSentNotification(ctx, pn.sn), "failed to delete SENT_NOTIFICATIONS as a rollback for %#v", pn.sn),
+		).ErrorOrNil()
+	}
+
+	return nil
+}
+
+func (r *repository) sendTelegramNotification(ctx context.Context, tn *telegramNotification) error {
+	if ctx.Err() != nil {
+		return errors.Wrap(ctx.Err(), "unexpected deadline")
+	}
+	if err := r.insertSentNotification(ctx, tn.sn); err != nil {
+		return errors.Wrapf(err, "failed to insert %#v", tn.sn)
+	}
+	responder := make(chan error, 1)
+	defer close(responder)
+	if err := r.telegramNotificationsClient.Send(ctx, tn.tn); err != nil {
+		return multierror.Append( //nolint:wrapcheck // Not needed.
+			errors.Wrapf(err, "failed to send telegram notification:%#v, desired to be sent:%#v", tn.sn, tn.sn),
+			errors.Wrapf(r.deleteSentNotification(ctx, tn.sn), "failed to delete SENT_NOTIFICATIONS as a rollback for %#v", tn.sn),
 		).ErrorOrNil()
 	}
 

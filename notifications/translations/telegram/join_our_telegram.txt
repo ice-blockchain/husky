@@ -1,0 +1,6 @@
+{
+    "en": {
+        "body": "📣 <b>Join our Telegram community!</b>\n\nJoin our community channel for exclusive updates.",
+        "buttonText": "✅ Join Now"
+    }
+}
