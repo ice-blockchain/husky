@@ -115,39 +115,45 @@ func (s *completedLevelsSource) Process(ctx context.Context, msg *messagebroker.
 			return errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", LevelChangedNotificationType, in)
 		})
 	}
-	if tmplTelegram, found := allTelegramNotificationTemplates[LevelChangedNotificationType][tokens.Language]; !found {
-		log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` telegram config", tokens.Language, LevelChangedNotificationType))
-	} else {
-		if botInfo, botFound := s.cfg.TelegramBots[strings.ToLower(tokens.TelegramBotID)]; botFound {
-			tn := &telegramNotification{
-				tn: &telegram.Notification{
-					ChatID:   tokens.TelegramUserID,
-					Text:     tmplTelegram.getBody(nil),
-					BotToken: botInfo.BotToken,
-				},
-				sn: &sentNotification{
-					SentAt:   now,
-					Language: tokens.Language,
-					sentNotificationPK: sentNotificationPK{
-						UserID:                   message.UserID,
-						Uniqueness:               message.Type,
-						NotificationType:         LevelChangedNotificationType,
-						NotificationChannel:      TelegramNotificationChannel,
-						NotificationChannelValue: message.UserID,
+	if tokens.TelegramBotID != "" && tokens.TelegramBotID != tokens.UserID && //nolint:nestif // .
+		tokens.TelegramUserID != "" && tokens.TelegramUserID != tokens.UserID {
+		if tmplTelegram, found := allTelegramNotificationTemplates[LevelChangedNotificationType][tokens.Language]; !found {
+			log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` telegram config", tokens.Language, LevelChangedNotificationType))
+		} else { //nolint:dupl // .
+			if botInfo, botFound := s.cfg.TelegramBots[strings.ToLower(tokens.TelegramBotID)]; botFound {
+				tn := &telegramNotification{
+					tn: &telegram.Notification{
+						ChatID:   tokens.TelegramUserID,
+						Text:     tmplTelegram.getBody(nil),
+						BotToken: botInfo.BotToken,
 					},
-				},
+					sn: &sentNotification{
+						SentAt:   now,
+						Language: tokens.Language,
+						sentNotificationPK: sentNotificationPK{
+							UserID:                   message.UserID,
+							Uniqueness:               message.Type,
+							NotificationType:         LevelChangedNotificationType,
+							NotificationChannel:      TelegramNotificationChannel,
+							NotificationChannelValue: message.UserID,
+						},
+					},
+				}
+				buttonText := tmplTelegram.getButtonText(nil)
+				buttonLink := getTelegramDeeplink(LevelChangedNotificationType, s.cfg, "", "")
+				if buttonText != "" && buttonLink != "" {
+					tn.tn.Buttons = append(tn.tn.Buttons, struct {
+						Text string `json:"text,omitempty"`
+						URL  string `json:"url,omitempty"`
+					}{
+						Text: buttonText,
+						URL:  buttonLink,
+					})
+				}
+				exConcurrently = append(exConcurrently, func() error {
+					return errors.Wrapf(s.sendTelegramNotification(ctx, tn), "failed to send telegram notification for %v, notif:%#v", LevelChangedNotificationType, in)
+				})
 			}
-			buttonText := tmplTelegram.getButtonText(nil)
-			buttonLink := getTelegramDeeplink(LevelChangedNotificationType, s.cfg, "", "")
-			if buttonText != "" && buttonLink != "" {
-				tn.tn.Buttons = append(tn.tn.Buttons, struct {
-					Text string `json:"text,omitempty"`
-					URL  string `json:"url,omitempty"`
-				}{})
-			}
-			exConcurrently = append(exConcurrently, func() error {
-				return errors.Wrapf(s.sendTelegramNotification(ctx, tn), "failed to send telegram notification for %v, notif:%#v", LevelChangedNotificationType, in)
-			})
 		}
 	}
 

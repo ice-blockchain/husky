@@ -344,7 +344,25 @@ func (r *repository) getUserByID(ctx context.Context, userID string) (*user, err
 	if ctx.Err() != nil {
 		return nil, errors.Wrap(ctx.Err(), "context failed")
 	}
-	usr, err := storage.Get[user](ctx, r.db, `SELECT * FROM users WHERE user_id = $1`, userID)
+	usr, err := storage.Get[user](ctx, r.db, `SELECT 
+			last_ping_cooldown_ended_at,
+			disabled_push_notification_domains,
+			disabled_email_notification_domains,
+			disabled_sms_notification_domains,
+			agenda_contact_user_ids,
+			phone_number,
+			email,
+			first_name,
+			last_name,
+			user_id,
+			username,
+			profile_picture_name,
+			referred_by,
+			phone_number_hash,
+			COALESCE(telegram_user_id, '') AS telegram_user_id,
+			COALESCE(telegram_bot_id, '') AS telegram_bot_id,
+			language
+		FROM users WHERE user_id = $1`, userID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to get user by id: %#v", userID)
 	}

@@ -77,8 +77,14 @@ func (s *Scheduler) runTelegramNotificationsProcessor(ctx context.Context, worke
 					log.Panic(fmt.Sprintf("no default translations provided for notification, lang:%v, notificationType:%v", notification.Language, notification.NotificationType)) //nolint:lll // .
 				}
 			}
+			if notification.TelegramBotID == "" || notification.TelegramBotID == notification.UserID ||
+				notification.TelegramUserID == "" || notification.TelegramUserID == notification.UserID {
+				failedTelegramNotifications = append(failedTelegramNotifications, &notification.scheduledNotification)
+
+				continue
+			}
 			botInfo, found := s.cfg.TelegramBots[strings.ToLower(notification.TelegramBotID)]
-			if !found || notification.TelegramBotID == notification.UserID || notification.TelegramUserID == notification.UserID {
+			if !found {
 				log.Warn(fmt.Sprintf("no bot token for bot id:%v for user:%v", notification.TelegramBotID, notification.UserID))
 				failedTelegramNotifications = append(failedTelegramNotifications, &notification.scheduledNotification)
 

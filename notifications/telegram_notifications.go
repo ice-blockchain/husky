@@ -252,7 +252,7 @@ func (s *Scheduler) getReplyUserInfo(ctx context.Context, updates []*telegram.Up
 	}
 	sql := `SELECT 
 				user_id,
-				telegram_user_id,
+				COALESCE(telegram_user_id, '') AS telegram_user_id,
 				language
 			FROM users 
 			WHERE telegram_user_id = ANY($1)`

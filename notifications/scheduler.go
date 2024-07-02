@@ -177,8 +177,8 @@ func (s *Scheduler) fetchScheduledNotifications(
 	sql := fmt.Sprintf(`SELECT sn.*,
 				   array_agg(dm.push_notification_token) filter (where dm.push_notification_token is not null)  AS push_notification_tokens,
 				   u.disabled_push_notification_domains,
-				   u.telegram_user_id,
-				   u.telegram_bot_id,
+				   COALESCE(u.telegram_user_id, '') AS telegram_user_id,
+				   COALESCE(u.telegram_bot_id, '') AS telegram_bot_id,
 				   u.username
 			FROM scheduled_notifications sn
 				JOIN users u

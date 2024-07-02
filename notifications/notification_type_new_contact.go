@@ -116,7 +116,9 @@ func (r *repository) getPushNotificationTokensForNewContactNotification(
 	}
 	sql := fmt.Sprintf(`SELECT array_agg(dm.push_notification_token) filter (where dm.push_notification_token is not null) AS push_notification_tokens, 
 							   u.language,
-							   u.user_id
+							   u.user_id,
+							   COALESCE(u.telegram_user_id, '') AS telegram_user_id,
+							   COALESCE(u.telegram_bot_id, '') AS telegram_bot_id
 						FROM users u
 							 LEFT JOIN device_metadata dm
 									ON ( u.disabled_push_notification_domains IS NULL 
