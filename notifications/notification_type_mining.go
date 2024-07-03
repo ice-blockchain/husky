@@ -133,7 +133,7 @@ func (m *miningSessionSource) insertMiningScheduledNotifications(ctx context.Con
 			Data:                     &users.JSON{},
 		}, &scheduledNotification{
 			ScheduledAt:              now,
-			ScheduledFor:             message.EndedAt,
+			ScheduledFor:             time.New(message.EndedAt.Add(minerLatencyToFinishProcessingIteration)),
 			Language:                 language,
 			UserID:                   *message.UserID,
 			NotificationType:         string(MiningNotActiveNotificationType),

@@ -221,6 +221,8 @@ const (
 	schedulerPushBatchSize int64 = 250
 
 	defaultLanguage = "en"
+	// Protection from getting ErrDuplicate on session creation due to ReferralsCountChangeGuardUpdatedAt on freezer.
+	minerLatencyToFinishProcessingIteration = 10 * stdlibtime.Minute
 )
 
 var (
