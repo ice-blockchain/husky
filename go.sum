@@ -1,8 +1,8 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 cloud.google.com/go v0.115.0 h1:CnFSK6Xo3lDYRoBKEcAtia6VSC837/ZkJuRduSFnr14=
 cloud.google.com/go v0.115.0/go.mod h1:8jIM5vVgoAEoiVxQ/O4BFTfHqulPZgs/ufEzMcFMdWU=
-cloud.google.com/go/auth v0.7.0 h1:kf/x9B3WTbBUHkC+1VS8wwwli9TzhSt0vSTVBmMR8Ts=
-cloud.google.com/go/auth v0.7.0/go.mod h1:D+WqdrpcjmiCgWrXmLLxOVq1GACoE36chW6KXoEvuIw=
+cloud.google.com/go/auth v0.7.1 h1:Iv1bbpzJ2OIg16m94XI9/tlzZZl3cdeR3nGVGj78N7s=
+cloud.google.com/go/auth v0.7.1/go.mod h1:VEc4p5NNxycWQTMQEDQF0bd6aTMb6VgYDXEwiJJQAbs=
 cloud.google.com/go/auth/oauth2adapt v0.2.3 h1:MlxF+Pd3OmSudg/b1yZ5lJwoXCEaeedAguodky1PcKI=
 cloud.google.com/go/auth/oauth2adapt v0.2.3/go.mod h1:tMQXOfZzFuNuUxOypHlQEXgdfX5cuhwU+ffUuXRJE8I=
 cloud.google.com/go/compute/metadata v0.5.0 h1:Zr0eK8JbFv6+Wi4ilXAR8FJ3wyNdpxHKJNPos6LTZOY=
@@ -282,8 +282,8 @@ github.com/holiman/uint256 v1.3.0 h1:4wdcm/tnd0xXdu7iS3ruNvxkWwrb4aeBQv19ayYn8F4
 github.com/holiman/uint256 v1.3.0/go.mod h1:EOMSn4q6Nyt9P6efbI3bueV4e1b3dGlUCXeiRV4ng7E=
 github.com/huin/goupnp v1.3.0 h1:UvLUlWDNpoUdYzb2TCn+MuTWtcjXKSza2n6CBdQ0xXc=
 github.com/huin/goupnp v1.3.0/go.mod h1:gnGPsThkYa7bFi/KWmEysQRf48l2dvR5bxr2OFckNX8=
-github.com/ice-blockchain/eskimo v1.370.0 h1:XED9hx2MLyyW0Z7teKqw4sTO4KEP/qy+aEBTpcz4bPA=
-github.com/ice-blockchain/eskimo v1.370.0/go.mod h1:x4zWkn0yO+6Y2jJvD7ie/NEjIWOduGSu/tiY4eZGUZs=
+github.com/ice-blockchain/eskimo v1.371.0 h1:o9acbUNUZ80U7CLyzrQyd2T67O/92+a8jiut3BtTpV0=
+github.com/ice-blockchain/eskimo v1.371.0/go.mod h1:7m6dFwOIi3aSAdPBJa2nJKjaEr1QDXXDVs4D3w+m7c4=
 github.com/ice-blockchain/freezer v1.488.0 h1:Q3XGS16eDQ4zeSTqfYLLwAt+H3TbDda9hI+VhEfhTx0=
 github.com/ice-blockchain/freezer v1.488.0/go.mod h1:bSwFbBC95BBF+/WrPJp+l9qyrGruim0pnTpAmkkWoLQ=
 github.com/ice-blockchain/go-tarantool-client v0.0.0-20230327200757-4fc71fa3f7bb h1:8TnFP3mc7O+tc44kv2e0/TpZKnEVUaKH+UstwfBwRkk=

@@ -21,7 +21,7 @@ func (r *repository) GetNews(ctx context.Context, newsType Type, language string
 	sql := fmt.Sprintf(`SELECT (nvu.created_at IS NOT NULL OR nvu_en.created_at IS NOT NULL OR COALESCE(n.created_at,n_en.created_at) < $6::timestamp) AS viewed,
 					    COALESCE(n_en.created_at,n.created_at) AS created_at,
 						COALESCE(n.updated_at, n_en.updated_at) AS updated_at,
-						COALESCE(v.views,v_en.views) as views,
+						COALESCE(v.views,v_en.views, 0) as views,
 						COALESCE(n.notification_channels, n_en.notification_channels) AS notification_channels,
 						COALESCE(n.id,n_en.id) AS id,
 						COALESCE(n.type, n_en.type) AS type,
