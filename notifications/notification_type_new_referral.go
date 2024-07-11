@@ -26,10 +26,10 @@ func (r *repository) sendNewReferralNotification(ctx context.Context, us *users.
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
 	usernameEmpty := us.Username == "" || us.Username == us.ID
+	usernameJustChanged := us.Before != nil && (us.Before.Username == us.Before.ID || us.Before.Username == "") && us.User != nil && !usernameEmpty
 	referredByNotChanged := us.Before != nil && us.Before.ID != "" && us.User != nil && us.User.ID != "" && us.User.ReferredBy == us.Before.ReferredBy
 	if us.User == nil || us.User.ReferredBy == "" || us.User.ReferredBy == us.User.ID ||
-		(referredByNotChanged && !usernameEmpty && us.Before.Username != "" && us.Before.Username != us.Before.ID) ||
-		usernameEmpty {
+		(referredByNotChanged && !usernameJustChanged) || (!referredByNotChanged && usernameEmpty) {
 		return nil
 	}
 
