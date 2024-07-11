@@ -137,8 +137,8 @@ func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.M
 			return errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", notifType, in)
 		})
 	}
-	if tokens.TelegramBotID != "" && tokens.TelegramBotID != tokens.UserID && //nolint:nestif // .
-		tokens.TelegramUserID != "" && tokens.TelegramUserID != tokens.UserID {
+	if false && (tokens.TelegramBotID != "" && tokens.TelegramBotID != tokens.UserID && //nolint:revive,nestif // .
+		tokens.TelegramUserID != "" && tokens.TelegramUserID != tokens.UserID) {
 		tmplTelegram, found := allTelegramNotificationTemplates[notifType][tokens.Language]
 		if !found {
 			log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` telegram config", tokens.Language, notifType))
@@ -162,8 +162,8 @@ func (s *achievedBadgesSource) Process(ctx context.Context, msg *messagebroker.M
 						},
 					},
 				}
-				buttonText := tmplTelegram.getButtonText(nil)
-				buttonLink := getTelegramDeeplink(notifType, s.cfg, "", "")
+				buttonText := tmplTelegram.getButtonText(nil, 0)
+				buttonLink := getTelegramDeeplink(notifType, s.cfg, "", "", "")
 				if buttonText != "" && buttonLink != "" {
 					tn.tn.Buttons = append(tn.tn.Buttons, struct {
 						Text string `json:"text,omitempty"`

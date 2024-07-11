@@ -109,18 +109,10 @@ func (s *Scheduler) runTelegramNotificationsProcessor(ctx context.Context, worke
 				},
 				scheduled: notification.scheduledNotification,
 			}
-			buttonText := tmpl.getButtonText(notification.Data)
-			buttonLink := getTelegramDeeplink(NotificationType(notification.NotificationType), s.cfg, notification.Username, tmpl.getInviteText(notification.Data))
-			if buttonText != "" && buttonLink != "" {
-				tn.tn.Buttons = append(tn.tn.Buttons, struct {
-					Text string `json:"text,omitempty"`
-					URL  string `json:"url,omitempty"`
-				}{
-					Text: buttonText,
-					URL:  buttonLink,
-				})
-			}
-			if notification.NotificationType == string(ReplyNotificationType) {
+			switch notification.NotificationType {
+			case string(SocialsNotificationType):
+				tn.tn.Buttons = append(tn.tn.Buttons, prepareTelegramButtonsForSocialNotificationType(s.cfg, tmpl.ButtonText)...)
+			case string(ReplyNotificationType):
 				replyMessageID, pErr := strconv.ParseInt(notification.NotificationChannelValue, 10, 64)
 				if pErr != nil {
 					log.Warn("can't convert notification chanel value to integer for reply notification type", pErr)
@@ -129,6 +121,18 @@ func (s *Scheduler) runTelegramNotificationsProcessor(ctx context.Context, worke
 					continue
 				}
 				tn.tn.ReplyMessageID = replyMessageID
+			default:
+				buttonText := tmpl.getButtonText(notification.Data, 0)
+				buttonLink := getTelegramDeeplink(NotificationType(notification.NotificationType), s.cfg, notification.Username, tmpl.getInviteText(notification.Data), notification.UserID) //nolint:lll // .
+				if buttonText != "" && buttonLink != "" {
+					tn.tn.Buttons = append(tn.tn.Buttons, struct {
+						Text string `json:"text,omitempty"`
+						URL  string `json:"url,omitempty"`
+					}{
+						Text: buttonText,
+						URL:  buttonLink,
+					})
+				}
 			}
 			toSendTelegramNotifications = append(toSendTelegramNotifications, tn)
 		}

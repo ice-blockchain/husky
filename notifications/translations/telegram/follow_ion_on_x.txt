@@ -1,6 +1,0 @@
-{
-    "en": {
-        "body": "❄️ <b>Follow Ice Open Network on X</b>\n\nStay updated with the latest news and insights from <b>Ice Open Network</b>",
-        "buttonText": "👉 Follow ION on X"
-    }
-}

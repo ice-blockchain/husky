@@ -1,0 +1,12 @@
+{
+    "en": {
+        "body": "🚀 Join our socials to stay updated on all the latest news and important updates!",
+        "buttonText": [
+                       "Follow us on X",
+                       "Join us on Telegram",
+                       "Follow Ice Open Network on X",
+                       "Join Ice Open Network on Telegram",
+                       "Follow Zeus on X"
+                       ]
+    }
+}

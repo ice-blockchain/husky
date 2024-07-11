@@ -43,7 +43,9 @@ func MustStartScheduler(ctx context.Context, cancel context.CancelFunc) *Schedul
 		schedulerTelegramNotificationsMX: &sync.Mutex{},
 	}
 	go sh.startWeeklyStatsUpdater(ctx)
-	go sh.startGetUpdatesTelegramLongPolling(ctx)
+	if false {
+		go sh.startGetUpdatesTelegramLongPolling(ctx)
+	}
 	sh.wg = new(sync.WaitGroup)
 	sh.wg.Add(3 * int(schedulerWorkersCount)) //nolint:gomnd,mnd // .
 	sh.cancel = cancel

@@ -27,8 +27,8 @@ func (r *repository) addScheduledInviteFriendNotifications(ctx context.Context, 
 		dayDuration = 24 * stdlibtime.Hour
 		firstNotificationDuration = 1 * stdlibtime.Hour
 	}
-	availableChannels := []NotificationChannel{PushNotificationChannel, TelegramNotificationChannel}
-	scheduled := make([]*scheduledNotification, 0, 2*len(availableChannels)) //nolint:gomnd,mnd // .
+	availableChannels := []NotificationChannel{PushNotificationChannel}
+	scheduled := make([]*scheduledNotification, 0, len(availableChannels))
 	for _, channel := range availableChannels {
 		scheduled = append(scheduled, &scheduledNotification{
 			ScheduledAt:              now,

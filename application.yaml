@@ -90,16 +90,16 @@ notifications: &notifications
   wintr/multimedia/picture:
     urlDownload: https://ice-staging.b-cdn.net
   socials:
-    - notificationType: follow_ion_on_x
-      link: https://x.com/ice_blockchain/status/1743221098349535361
     - notificationType: follow_us_on_x
-      link: https://x.com/ice_blockchain/status/1793988190614823165
-    - notificationType: follow_zeus_on_x
-      link: https://x.com/ice_blockchain/status/1793256299519418521
-    - notificationType: join_ion_on_telegram
-      link: https://x.com/ice_blockchain/status/1793256299519418521
+      link: https://x.com/sunwaves_token
     - notificationType: join_our_telegram
-      link: https://x.com/ice_blockchain/status/1793256299519418521
+      link: 'https://t.me/sunwavestoken'
+    - notificationType: follow_ion_on_x
+      link: https://x.com/ice_blockchain
+    - notificationType: join_ion_on_telegram
+      link: 'https://t.me/iceblockchain'
+    - notificationType: follow_zeus_on_x
+      link: https://x.com/ice_z3us
   weeklyStats:
     weekday: 1
     hour: 10
@@ -118,6 +118,8 @@ notifications: &notifications
       password: pass
     replicaURLs:
       - postgresql://root:pass@localhost:5434/husky
+  wintr/connectors/storage/v3:
+    url: redis://default:@localhost:6379
   tenantName: BogusName
   tokenName: BN
   wintr/notifications/telegram:

@@ -106,8 +106,8 @@ func (m *miningSessionSource) insertMiningScheduledNotifications(ctx context.Con
 		dayDuration = 24 * stdlibtime.Hour
 		uniquenessTime = fmt.Sprintf("%v:%02d:%02d %02d:%02d:%02d", now.Year(), int(now.Month()), now.Day(), now.Hour(), 0, 0)
 	}
-	scheduled := make([]*scheduledNotification, 0, 2*notificationsNum) //nolint:gomnd,mnd // .
-	for _, channel := range []NotificationChannel{PushNotificationChannel, TelegramNotificationChannel} {
+	scheduled := make([]*scheduledNotification, 0, notificationsNum)
+	for _, channel := range []NotificationChannel{PushNotificationChannel} {
 		scheduled = append(scheduled, &scheduledNotification{
 			ScheduledAt:              now,
 			ScheduledFor:             message.ResettableStartingAt,

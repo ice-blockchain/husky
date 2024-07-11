@@ -115,8 +115,8 @@ func (s *completedLevelsSource) Process(ctx context.Context, msg *messagebroker.
 			return errors.Wrapf(s.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", LevelChangedNotificationType, in)
 		})
 	}
-	if tokens.TelegramBotID != "" && tokens.TelegramBotID != tokens.UserID && //nolint:nestif // .
-		tokens.TelegramUserID != "" && tokens.TelegramUserID != tokens.UserID {
+	if false && (tokens.TelegramBotID != "" && tokens.TelegramBotID != tokens.UserID && //nolint:revive,nestif // .
+		tokens.TelegramUserID != "" && tokens.TelegramUserID != tokens.UserID) {
 		if tmplTelegram, found := allTelegramNotificationTemplates[LevelChangedNotificationType][tokens.Language]; !found {
 			log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` telegram config", tokens.Language, LevelChangedNotificationType))
 		} else { //nolint:dupl // .
@@ -139,8 +139,8 @@ func (s *completedLevelsSource) Process(ctx context.Context, msg *messagebroker.
 						},
 					},
 				}
-				buttonText := tmplTelegram.getButtonText(nil)
-				buttonLink := getTelegramDeeplink(LevelChangedNotificationType, s.cfg, "", "")
+				buttonText := tmplTelegram.getButtonText(nil, 0)
+				buttonLink := getTelegramDeeplink(LevelChangedNotificationType, s.cfg, "", "", "")
 				if buttonText != "" && buttonLink != "" {
 					tn.tn.Buttons = append(tn.tn.Buttons, struct {
 						Text string `json:"text,omitempty"`

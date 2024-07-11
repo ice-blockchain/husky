@@ -19,14 +19,14 @@ func (r *repository) addScheduledSocialsNotifications(ctx context.Context, us *u
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
 	now := time.Now()
-	scheduled := make([]*scheduledNotification, 0, 2*len(r.cfg.Socials)) //nolint:gomnd,mnd // .
+	scheduled := make([]*scheduledNotification, 0, len(r.cfg.Socials)+1)
 	var dayDuration stdlibtime.Duration
 	if r.cfg.Development {
 		dayDuration = 1 * stdlibtime.Minute
 	} else {
 		dayDuration = 24 * stdlibtime.Hour
 	}
-	for _, channel := range []NotificationChannel{PushNotificationChannel, TelegramNotificationChannel} {
+	for _, channel := range []NotificationChannel{PushNotificationChannel} {
 		for ix := range r.cfg.Socials {
 			scheduled = append(scheduled, &scheduledNotification{
 				ScheduledAt:              now,
@@ -44,6 +44,19 @@ func (r *repository) addScheduledSocialsNotifications(ctx context.Context, us *u
 			})
 		}
 	}
+	scheduled = append(scheduled, &scheduledNotification{
+		ScheduledAt:              now,
+		ScheduledFor:             time.New(us.CreatedAt.Add(dayDuration)),
+		Language:                 us.Language,
+		UserID:                   us.ID,
+		NotificationType:         string(SocialsNotificationType),
+		Uniqueness:               fmt.Sprintf("%v_%v", us.ID, SocialsNotificationType),
+		NotificationChannel:      string(TelegramNotificationChannel),
+		NotificationChannelValue: us.ID,
+		Data: &users.JSON{
+			"TenantName": r.cfg.TenantName,
+		},
+	})
 
 	return errors.Wrapf(insertScheduledNotifications(ctx, r.db, scheduled), "can't execute insertScheduledNotifications:%#v", scheduled)
 }

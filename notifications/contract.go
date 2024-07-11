@@ -72,6 +72,7 @@ const (
 	SocialsFollowOurTelegramNotificationType   NotificationType = "join_our_telegram"
 	WeeklyStatsNotificationType                NotificationType = "weekly_stats"
 	ReplyNotificationType                      NotificationType = "reply"
+	SocialsNotificationType                    NotificationType = "socials"
 )
 
 var (
@@ -125,11 +126,8 @@ var (
 		MiningExpiredNotificationType,
 		MiningNotActiveNotificationType,
 		InviteFriendNotificationType,
-		SocialsFollowIceOnXNotificationType,
-		SocialsFollowUsOnXNotificationType,
-		SocialsFollowZeusOnXNotificationType,
-		SocialsFollowIONOnTelegramNotificationType,
-		SocialsFollowOurTelegramNotificationType,
+		NewReferralNotificationType,
+		SocialsNotificationType,
 		ReplyNotificationType,
 	}
 	//nolint:gochecknoglobals // It's just for more descriptive validation messages.
@@ -218,8 +216,9 @@ const (
 	requestingUserIDCtxValueKey = "requestingUserIDCtxValueKey"
 	requestDeadline             = 30 * stdlibtime.Second
 
-	schedulerWorkersCount  int64 = 10
-	schedulerPushBatchSize int64 = 250
+	schedulerWorkersCount    int64 = 10
+	schedulerPushBatchSize   int64 = 250
+	telegramLongPollingLimit int64 = 100
 
 	defaultLanguage = "en"
 	// Protection from getting ErrDuplicate on session creation due to ReferralsCountChangeGuardUpdatedAt on freezer.

@@ -24,19 +24,23 @@ import (
 
 type (
 	telegramNotificationTemplate struct {
-		body, buttonText, inviteText *template.Template
-		Body                         string `json:"body"`       //nolint:revive // That's intended.
-		ButtonText                   string `json:"buttonText"` //nolint:revive // That's intended.
-		InviteText                   string `json:"inviteText"` //nolint:revive // That's intended.
+		body, inviteText *template.Template
+		Body             string               `json:"body"`       //nolint:revive // That's intended.
+		InviteText       string               `json:"inviteText"` //nolint:revive // That's intended.
+		ButtonText       []string             `json:"buttonText"`
+		buttonText       []*template.Template //nolint:revive // That's intended.
 	}
 )
 
-func (t *telegramNotificationTemplate) getButtonText(data any) string {
+func (t *telegramNotificationTemplate) getButtonText(data any, ix int) string { //nolint:unparam // .
+	if ix > len(t.buttonText)-1 {
+		return ""
+	}
 	if data == nil {
-		return t.ButtonText
+		return t.ButtonText[ix]
 	}
 	bf := new(bytes.Buffer)
-	log.Panic(errors.Wrapf(t.buttonText.Execute(bf, data), "failed to execute button text template for data:%#v", data))
+	log.Panic(errors.Wrapf(t.buttonText[ix].Execute(bf, data), "failed to execute button text 1 template for data:%#v", data))
 
 	return bf.String()
 }
@@ -66,7 +70,7 @@ func (t *telegramNotificationTemplate) getInviteText(data any) string {
 	return bf.String()
 }
 
-func loadTelegramNotificationTranslationTemplates() {
+func loadTelegramNotificationTranslationTemplates() { //nolint:funlen // .
 	const totalLanguages = 50
 	allTelegramNotificationTemplates = make(map[NotificationType]map[languageCode]*telegramNotificationTemplate, len(AllTelegramNotificationTypes))
 	for _, notificationType := range AllTelegramNotificationTypes {
@@ -76,9 +80,9 @@ func loadTelegramNotificationTranslationTemplates() {
 		}
 		allTelegramNotificationTemplates[notificationType] = make(map[languageCode]*telegramNotificationTemplate, totalLanguages)
 		var translations map[string]*struct {
-			Body       string `json:"body"`
-			ButtonText string `json:"buttonText"`
-			InviteText string `json:"inviteText"`
+			Body       string   `json:"body"`
+			InviteText string   `json:"inviteText"`
+			ButtonText []string `json:"buttonText"`
 		}
 		err := json.Unmarshal(content, &translations)
 		if err != nil {
@@ -87,12 +91,14 @@ func loadTelegramNotificationTranslationTemplates() {
 		for language, data := range translations {
 			var tmpl telegramNotificationTemplate
 			tmpl.Body = data.Body
-			tmpl.ButtonText = data.ButtonText
 			if notificationType == InviteFriendNotificationType {
 				tmpl.InviteText = data.InviteText
 				tmpl.inviteText = template.Must(template.New(fmt.Sprintf("telegram_%v_%v_invite_text", notificationType, language)).Parse(data.InviteText))
 			}
-			tmpl.buttonText = template.Must(template.New(fmt.Sprintf("telegram_%v_%v_button_text", notificationType, language)).Parse(data.ButtonText))
+			tmpl.ButtonText = data.ButtonText
+			for ix := range data.ButtonText {
+				tmpl.buttonText = append(tmpl.buttonText, template.Must(template.New(fmt.Sprintf("telegram_%v_%v_button_text_%v", notificationType, language, ix)).Parse(data.ButtonText[ix]))) //nolint:lll // .
+			}
 			tmpl.body = template.Must(template.New(fmt.Sprintf("telegram_%v_%v_body", notificationType, language)).Parse(data.Body))
 			allTelegramNotificationTemplates[notificationType][language] = &tmpl
 		}
@@ -100,29 +106,20 @@ func loadTelegramNotificationTranslationTemplates() {
 }
 
 //nolint:exhaustive // We know what cases need to be handled only.
-func getTelegramDeeplink(nt NotificationType, cfg *config, username, inviteText string) string {
-	urls := getSocialsMapURL(cfg)
+func getTelegramDeeplink(nt NotificationType, cfg *config, username, inviteText, userID string) string {
 	switch nt {
 	case MiningExtendNotificationType, MiningEndingSoonNotificationType, MiningExpiredNotificationType, MiningNotActiveNotificationType:
 		return cfg.WebAppLink
 	case InviteFriendNotificationType:
 		return fmt.Sprintf("%[1]v?url=%[2]v/@%[3]v&text=%[4]v", cfg.InviteURL, url.QueryEscape(cfg.WebSiteURL), url.QueryEscape(username), url.QueryEscape(inviteText)) //nolint:lll // .
-	case SocialsFollowIceOnXNotificationType:
-		return urls[string(SocialsFollowIceOnXNotificationType)]
-	case SocialsFollowUsOnXNotificationType:
-		return urls[string(SocialsFollowUsOnXNotificationType)]
-	case SocialsFollowZeusOnXNotificationType:
-		return urls[string(SocialsFollowZeusOnXNotificationType)]
-	case SocialsFollowIONOnTelegramNotificationType:
-		return urls[string(SocialsFollowIONOnTelegramNotificationType)]
-	case SocialsFollowOurTelegramNotificationType:
-		return urls[string(SocialsFollowOurTelegramNotificationType)]
 	case CoinBadgeUnlockedNotificationType, LevelBadgeUnlockedNotificationType, SocialBadgeUnlockedNotificationType:
 		return fmt.Sprintf("%v?startapp=goto_profile_badges", cfg.WebAppLink)
 	case LevelChangedNotificationType:
 		return fmt.Sprintf("%v?startapp=goto_profile", cfg.WebAppLink)
 	case ReplyNotificationType:
 		return cfg.WebAppLink
+	case NewReferralNotificationType:
+		return fmt.Sprintf("%v://profile?userId=%v", cfg.WebAppLink, userID)
 	default:
 		log.Panic(fmt.Sprintf("wrong notification type:%v", nt))
 	}
@@ -130,13 +127,40 @@ func getTelegramDeeplink(nt NotificationType, cfg *config, username, inviteText 
 	return ""
 }
 
-func getSocialsMapURL(cfg *config) map[string]string {
+func prepareTelegramButtonsForSocialNotificationType(cfg *config, buttonTexts []string) []struct {
+	Text string `json:"text,omitempty"`
+	URL  string `json:"url,omitempty"`
+} {
+	urls := getSocialsMapURL(cfg)
+	if len(urls) != len(buttonTexts) {
+		log.Error(errors.New("socials cfg/translation misconfiguration"))
+
+		return nil
+	}
+	res := make([]struct {
+		Text string `json:"text,omitempty"`
+		URL  string `json:"url,omitempty"`
+	}, 0, len(buttonTexts))
+	for ix, text := range buttonTexts {
+		res = append(res, struct {
+			Text string `json:"text,omitempty"`
+			URL  string `json:"url,omitempty"`
+		}{
+			Text: text,
+			URL:  urls[ix],
+		})
+	}
+
+	return res
+}
+
+func getSocialsMapURL(cfg *config) map[int]string {
 	if len(cfg.Socials) == 0 {
 		log.Panic("no urls for socials")
 	}
-	urls := make(map[string]string, len(cfg.Socials))
+	urls := make(map[int]string, len(cfg.Socials))
 	for ix := range cfg.Socials {
-		urls[cfg.Socials[ix].NotificationType] = cfg.Socials[ix].Link
+		urls[ix] = cfg.Socials[ix].Link
 	}
 
 	return urls
@@ -172,7 +196,7 @@ func (s *Scheduler) getTelegramLongPollingUpdates(ctx context.Context) (err erro
 			upd, gErr := s.telegramNotificationsClient.GetUpdates(ctx, &telegram.GetUpdatesArg{
 				BotToken:       bot.BotToken,
 				AllowedUpdates: []string{"message", "callback_query"},
-				Limit:          int64(1),
+				Limit:          telegramLongPollingLimit,
 				Offset:         nextOffset,
 			})
 			if gErr != nil {
