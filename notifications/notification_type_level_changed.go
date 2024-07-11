@@ -140,7 +140,7 @@ func (s *completedLevelsSource) Process(ctx context.Context, msg *messagebroker.
 					},
 				}
 				buttonText := tmplTelegram.getButtonText(nil, 0)
-				buttonLink := getTelegramDeeplink(LevelChangedNotificationType, s.cfg, "", "", "")
+				buttonLink := getTelegramDeeplink(LevelChangedNotificationType, s.cfg, "", "")
 				if buttonText != "" && buttonLink != "" {
 					tn.tn.Buttons = append(tn.tn.Buttons, struct {
 						Text string `json:"text,omitempty"`

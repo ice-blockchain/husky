@@ -24,11 +24,12 @@ import (
 
 type (
 	telegramNotificationTemplate struct {
-		body, inviteText *template.Template
-		Body             string               `json:"body"`       //nolint:revive // That's intended.
-		InviteText       string               `json:"inviteText"` //nolint:revive // That's intended.
-		ButtonText       []string             `json:"buttonText"`
-		buttonText       []*template.Template //nolint:revive // That's intended.
+		body, inviteText, altBody *template.Template
+		Body                      string               `json:"body"`       //nolint:revive // That's intended.
+		AltBody                   string               `json:"altBody"`    //nolint:revive // That's intended.
+		InviteText                string               `json:"inviteText"` //nolint:revive // That's intended.
+		ButtonText                []string             `json:"buttonText"`
+		buttonText                []*template.Template //nolint:revive // That's intended.
 	}
 )
 
@@ -55,6 +56,16 @@ func (t *telegramNotificationTemplate) getBody(data any) string {
 	return bf.String()
 }
 
+func (t *telegramNotificationTemplate) getAltBody(data any) string {
+	if data == nil {
+		return t.AltBody
+	}
+	bf := new(bytes.Buffer)
+	log.Panic(errors.Wrapf(t.altBody.Execute(bf, data), "failed to execute altBody template for data:%#v", data))
+
+	return bf.String()
+}
+
 func (t *telegramNotificationTemplate) getInviteText(data any) string {
 	if t.inviteText == nil {
 		return ""
@@ -70,7 +81,7 @@ func (t *telegramNotificationTemplate) getInviteText(data any) string {
 	return bf.String()
 }
 
-func loadTelegramNotificationTranslationTemplates() { //nolint:funlen // .
+func loadTelegramNotificationTranslationTemplates() { //nolint:funlen,revive,gocognit // .
 	const totalLanguages = 50
 	allTelegramNotificationTemplates = make(map[NotificationType]map[languageCode]*telegramNotificationTemplate, len(AllTelegramNotificationTypes))
 	for _, notificationType := range AllTelegramNotificationTypes {
@@ -81,6 +92,7 @@ func loadTelegramNotificationTranslationTemplates() { //nolint:funlen // .
 		allTelegramNotificationTemplates[notificationType] = make(map[languageCode]*telegramNotificationTemplate, totalLanguages)
 		var translations map[string]*struct {
 			Body       string   `json:"body"`
+			AltBody    string   `json:"altBody"`
 			InviteText string   `json:"inviteText"`
 			ButtonText []string `json:"buttonText"`
 		}
@@ -91,9 +103,13 @@ func loadTelegramNotificationTranslationTemplates() { //nolint:funlen // .
 		for language, data := range translations {
 			var tmpl telegramNotificationTemplate
 			tmpl.Body = data.Body
+			tmpl.AltBody = data.AltBody
 			if notificationType == InviteFriendNotificationType {
 				tmpl.InviteText = data.InviteText
 				tmpl.inviteText = template.Must(template.New(fmt.Sprintf("telegram_%v_%v_invite_text", notificationType, language)).Parse(data.InviteText))
+			}
+			if tmpl.AltBody != "" {
+				tmpl.altBody = template.Must(template.New(fmt.Sprintf("push_%v_%v_alt_body", notificationType, language)).Parse(data.AltBody))
 			}
 			tmpl.ButtonText = data.ButtonText
 			for ix := range data.ButtonText {
@@ -106,7 +122,7 @@ func loadTelegramNotificationTranslationTemplates() { //nolint:funlen // .
 }
 
 //nolint:exhaustive // We know what cases need to be handled only.
-func getTelegramDeeplink(nt NotificationType, cfg *config, username, inviteText, userID string) string {
+func getTelegramDeeplink(nt NotificationType, cfg *config, username, inviteText string) string {
 	switch nt {
 	case MiningExtendNotificationType, MiningEndingSoonNotificationType, MiningExpiredNotificationType, MiningNotActiveNotificationType:
 		return cfg.WebAppLink
@@ -119,7 +135,7 @@ func getTelegramDeeplink(nt NotificationType, cfg *config, username, inviteText,
 	case ReplyNotificationType:
 		return cfg.WebAppLink
 	case NewReferralNotificationType:
-		return fmt.Sprintf("%v://profile?userId=%v", cfg.WebAppLink, userID)
+		return fmt.Sprintf("%v?startapp=goto_team", cfg.WebAppLink)
 	default:
 		log.Panic(fmt.Sprintf("wrong notification type:%v", nt))
 	}

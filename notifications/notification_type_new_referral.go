@@ -115,16 +115,6 @@ func (r *repository) sendNewReferralNotification(ctx context.Context, us *users.
 						NotificationType:         NewReferralNotificationType,
 						NotificationChannel:      PushNotificationChannel,
 						NotificationChannelValue: string(token),
-				},
-				sn: &sentNotification{
-					SentAt:   now,
-					Language: tokens.Language,
-					sentNotificationPK: sentNotificationPK{
-						UserID:                   us.User.ReferredBy,
-						Uniqueness:               us.User.ID,
-						NotificationType:         NewReferralNotificationType,
-						NotificationChannel:      PushNotificationChannel,
-						NotificationChannelValue: string(token),
 					},
 				},
 			})
@@ -142,11 +132,12 @@ func (r *repository) sendNewReferralNotification(ctx context.Context, us *users.
 			log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` telegram config", tokens.Language, NewReferralNotificationType))
 		} else {
 			if botInfo, botFound := r.cfg.TelegramBots[strings.ToLower(tokens.TelegramBotID)]; botFound {
+				data.Username = us.User.Username
 				var body string
 				if data.Amount > 0 {
-					body = tmpl.getBody(data)
+					body = tmplTelegram.getBody(data)
 				} else {
-					body = tmpl.getAltBody(nil)
+					body = tmplTelegram.getAltBody(data)
 				}
 				tn := &telegramNotification{
 					tn: &telegram.Notification{
@@ -167,7 +158,7 @@ func (r *repository) sendNewReferralNotification(ctx context.Context, us *users.
 					},
 				}
 				buttonText := tmplTelegram.getButtonText(nil, 0)
-				buttonLink := getTelegramDeeplink(NewReferralNotificationType, r.cfg, "", "", us.User.ID)
+				buttonLink := getTelegramDeeplink(NewReferralNotificationType, r.cfg, "", "")
 				if buttonText != "" && buttonLink != "" {
 					tn.tn.Buttons = append(tn.tn.Buttons, struct {
 						Text string `json:"text,omitempty"`
@@ -188,7 +179,6 @@ func (r *repository) sendNewReferralNotification(ctx context.Context, us *users.
 }
 
 func (r *repository) getNewReferralCoinAmount(ctx context.Context, referredBy string) uint64 {
-	const defaultNewReferralCoinAmount = tokenomics.WelcomeBonusV2Amount
 	freezerInternalID, err := tokenomics.GetInternalID(ctx, r.freezerDB, referredBy)
 	if err != nil {
 		log.Error(errors.Wrapf(err, "failed to tokenomics.GetInternalID for referredBy: %v", referredBy))
