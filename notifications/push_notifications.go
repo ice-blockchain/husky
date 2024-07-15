@@ -168,25 +168,6 @@ func (r *repository) sendPushNotification(ctx context.Context, pn *pushNotificat
 	return nil
 }
 
-func (r *repository) sendTelegramNotification(ctx context.Context, tn *telegramNotification) error {
-	if ctx.Err() != nil {
-		return errors.Wrap(ctx.Err(), "unexpected deadline")
-	}
-	if err := r.insertSentNotification(ctx, tn.sn); err != nil {
-		return errors.Wrapf(err, "failed to insert %#v", tn.sn)
-	}
-	responder := make(chan error, 1)
-	defer close(responder)
-	if err := r.telegramNotificationsClient.Send(ctx, tn.tn); err != nil {
-		return multierror.Append( //nolint:wrapcheck // Not needed.
-			errors.Wrapf(err, "failed to send telegram notification:%#v, desired to be sent:%#v", tn.sn, tn.sn),
-			errors.Wrapf(r.deleteSentNotification(ctx, tn.sn), "failed to delete SENT_NOTIFICATIONS as a rollback for %#v", tn.sn),
-		).ErrorOrNil()
-	}
-
-	return nil
-}
-
 func (r *repository) clearInvalidPushNotificationToken(ctx context.Context, userID string, token push.DeviceToken) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")

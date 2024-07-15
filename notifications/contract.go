@@ -73,6 +73,12 @@ const (
 	WeeklyStatsNotificationType                NotificationType = "weekly_stats"
 	ReplyNotificationType                      NotificationType = "reply"
 	SocialsNotificationType                    NotificationType = "socials"
+	StartCommandNotificationType               NotificationType = "start"
+)
+
+const (
+	StartTelegramCommand   TelegramCommand = "/start"
+	SocialsTelegramCommand TelegramCommand = "/socials"
 )
 
 var (
@@ -129,6 +135,7 @@ var (
 		NewReferralNotificationType,
 		SocialsNotificationType,
 		ReplyNotificationType,
+		StartCommandNotificationType,
 	}
 	//nolint:gochecknoglobals // It's just for more descriptive validation messages.
 	AllNotificationDomains = map[NotificationChannel][]NotificationDomain{
@@ -160,6 +167,7 @@ type (
 	NotificationChannel             string
 	NotificationDomain              string
 	NotificationType                string
+	TelegramCommand                 string
 	NotificationChannels            struct {
 		NotificationChannels *users.Enum[NotificationChannel] `json:"notificationChannels,omitempty" swaggertype:"array,string" enums:"inapp,sms,email,push,push||email"` //nolint:lll // .
 	}
@@ -237,6 +245,11 @@ var (
 	//nolint:gochecknoglobals // Its loaded once at startup.
 	internationalizedEmailDisplayNames = map[string]string{
 		"en": "ice: Decentralized Future",
+	}
+	//nolint:gochecknoglobals // It's just for more descriptive commands names.
+	availableBotCommands = []TelegramCommand{
+		StartTelegramCommand,
+		SocialsTelegramCommand,
 	}
 )
 
@@ -359,6 +372,7 @@ type (
 	}
 	telegramUserInfo struct {
 		UserID         string `json:"userId,omitempty"`
+		Username       string `json:"username,omitempty"`
 		TelegramUserID string `json:"telegramUserId,omitempty"`
 		Language       string `json:"language,omitempty"`
 	}

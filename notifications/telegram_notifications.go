@@ -9,10 +9,12 @@ import (
 	"fmt"
 	"net/url"
 	"strconv"
+	"strings"
 	"sync"
 	"text/template"
 	stdlibtime "time"
 
+	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 
 	"github.com/ice-blockchain/eskimo/users"
@@ -143,25 +145,16 @@ func getTelegramDeeplink(nt NotificationType, cfg *config, username, inviteText 
 	return ""
 }
 
-func prepareTelegramButtonsForSocialNotificationType(cfg *config, buttonTexts []string) []struct {
-	Text string `json:"text,omitempty"`
-	URL  string `json:"url,omitempty"`
-} {
+func prepareTelegramButtonsForSocialNotificationType(cfg *config, buttonTexts []string) []telegram.Button {
 	urls := getSocialsMapURL(cfg)
 	if len(urls) != len(buttonTexts) {
 		log.Error(errors.New("socials cfg/translation misconfiguration"))
 
 		return nil
 	}
-	res := make([]struct {
-		Text string `json:"text,omitempty"`
-		URL  string `json:"url,omitempty"`
-	}, 0, len(buttonTexts))
+	res := make([]telegram.Button, 0, len(buttonTexts))
 	for ix, text := range buttonTexts {
-		res = append(res, struct {
-			Text string `json:"text,omitempty"`
-			URL  string `json:"url,omitempty"`
-		}{
+		res = append(res, telegram.Button{
 			Text: text,
 			URL:  urls[ix],
 		})
@@ -182,22 +175,24 @@ func getSocialsMapURL(cfg *config) map[int]string {
 	return urls
 }
 
-func (s *Scheduler) startGetUpdatesTelegramLongPolling(ctx context.Context) {
-	ticker := stdlibtime.NewTicker(30 * stdlibtime.Second) //nolint:gomnd,mnd // .
+func (r *repository) startGetUpdatesTelegramLongPolling(ctx context.Context) {
+	ticker := stdlibtime.NewTicker(1 * stdlibtime.Second)
 	defer ticker.Stop()
 	for {
 		select {
 		case <-ticker.C:
 			wg := new(sync.WaitGroup)
-			wg.Add(len(s.cfg.TelegramBots))
-			go func() {
-				defer wg.Done()
-				reqCtx, cancel := context.WithTimeout(ctx, 1*stdlibtime.Minute)
-				if err := s.getTelegramLongPollingUpdates(reqCtx); err != nil {
-					log.Error(errors.Wrap(err, "failed to get updates long polling"))
-				}
-				cancel()
-			}()
+			wg.Add(len(r.cfg.TelegramBots))
+			for botName, bot := range r.cfg.TelegramBots {
+				go func(botName, botToken string) {
+					defer wg.Done()
+					reqCtx, cancel := context.WithTimeout(ctx, 1*stdlibtime.Minute)
+					if err := r.getTelegramLongPollingUpdates(reqCtx, botName, botToken); err != nil {
+						log.Error(errors.Wrapf(err, "failed to get updates long polling for botName:%v", botName))
+					}
+					cancel()
+				}(botName, bot.BotToken)
+			}
 			wg.Wait()
 		case <-ctx.Done():
 			return
@@ -205,84 +200,184 @@ func (s *Scheduler) startGetUpdatesTelegramLongPolling(ctx context.Context) {
 	}
 }
 
-func (s *Scheduler) getTelegramLongPollingUpdates(ctx context.Context) (err error) {
-	for _, bot := range s.cfg.TelegramBots {
-		nextOffset := int64(0)
-		for {
-			upd, gErr := s.telegramNotificationsClient.GetUpdates(ctx, &telegram.GetUpdatesArg{
-				BotToken:       bot.BotToken,
-				AllowedUpdates: []string{"message", "callback_query"},
-				Limit:          telegramLongPollingLimit,
-				Offset:         nextOffset,
-			})
-			if gErr != nil {
-				return errors.Wrapf(gErr, "can't get updates for offset: %v", nextOffset)
-			}
-			if len(upd) == 0 {
-				break
-			}
-			nextOffset, err = s.handleTelegramUpdates(ctx, upd)
-			if err != nil {
-				return errors.Wrapf(err, "can't handle telegram updates for:%v", upd)
-			}
+func (r *repository) getTelegramLongPollingUpdates(ctx context.Context, botName, botToken string) error {
+	nextOffset := int64(0)
+	for {
+		upd, gErr := r.telegramNotificationsClient.GetUpdates(ctx, &telegram.GetUpdatesArg{
+			BotToken:       botToken,
+			AllowedUpdates: []string{"message"},
+			Limit:          telegramLongPollingLimit,
+			Offset:         nextOffset,
+		})
+		if gErr != nil {
+			return errors.Wrapf(gErr, "can't get updates for bot:%v offset: %v", botName, nextOffset)
+		}
+		if len(upd) == 0 {
+			break
+		}
+		offset, notifications, err := r.handleTelegramUpdates(ctx, upd, botToken, botName)
+		if err != nil {
+			return errors.Wrapf(err, "can't handle telegram updates for bot:%v for:%v", botName, upd)
+		}
+		nextOffset = offset
+
+		if rErr := runConcurrentlyBatch(ctx, r.sendTelegramNotification, notifications, func(arg *telegramNotification, err error) {
+			log.Error(errors.Wrapf(err, "can't send telegram command notification for bot:%v for:%+v", botName, arg))
+		}, func(_ *telegramNotification) {}); rErr != nil {
+			return errors.Wrapf(rErr, "can't send telegram command notification batch for bot:%v, for:%+v", botName, notifications)
 		}
 	}
 
 	return nil
 }
 
-//nolint:funlen // .
-func (s *Scheduler) handleTelegramUpdates(ctx context.Context, updates []*telegram.Update) (nextOffset int64, err error) {
+//nolint:funlen,gocognit,revive,cyclop // .
+func (r *repository) handleTelegramUpdates(
+	ctx context.Context, updates []*telegram.Update, botToken, botName string,
+) (nextOffset int64, notif []*telegramNotification, err error) {
 	var (
 		maxUpdateID    = int64(0)
 		now            = time.Now()
-		scheduled      = make([]*scheduledNotification, 0, len(updates))
 		uniquenessTime = fmt.Sprintf("%v:%02d:%02d %02d:%02d:%02d", now.Year(), int(now.Month()), now.Day(), now.Hour(), now.Minute(), now.Second())
+		notifications  = make([]*telegramNotification, 0, len(updates))
 	)
-	userInfoMap, err := s.getReplyUserInfo(ctx, updates)
+	userInfoMap, err := r.getTelegramReplyUserInfo(ctx, updates)
 	if err != nil {
-		return 0, errors.Wrapf(err, "can't get user ids by telegram user ids for:%#v", updates)
+		return 0, nil, errors.Wrapf(err, "can't get user ids by telegram user ids for bot:%v for:%#v", botName, updates)
 	}
 	if len(userInfoMap) == 0 {
-		return 0, nil
+		return 0, nil, nil
 	}
 	for _, upd := range updates {
-		if upd.Message.From.IsBot {
-			log.Warn("The message are sent through the bot", upd)
-
-			continue
-		}
 		if upd.UpdateID > maxUpdateID {
 			maxUpdateID = upd.UpdateID
 		}
-		idStr := strconv.FormatInt(upd.Message.From.ID, 10)
-		if _, ok := userInfoMap[idStr]; !ok {
-			log.Warn("no such telegram user id", upd.Message.From.ID)
+		if upd.Message.From.IsBot || !isCommand(upd) || !isAllowedCommand(TelegramCommand(upd.Message.Text)) {
+			log.Warn("The message is sent through the bot or is not a command", upd)
 
 			continue
 		}
-		scheduled = append(scheduled, &scheduledNotification{
-			ScheduledAt:  now,
-			ScheduledFor: time.New(now.Add(1 * stdlibtime.Minute)),
-			Data: &users.JSON{
-				"Username": upd.Message.From.Username,
+		idStr := strconv.FormatInt(upd.Message.From.ID, 10)
+		if userInfoMap[idStr].Username == userInfoMap[idStr].UserID || userInfoMap[idStr].Username == "" {
+			log.Error(errors.Wrapf(errors.New("no username"), "no username for userID:%v, telegram user id:%v", userInfoMap[idStr].UserID, upd.Message.From.ID))
+
+			continue
+		}
+		if _, ok := userInfoMap[idStr]; !ok {
+			log.Error(errors.New("no such telegram user id"), upd.Message.From.ID)
+
+			continue
+		}
+		notificationType := getNotificationTypeByStartCommandArg(upd.Message.Text)
+		tmpl, found := allTelegramNotificationTemplates[notificationType][userInfoMap[idStr].Language]
+		if !found {
+			log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` telegram notifications config", userInfoMap[idStr].Language, notificationType))
+			tmpl, found = allTelegramNotificationTemplates[notificationType][defaultLanguage]
+			if !found {
+				log.Panic(fmt.Sprintf("no default translations provided for notification, lang:%v, notificationType:%v", userInfoMap[idStr].Language, notificationType)) //nolint:lll // .
+			}
+		}
+		notification := &telegramNotification{
+			tn: &telegram.Notification{
+				ChatID: userInfoMap[idStr].TelegramUserID,
+				Text: tmpl.getBody(users.JSON{
+					"TenantName": r.cfg.TenantName,
+					"TokenName":  r.cfg.TokenName,
+					"Username":   userInfoMap[idStr].Username,
+				}),
+				BotToken: botToken,
 			},
-			Language:                 userInfoMap[idStr].Language,
-			UserID:                   userInfoMap[idStr].UserID,
-			Uniqueness:               fmt.Sprintf("%v_%v_%v", ReplyNotificationType, upd.Message.MessageID, uniquenessTime),
-			NotificationType:         string(ReplyNotificationType),
-			NotificationChannel:      string(TelegramNotificationChannel),
-			NotificationChannelValue: strconv.FormatInt(upd.Message.MessageID, 10),
-		})
-	}
-	if iErr := insertScheduledNotifications(ctx, s.db, scheduled); iErr != nil {
-		return 0, errors.Wrapf(iErr, "can't insert scheduled notifications for:%#v", updates)
+			sn: &sentNotification{
+				SentAt:   now,
+				Language: userInfoMap[idStr].Language,
+				sentNotificationPK: sentNotificationPK{
+					UserID:                   userInfoMap[idStr].UserID,
+					Uniqueness:               fmt.Sprintf("command_%v_%v_%v", notificationType, upd.Message.MessageID, uniquenessTime),
+					NotificationType:         notificationType,
+					NotificationChannel:      TelegramNotificationChannel,
+					NotificationChannelValue: strconv.FormatInt(upd.Message.MessageID, 10),
+				},
+			},
+		}
+		switch notificationType { //nolint:exhaustive // We know for sure the commands to here.
+		case StartCommandNotificationType:
+			notification.tn.Buttons = append(notification.tn.Buttons, prepareTelegramButtonsForStartCommandNotificationType(r.cfg, botName, tmpl.ButtonText)...)
+		case SocialsNotificationType:
+			notification.tn.Buttons = append(notification.tn.Buttons, prepareTelegramButtonsForSocialNotificationType(r.cfg, tmpl.ButtonText)...)
+		default:
+			continue
+		}
+		notifications = append(notifications, notification)
 	}
 
-	return maxUpdateID + 1, nil
+	return maxUpdateID + 1, notifications, nil
 }
 
-func (s *Scheduler) getReplyUserInfo(ctx context.Context, updates []*telegram.Update) (res map[telegramUserID]*telegramUserInfo, err error) {
+func getNotificationTypeByStartCommandArg(text string) NotificationType {
+	splitted := strings.Split(text, " ")
+	if len(splitted) > 1 && strings.HasPrefix(text, string(StartTelegramCommand)) {
+		if splitted[1] == string(SocialsNotificationType) {
+			return SocialsNotificationType
+		}
+	}
+
+	return notificationTypeByCommand(TelegramCommand(text))
+}
+
+func prepareTelegramButtonsForStartCommandNotificationType(cfg *config, botName string, buttonTexts []string) []telegram.Button {
+	res := make([]telegram.Button, 0, len(buttonTexts))
+	res = append(res, telegram.Button{
+		Text: buttonTexts[0],
+		URL:  cfg.WebAppLink,
+	}, telegram.Button{
+		Text: buttonTexts[1],
+		URL:  fmt.Sprintf("https://t.me/%v?start=socials", botName),
+	}, telegram.Button{
+		Text: buttonTexts[2],
+		URL:  fmt.Sprintf("%v/%v", cfg.WebSiteURL, "knowledge-base"),
+	})
+
+	return res
+}
+
+func notificationTypeByCommand(command TelegramCommand) NotificationType {
+	switch command {
+	case StartTelegramCommand:
+		return StartCommandNotificationType
+	case SocialsTelegramCommand:
+		return SocialsNotificationType
+	default:
+		log.Panic("wrong command ", command)
+	}
+
+	return ""
+}
+
+func isCommand(upd *telegram.Update) bool {
+	isCommand := false
+	for _, entity := range upd.Message.Entities {
+		if entity.Type == telegram.BotCommandType {
+			isCommand = true
+		}
+	}
+
+	return isCommand
+}
+
+func isAllowedCommand(command TelegramCommand) bool {
+	available := false
+	for _, cmd := range availableBotCommands {
+		if strings.Contains(string(command), string(cmd)) {
+			available = true
+
+			break
+		}
+	}
+
+	return available
+}
+
+func (r *repository) getTelegramReplyUserInfo(ctx context.Context, updates []*telegram.Update) (res map[telegramUserID]*telegramUserInfo, err error) {
 	if len(updates) == 0 {
 		return
 	}
@@ -292,11 +387,12 @@ func (s *Scheduler) getReplyUserInfo(ctx context.Context, updates []*telegram.Up
 	}
 	sql := `SELECT 
 				user_id,
+				username,
 				COALESCE(telegram_user_id, '') AS telegram_user_id,
 				language
 			FROM users 
 			WHERE telegram_user_id = ANY($1)`
-	result, err := storage.Select[telegramUserInfo](ctx, s.db, sql, telegramUserIDs)
+	result, err := storage.Select[telegramUserInfo](ctx, r.db, sql, telegramUserIDs)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to get user ids for telegram user ids:%#v", telegramUserIDs)
 	}
@@ -309,4 +405,23 @@ func (s *Scheduler) getReplyUserInfo(ctx context.Context, updates []*telegram.Up
 	}
 
 	return
+}
+
+func (r *repository) sendTelegramNotification(ctx context.Context, tn *telegramNotification) error {
+	if ctx.Err() != nil {
+		return errors.Wrap(ctx.Err(), "unexpected deadline")
+	}
+	if err := r.insertSentNotification(ctx, tn.sn); err != nil {
+		return errors.Wrapf(err, "failed to insert %#v", tn.sn)
+	}
+	responder := make(chan error, 1)
+	defer close(responder)
+	if err := r.telegramNotificationsClient.Send(ctx, tn.tn); err != nil {
+		return multierror.Append( //nolint:wrapcheck // Not needed.
+			errors.Wrapf(err, "failed to send telegram notification:%#v, desired to be sent:%#v", tn.sn, tn.sn),
+			errors.Wrapf(r.deleteSentNotification(ctx, tn.sn), "failed to delete SENT_NOTIFICATIONS as a rollback for %#v", tn.sn),
+		).ErrorOrNil()
+	}
+
+	return nil
 }

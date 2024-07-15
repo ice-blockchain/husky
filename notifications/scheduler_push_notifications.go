@@ -123,6 +123,8 @@ func (s *Scheduler) runPushNotificationsProcessor(ctx context.Context, workerNum
 		******************************************************************************************************************************************************/
 		if eErr := runConcurrentlyBatch(ctx, s.sendPushNotification, toSendPushNotifications, func(arg *pushNotification, err error) {
 			if errors.Is(err, push.ErrInvalidDeviceToken) {
+				log.Error(errors.Wrapf(err, "invalid token:%v for:%v", arg.pn.Target, arg.sn.UserID))
+
 				s.schedulerPushNotificationsMX.Lock()
 				invalidTokens = append(invalidTokens, &invalidToken{
 					UserID: arg.sn.UserID,
@@ -130,7 +132,7 @@ func (s *Scheduler) runPushNotificationsProcessor(ctx context.Context, workerNum
 				})
 				s.schedulerPushNotificationsMX.Unlock()
 			} else {
-				log.Error(errors.Wrapf(err, "can't send notification for:%v", arg.sn.UserID))
+				log.Error(errors.Wrapf(err, "can't send notification:%+v", arg))
 			}
 		}, func(arg *pushNotification) {
 			s.schedulerPushNotificationsMX.Lock()
@@ -193,7 +195,7 @@ func (s *Scheduler) sendPushNotification(ctx context.Context, pn *pushNotificati
 	defer close(responder)
 	s.pushNotificationsClient.Send(ctx, pn.pn, responder)
 
-	return errors.Wrapf(<-responder, "can't send push notification for pn:%#v", pn)
+	return errors.Wrapf(<-responder, "can't send push notification for pn:%+v", pn)
 }
 
 func (s *Scheduler) clearInvalidPushNotificationTokens(ctx context.Context, pnInvalidTokens []*invalidToken) error {
