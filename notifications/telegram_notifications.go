@@ -205,7 +205,7 @@ func (r *repository) getTelegramLongPollingUpdates(ctx context.Context, botName,
 	for {
 		upd, gErr := r.telegramNotificationsClient.GetUpdates(ctx, &telegram.GetUpdatesArg{
 			BotToken:       botToken,
-			AllowedUpdates: []string{"message"},
+			AllowedUpdates: []string{"message", "callback_query"},
 			Limit:          telegramLongPollingLimit,
 			Offset:         nextOffset,
 		})
@@ -252,56 +252,62 @@ func (r *repository) handleTelegramUpdates(
 		if upd.UpdateID > maxUpdateID {
 			maxUpdateID = upd.UpdateID
 		}
-		if upd.Message.From.IsBot || !isCommand(upd) || !isAllowedCommand(TelegramCommand(upd.Message.Text)) {
-			log.Warn("The message is sent through the bot or is not a command", upd)
+		var (
+			skip                          bool
+			id, username, text, messageID string
+		)
+		if upd.Message != nil {
+			skip, id, username, text, messageID = extractDataFromMessage(upd)
+		} else if upd.CallbackQuery != nil {
+			skip, id, username, text, messageID = extractDataFromCallbackQuery(upd)
+		}
+		if skip {
+			continue
+		}
+		if _, ok := userInfoMap[id]; !ok {
+			log.Error(errors.New("no such telegram user id"), id)
 
 			continue
 		}
-		idStr := strconv.FormatInt(upd.Message.From.ID, 10)
-		if upd.Message.From.Username == "" {
-			log.Error(errors.Wrapf(errors.New("no username"), "no username for userID:%v, telegram user id:%v", userInfoMap[idStr].UserID, upd.Message.From.ID))
+		notificationType := notificationTypeByCommand(TelegramCommand(text))
+		if notificationType == "" {
+			log.Warn("wrong command provided", notificationType)
 
 			continue
 		}
-		if _, ok := userInfoMap[idStr]; !ok {
-			log.Error(errors.New("no such telegram user id"), upd.Message.From.ID)
-
-			continue
-		}
-		notificationType := getNotificationTypeByStartCommandArg(upd.Message.Text)
-		tmpl, found := allTelegramNotificationTemplates[notificationType][userInfoMap[idStr].Language]
+		tmpl, found := allTelegramNotificationTemplates[notificationType][userInfoMap[id].Language]
 		if !found {
-			log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` telegram notifications config", userInfoMap[idStr].Language, notificationType))
+			log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` telegram notifications config", userInfoMap[id].Language, notificationType))
 			tmpl, found = allTelegramNotificationTemplates[notificationType][defaultLanguage]
 			if !found {
-				log.Panic(fmt.Sprintf("no default translations provided for notification, lang:%v, notificationType:%v", userInfoMap[idStr].Language, notificationType)) //nolint:lll // .
+				log.Panic(fmt.Sprintf("no default translations provided for notification, lang:%v, notificationType:%v", userInfoMap[id].Language, notificationType)) //nolint:lll // .
 			}
 		}
 		notification := &telegramNotification{
 			tn: &telegram.Notification{
-				ChatID: userInfoMap[idStr].TelegramUserID,
+				ChatID: userInfoMap[id].TelegramUserID,
 				Text: tmpl.getBody(users.JSON{
 					"TenantName": r.cfg.TenantName,
 					"TokenName":  r.cfg.TokenName,
-					"Username":   upd.Message.From.Username,
+					"Username":   username,
 				}),
 				BotToken: botToken,
 			},
 			sn: &sentNotification{
 				SentAt:   now,
-				Language: userInfoMap[idStr].Language,
+				Language: userInfoMap[id].Language,
 				sentNotificationPK: sentNotificationPK{
-					UserID:                   userInfoMap[idStr].UserID,
-					Uniqueness:               fmt.Sprintf("command_%v_%v_%v", notificationType, upd.Message.MessageID, uniquenessTime),
+					UserID:                   userInfoMap[id].UserID,
+					Uniqueness:               fmt.Sprintf("command_%v_%v_%v", notificationType, messageID, uniquenessTime),
 					NotificationType:         notificationType,
 					NotificationChannel:      TelegramNotificationChannel,
-					NotificationChannelValue: strconv.FormatInt(upd.Message.MessageID, 10),
+					NotificationChannelValue: messageID,
 				},
 			},
 		}
 		switch notificationType { //nolint:exhaustive // We know for sure the commands to here.
 		case StartCommandNotificationType:
-			notification.tn.Buttons = append(notification.tn.Buttons, prepareTelegramButtonsForStartCommandNotificationType(r.cfg, botName, tmpl.ButtonText)...)
+			notification.tn.Buttons = append(notification.tn.Buttons, prepareTelegramButtonsForStartCommandNotificationType(r.cfg, tmpl.ButtonText)...)
 		case SocialsNotificationType:
 			notification.tn.Buttons = append(notification.tn.Buttons, prepareTelegramButtonsForSocialNotificationType(r.cfg, tmpl.ButtonText)...)
 		default:
@@ -313,25 +319,60 @@ func (r *repository) handleTelegramUpdates(
 	return maxUpdateID + 1, notifications, nil
 }
 
-func getNotificationTypeByStartCommandArg(text string) NotificationType {
-	splitted := strings.Split(text, " ")
-	if len(splitted) > 1 && strings.HasPrefix(text, string(StartTelegramCommand)) {
-		if splitted[1] == string(SocialsNotificationType) {
-			return SocialsNotificationType
-		}
+//nolint:gocritic,revive // .
+func extractDataFromMessage(upd *telegram.Update) (skip bool, id, username, text, messageID string) {
+	if upd.Message == nil {
+		return false, "", "", "", ""
 	}
+	if upd.Message.From.IsBot || !isCommand(upd) || !isAllowedCommand(TelegramCommand(upd.Message.Text)) {
+		log.Warn("The message is sent through the bot or is not a command", upd)
 
-	return notificationTypeByCommand(TelegramCommand(text))
+		return false, "", "", "", ""
+	}
+	id = strconv.FormatInt(upd.Message.From.ID, 10)
+	if upd.Message.From.Username == "" {
+		log.Error(errors.Wrapf(errors.New("no username"), "no username for telegram user id:%v", upd.Message.From.ID))
+
+		return true, "", "", "", ""
+	}
+	username = upd.Message.From.Username
+	text = upd.Message.Text
+	messageID = strconv.FormatInt(upd.Message.MessageID, 10)
+
+	return skip, id, username, text, messageID
 }
 
-func prepareTelegramButtonsForStartCommandNotificationType(cfg *config, botName string, buttonTexts []string) []telegram.Button {
+//nolint:gocritic,revive // .
+func extractDataFromCallbackQuery(upd *telegram.Update) (skip bool, id, username, text, messageID string) {
+	if upd.CallbackQuery == nil {
+		return false, "", "", "", ""
+	}
+	if upd.CallbackQuery.From.IsBot || !isAllowedCommand(TelegramCommand(upd.CallbackQuery.Data)) {
+		log.Warn("the message is sent through the bot or is not a command", upd)
+
+		return true, "", "", "", ""
+	}
+	id = strconv.FormatInt(upd.CallbackQuery.From.ID, 10)
+	if upd.CallbackQuery.From.Username == "" {
+		log.Error(errors.Wrapf(errors.New("no username"), "no username for telegram user id:%v", upd.CallbackQuery.From.ID))
+
+		return true, "", "", "", ""
+	}
+	username = upd.CallbackQuery.From.Username
+	text = upd.CallbackQuery.Data
+	messageID = upd.CallbackQuery.ID
+
+	return skip, id, username, text, messageID
+}
+
+func prepareTelegramButtonsForStartCommandNotificationType(cfg *config, buttonTexts []string) []telegram.Button {
 	res := make([]telegram.Button, 0, len(buttonTexts))
 	res = append(res, telegram.Button{
 		Text: buttonTexts[0],
 		URL:  cfg.WebAppLink,
 	}, telegram.Button{
-		Text: buttonTexts[1],
-		URL:  fmt.Sprintf("https://t.me/%v?start=socials", botName),
+		Text:         buttonTexts[1],
+		CallbackData: string(SocialsTelegramCommand),
 	}, telegram.Button{
 		Text: buttonTexts[2],
 		URL:  fmt.Sprintf("%v/%v", cfg.WebSiteURL, "knowledge-base"),
@@ -347,10 +388,8 @@ func notificationTypeByCommand(command TelegramCommand) NotificationType {
 	case SocialsTelegramCommand:
 		return SocialsNotificationType
 	default:
-		log.Panic("wrong command ", command)
+		return ""
 	}
-
-	return ""
 }
 
 func isCommand(upd *telegram.Update) bool {
@@ -379,11 +418,15 @@ func isAllowedCommand(command TelegramCommand) bool {
 
 func (r *repository) getTelegramReplyUserInfo(ctx context.Context, updates []*telegram.Update) (res map[telegramUserID]*telegramUserInfo, err error) {
 	if len(updates) == 0 {
-		return
+		return nil, err
 	}
 	telegramUserIDs := make([]telegramUserID, 0, len(updates))
 	for _, upd := range updates {
-		telegramUserIDs = append(telegramUserIDs, strconv.FormatInt(upd.Message.From.ID, 10))
+		if upd.Message != nil {
+			telegramUserIDs = append(telegramUserIDs, strconv.FormatInt(upd.Message.From.ID, 10))
+		} else if upd.CallbackQuery != nil {
+			telegramUserIDs = append(telegramUserIDs, strconv.FormatInt(upd.CallbackQuery.From.ID, 10))
+		}
 	}
 	sql := `SELECT 
 				user_id,
@@ -396,14 +439,14 @@ func (r *repository) getTelegramReplyUserInfo(ctx context.Context, updates []*te
 		return nil, errors.Wrapf(err, "failed to get user ids for telegram user ids:%#v", telegramUserIDs)
 	}
 	if result == nil {
-		return
+		return nil, err
 	}
 	res = make(map[telegramUserID]*telegramUserInfo, len(result))
 	for _, val := range result {
 		res[val.TelegramUserID] = val
 	}
 
-	return
+	return res, nil
 }
 
 func (r *repository) sendTelegramNotification(ctx context.Context, tn *telegramNotification) error {
