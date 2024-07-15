@@ -231,7 +231,7 @@ func (r *repository) getTelegramLongPollingUpdates(ctx context.Context, botName,
 	return nil
 }
 
-//nolint:funlen,gocognit,revive,cyclop // .
+//nolint:funlen,gocognit,revive // .
 func (r *repository) handleTelegramUpdates(
 	ctx context.Context, updates []*telegram.Update, botToken, botName string,
 ) (nextOffset int64, notif []*telegramNotification, err error) {
@@ -258,7 +258,7 @@ func (r *repository) handleTelegramUpdates(
 			continue
 		}
 		idStr := strconv.FormatInt(upd.Message.From.ID, 10)
-		if userInfoMap[idStr].Username == userInfoMap[idStr].UserID || userInfoMap[idStr].Username == "" {
+		if upd.Message.From.Username == "" {
 			log.Error(errors.Wrapf(errors.New("no username"), "no username for userID:%v, telegram user id:%v", userInfoMap[idStr].UserID, upd.Message.From.ID))
 
 			continue
@@ -283,7 +283,7 @@ func (r *repository) handleTelegramUpdates(
 				Text: tmpl.getBody(users.JSON{
 					"TenantName": r.cfg.TenantName,
 					"TokenName":  r.cfg.TokenName,
-					"Username":   userInfoMap[idStr].Username,
+					"Username":   upd.Message.From.Username,
 				}),
 				BotToken: botToken,
 			},
@@ -387,7 +387,6 @@ func (r *repository) getTelegramReplyUserInfo(ctx context.Context, updates []*te
 	}
 	sql := `SELECT 
 				user_id,
-				username,
 				COALESCE(telegram_user_id, '') AS telegram_user_id,
 				language
 			FROM users 
