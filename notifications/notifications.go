@@ -85,6 +85,7 @@ func StartProcessor(ctx context.Context, cancel context.CancelFunc) Processor { 
 	prc.shutdown = closeAll(mbConsumer, prc.mb, prc.db, prc.pushNotificationsClient.Close, prc.freezerDB.Close)
 	go prc.startOldSentNotificationsCleaner(ctx)
 	go prc.startOldSentAnnouncementsCleaner(ctx)
+	go prc.startGetUpdatesTelegramLongPolling(ctx)
 
 	return prc
 }

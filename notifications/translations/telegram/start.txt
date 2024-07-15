@@ -1,0 +1,10 @@
+{
+    "en": {
+        "body": "<b>Hi, @{{.Username}}! Welcome to {{.TenantName}}</b>\n\n\n<b>{{.TenantName}} Token ({{.TokenName}})</b> is set to transform the festival experience through blockchain technology.\nOur app ensures a seamless experience without using any of your phone's resources, allowing you to participate in the {{.TenantName}} ecosystem and earn {{.TokenName}} Tokens for free using your phone.\n\nJoin the {{.TenantName}} community and earn {{.TokenName}} Tokens effortlessly with our blockchain-powered app. Start earning today!",
+        "buttonText": [
+                       "⭐️ Launch App",
+                       "🙌 Join our community",
+                       "💡 Help"
+                       ]
+    }
+}
