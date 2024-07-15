@@ -327,7 +327,7 @@ func extractDataFromMessage(upd *telegram.Update) (skip bool, id, username, text
 	if upd.Message.From.IsBot || !isCommand(upd) || !isAllowedCommand(TelegramCommand(upd.Message.Text)) {
 		log.Warn("The message is sent through the bot or is not a command", upd)
 
-		return false, "", "", "", ""
+		return true, "", "", "", ""
 	}
 	id = strconv.FormatInt(upd.Message.From.ID, 10)
 	if upd.Message.From.Username == "" {
