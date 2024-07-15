@@ -372,7 +372,6 @@ type (
 	}
 	telegramUserInfo struct {
 		UserID         string `json:"userId,omitempty"`
-		Username       string `json:"username,omitempty"`
 		TelegramUserID string `json:"telegramUserId,omitempty"`
 		Language       string `json:"language,omitempty"`
 	}
