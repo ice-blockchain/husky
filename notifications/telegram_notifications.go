@@ -201,7 +201,6 @@ func (r *repository) startGetUpdatesTelegramLongPolling(ctx context.Context) {
 }
 
 func (r *repository) getTelegramLongPollingUpdates(ctx context.Context, botName, botToken string) error {
-	notifications := make([]*telegramNotification, 0, telegramLongPollingLimit)
 	nextOffset := int64(0)
 	for {
 		upd, gErr := r.telegramNotificationsClient.GetUpdates(ctx, &telegram.GetUpdatesArg{
@@ -216,17 +215,20 @@ func (r *repository) getTelegramLongPollingUpdates(ctx context.Context, botName,
 		if len(upd) == 0 {
 			break
 		}
-		offset, notif, err := r.handleTelegramUpdates(ctx, upd, botToken, botName)
+		offset, notifications, err := r.handleTelegramUpdates(ctx, upd, botToken, botName)
 		if err != nil {
 			return errors.Wrapf(err, "can't handle telegram updates for bot:%v for:%v", botName, upd)
 		}
-		notifications = append(notifications, notif...)
 		nextOffset = offset
+
+		if rErr := runConcurrentlyBatch(ctx, r.sendTelegramNotification, notifications, func(arg *telegramNotification, err error) {
+			log.Error(errors.Wrapf(err, "can't send telegram command notification for bot:%v for:%+v", botName, arg))
+		}, func(_ *telegramNotification) {}); rErr != nil {
+			return errors.Wrapf(rErr, "can't send telegram command notification batch for bot:%v, for:%+v", botName, notifications)
+		}
 	}
 
-	return errors.Wrapf(runConcurrentlyBatch(ctx, r.sendTelegramNotification, notifications, func(arg *telegramNotification, err error) {
-		log.Error(errors.Wrapf(err, "can't send telegram command notification for bot:%v for:%+v", botName, arg))
-	}, func(_ *telegramNotification) {}), "can't send telegram command notification batch for bot:%v, for:%+v", botName, notifications)
+	return nil
 }
 
 //nolint:funlen,gocognit,revive,cyclop // .
