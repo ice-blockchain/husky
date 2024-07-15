@@ -125,10 +125,7 @@ func (s *Scheduler) runTelegramNotificationsProcessor(ctx context.Context, worke
 				buttonText := tmpl.getButtonText(notification.Data, 0)
 				buttonLink := getTelegramDeeplink(NotificationType(notification.NotificationType), s.cfg, notification.Username, tmpl.getInviteText(notification.Data))
 				if buttonText != "" && buttonLink != "" {
-					tn.tn.Buttons = append(tn.tn.Buttons, struct {
-						Text string `json:"text,omitempty"`
-						URL  string `json:"url,omitempty"`
-					}{
+					tn.tn.Buttons = append(tn.tn.Buttons, telegram.Button{
 						Text: buttonText,
 						URL:  buttonLink,
 					})
