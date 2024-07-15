@@ -288,8 +288,6 @@ github.com/ice-blockchain/freezer v1.489.0 h1:JvSeQb4ipxJXmTQsyZj3K46WDGgnSQIgcS
 github.com/ice-blockchain/freezer v1.489.0/go.mod h1:DR5VMXlnDGYVnzmocSMTViMbYhHny4ee0iNVrYv1QKM=
 github.com/ice-blockchain/go-tarantool-client v0.0.0-20230327200757-4fc71fa3f7bb h1:8TnFP3mc7O+tc44kv2e0/TpZKnEVUaKH+UstwfBwRkk=
 github.com/ice-blockchain/go-tarantool-client v0.0.0-20230327200757-4fc71fa3f7bb/go.mod h1:ZsQU7i3mxhgBBu43Oev7WPFbIjP4TniN/b1UPNGbrq8=
-github.com/ice-blockchain/wintr v1.145.0 h1:ObAgnS2Mqc2tbSM1pRpmi4dGUtkD/T+lacpaq+Ri8Mw=
-github.com/ice-blockchain/wintr v1.145.0/go.mod h1:CgbY1UEyIx//+tM57Hz72Jd28UOs5tpOlJOByyQhi2c=
 github.com/ice-blockchain/wintr v1.146.0 h1:bYkbImnMYNYVcDftwBmAV0NbcHJIcP+J7a86HeJnTA8=
 github.com/ice-blockchain/wintr v1.146.0/go.mod h1:CgbY1UEyIx//+tM57Hz72Jd28UOs5tpOlJOByyQhi2c=
 github.com/imroc/req/v3 v3.43.7 h1:dOcNb9n0X83N5/5/AOkiU+cLhzx8QFXjv5MhikazzQA=
