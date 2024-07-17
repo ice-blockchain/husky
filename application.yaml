@@ -90,7 +90,6 @@ notifications: &notifications
   wintr/multimedia/picture:
     urlDownload: https://ice-staging.b-cdn.net
   socials:
-    socials:
     - notificationType: join_our_telegram
       link: 'https://t.me/sunwavestoken'
     - notificationType: follow_us_on_x
