@@ -7,7 +7,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/ice-blockchain/eskimo v1.371.0
-	github.com/ice-blockchain/freezer v1.493.0
+	github.com/ice-blockchain/freezer v1.494.0
 	github.com/ice-blockchain/go-tarantool-client v0.0.0-20230327200757-4fc71fa3f7bb
 	github.com/ice-blockchain/wintr v1.146.0
 	github.com/imroc/req/v3 v3.43.7
@@ -49,7 +49,6 @@ require (
 	github.com/cloudflare/circl v1.3.9 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
-	github.com/cockroachdb/fifo v0.0.0-20240616162244-4768e80dfb9a // indirect
 	github.com/consensys/bavard v0.1.13 // indirect
 	github.com/consensys/gnark-crypto v0.12.1 // indirect
 	github.com/containerd/cgroups/v3 v3.0.3 // indirect
