@@ -200,6 +200,7 @@ require (
 )
 
 replace (
+	github.com/btcsuite/btcd/btcec/v2 => github.com/btcsuite/btcd/btcec/v2 v2.3.4-0.20240701131322-c9fae1ac7cca
 	github.com/containerd/containerd => github.com/containerd/containerd v1.6.19
 	github.com/distribution/reference => github.com/distribution/reference v0.5.0
 	github.com/docker/docker => github.com/docker/docker v20.10.3+incompatible
