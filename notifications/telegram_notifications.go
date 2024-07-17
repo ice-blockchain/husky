@@ -18,6 +18,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ice-blockchain/eskimo/users"
+	"github.com/ice-blockchain/freezer/tokenomics"
 	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/notifications/telegram"
@@ -35,7 +36,7 @@ type (
 	}
 )
 
-func (t *telegramNotificationTemplate) getButtonText(data any, ix int) string { //nolint:unparam // .
+func (t *telegramNotificationTemplate) getButtonText(data any, ix int) string {
 	if ix > len(t.buttonText)-1 {
 		return ""
 	}
@@ -111,7 +112,7 @@ func loadTelegramNotificationTranslationTemplates() { //nolint:funlen,revive,goc
 				tmpl.inviteText = template.Must(template.New(fmt.Sprintf("telegram_%v_%v_invite_text", notificationType, language)).Parse(data.InviteText))
 			}
 			if tmpl.AltBody != "" {
-				tmpl.altBody = template.Must(template.New(fmt.Sprintf("push_%v_%v_alt_body", notificationType, language)).Parse(data.AltBody))
+				tmpl.altBody = template.Must(template.New(fmt.Sprintf("telegram_%v_%v_alt_body", notificationType, language)).Parse(data.AltBody))
 			}
 			tmpl.ButtonText = data.ButtonText
 			for ix := range data.ButtonText {
@@ -145,20 +146,25 @@ func getTelegramDeeplink(nt NotificationType, cfg *config, username, inviteText 
 	return ""
 }
 
-func prepareTelegramButtonsForSocialNotificationType(cfg *config, buttonTexts []string) []telegram.Button {
+func prepareTelegramButtonsForSocialNotificationType(cfg *config, tmpl *telegramNotificationTemplate) []telegram.Button {
 	urls := getSocialsMapURL(cfg)
-	if len(urls) != len(buttonTexts) {
+	if len(urls) != len(tmpl.ButtonText)-1 {
 		log.Error(errors.New("socials cfg/translation misconfiguration"))
 
 		return nil
 	}
-	res := make([]telegram.Button, 0, len(buttonTexts))
-	for ix, text := range buttonTexts {
+	data := struct{ TenantName string }{TenantName: strings.ToUpper(cfg.TenantName)}
+	res := make([]telegram.Button, 0, len(tmpl.ButtonText))
+	for ix := range len(tmpl.buttonText) - 1 {
 		res = append(res, telegram.Button{
-			Text: text,
+			Text: tmpl.getButtonText(data, ix),
 			URL:  urls[ix],
 		})
 	}
+	res = append(res, telegram.Button{
+		Text: tmpl.getButtonText(data, len(tmpl.buttonText)-1),
+		URL:  cfg.WebAppLink,
+	})
 
 	return res
 }
@@ -287,9 +293,10 @@ func (r *repository) handleTelegramUpdates(
 			tn: &telegram.Notification{
 				ChatID: userInfoMap[id].TelegramUserID,
 				Text: tmpl.getBody(users.JSON{
-					"TenantName": r.cfg.TenantName,
-					"TokenName":  r.cfg.TokenName,
-					"Username":   username,
+					"TenantName":   strings.ToUpper(r.cfg.TenantName),
+					"TokenName":    strings.ToUpper(r.cfg.TokenName),
+					"Username":     username,
+					"WelcomeBonus": tokenomics.WelcomeBonusV2Amount,
 				}),
 				BotToken: botToken,
 			},
@@ -309,7 +316,7 @@ func (r *repository) handleTelegramUpdates(
 		case StartCommandNotificationType:
 			notification.tn.Buttons = append(notification.tn.Buttons, prepareTelegramButtonsForStartCommandNotificationType(r.cfg, tmpl.ButtonText)...)
 		case SocialsNotificationType:
-			notification.tn.Buttons = append(notification.tn.Buttons, prepareTelegramButtonsForSocialNotificationType(r.cfg, tmpl.ButtonText)...)
+			notification.tn.Buttons = append(notification.tn.Buttons, prepareTelegramButtonsForSocialNotificationType(r.cfg, tmpl)...)
 		default:
 			continue
 		}
@@ -366,15 +373,21 @@ func extractDataFromCallbackQuery(upd *telegram.Update) (skip bool, id, username
 }
 
 func prepareTelegramButtonsForStartCommandNotificationType(cfg *config, buttonTexts []string) []telegram.Button {
+	if len(cfg.Socials) == 0 {
+		return nil
+	}
 	res := make([]telegram.Button, 0, len(buttonTexts))
 	res = append(res, telegram.Button{
 		Text: buttonTexts[0],
 		URL:  cfg.WebAppLink,
 	}, telegram.Button{
-		Text:         buttonTexts[1],
-		CallbackData: string(SocialsTelegramCommand),
+		Text: buttonTexts[1],
+		URL:  cfg.Socials[0].Link,
 	}, telegram.Button{
 		Text: buttonTexts[2],
+		URL:  cfg.Socials[1].Link,
+	}, telegram.Button{
+		Text: buttonTexts[3],
 		URL:  fmt.Sprintf("%v/%v", cfg.WebSiteURL, "knowledge-base"),
 	})
 

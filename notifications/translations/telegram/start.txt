@@ -1,10 +1,11 @@
 {
     "en": {
-        "body": "<b>Hi, @{{.Username}}! Welcome to {{.TenantName}}</b>\n\n\n<b>{{.TenantName}} Token ({{.TokenName}})</b> is set to transform the festival experience through blockchain technology.\nOur app ensures a seamless experience without using any of your phone's resources, allowing you to participate in the {{.TenantName}} ecosystem and earn {{.TokenName}} Tokens for free using your phone.\n\nJoin the {{.TenantName}} community and earn {{.TokenName}} Tokens effortlessly with our blockchain-powered app. Start earning today!",
+        "body": "<b>Hi @{{.Username}}!</b>\n\n⏰ Tap on the <b>{{.TenantName}}</b> button every 24 hours to see your coin balance increase.\n\n👬 Build your team, complete tasks and increase your coins earnings! For each friend you invite, you both receive <b>{{.WelcomeBonus}} {{.TokenName}} tokens</b>.\n\n🌟 The <b>{{.TenantName}} Token</b> is a utility token designed to enhance the festival experience by providing exclusive benefits, fostering community engagement, and facilitating seamless transactions within the Sunwaves ecosystem.",
         "buttonText": [
-                       "⭐️ Launch App",
-                       "🙌 Join our community",
-                       "💡 Help"
+                       "🌟 Start Now!",
+                       "👾 Join TG Community",
+                       "🤖 Join X Community",
+                       "📋 Knowledge Base"
                        ]
     }
 }
