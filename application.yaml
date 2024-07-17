@@ -90,16 +90,14 @@ notifications: &notifications
   wintr/multimedia/picture:
     urlDownload: https://ice-staging.b-cdn.net
   socials:
-    - notificationType: follow_us_on_x
-      link: https://x.com/sunwaves_token
     - notificationType: join_our_telegram
       link: 'https://t.me/sunwavestoken'
-    - notificationType: follow_ion_on_x
-      link: https://x.com/ice_blockchain
+    - notificationType: follow_us_on_x
+      link: https://x.com/sunwaves_token
     - notificationType: join_ion_on_telegram
       link: 'https://t.me/iceblockchain'
-    - notificationType: follow_zeus_on_x
-      link: https://x.com/ice_z3us
+    - notificationType: follow_ion_on_x
+      link: https://x.com/ice_blockchain
   weeklyStats:
     weekday: 1
     hour: 10

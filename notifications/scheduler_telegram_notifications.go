@@ -111,7 +111,7 @@ func (s *Scheduler) runTelegramNotificationsProcessor(ctx context.Context, worke
 			}
 			switch notification.NotificationType {
 			case string(SocialsNotificationType):
-				tn.tn.Buttons = append(tn.tn.Buttons, prepareTelegramButtonsForSocialNotificationType(s.cfg, tmpl.ButtonText)...)
+				tn.tn.Buttons = append(tn.tn.Buttons, prepareTelegramButtonsForSocialNotificationType(s.cfg, tmpl)...)
 			case string(ReplyNotificationType):
 				replyMessageID, pErr := strconv.ParseInt(notification.NotificationChannelValue, 10, 64)
 				if pErr != nil {

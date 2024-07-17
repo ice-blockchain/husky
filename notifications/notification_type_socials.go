@@ -5,6 +5,7 @@ package notifications
 import (
 	"context"
 	"fmt"
+	"strings"
 	stdlibtime "time"
 
 	"github.com/pkg/errors"
@@ -54,7 +55,7 @@ func (r *repository) addScheduledSocialsNotifications(ctx context.Context, us *u
 		NotificationChannel:      string(TelegramNotificationChannel),
 		NotificationChannelValue: us.ID,
 		Data: &users.JSON{
-			"TenantName": r.cfg.TenantName,
+			"TenantName": strings.ToUpper(r.cfg.TenantName),
 		},
 	})
 
