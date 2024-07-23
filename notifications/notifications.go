@@ -163,6 +163,9 @@ func (p *processor) startOldSentNotificationsCleaner(ctx context.Context) {
 			reqCtx, cancel := context.WithTimeout(ctx, deadline)
 			log.Error(errors.Wrap(p.deleteOldSentNotifications(reqCtx), "failed to deleteOldSentNotifications"))
 			cancel()
+			reqCtx, cancel = context.WithTimeout(ctx, deadline)
+			log.Error(errors.Wrap(p.deleteOldSentTelegramNotifications(reqCtx), "failed to deleteOldSentTelegramNotifications"))
+			cancel()
 		case <-ctx.Done():
 			return
 		}
@@ -191,6 +194,18 @@ func (p *processor) deleteOldSentNotifications(ctx context.Context) error {
 		return errors.Wrap(ctx.Err(), "unexpected deadline")
 	}
 	sql := `DELETE FROM sent_notifications WHERE sent_at < $1`
+	if _, err := storage.Exec(ctx, p.db, sql, stdlibtime.Now().Add(-24*stdlibtime.Hour)); err != nil {
+		return errors.Wrap(err, "failed to delete old data from sent_notifications")
+	}
+
+	return nil
+}
+
+func (p *processor) deleteOldSentTelegramNotifications(ctx context.Context) error {
+	if ctx.Err() != nil {
+		return errors.Wrap(ctx.Err(), "unexpected deadline")
+	}
+	sql := `DELETE FROM sent_telegram_notifications WHERE sent_at < $1`
 	if _, err := storage.Exec(ctx, p.db, sql, stdlibtime.Now().Add(-24*stdlibtime.Hour)); err != nil {
 		return errors.Wrap(err, "failed to delete old data from sent_notifications")
 	}
@@ -307,6 +322,50 @@ func (r *repository) deleteSentNotification(ctx context.Context, sn *sentNotific
 	)
 
 	return errors.Wrapf(err, "failed to insert sent notification %#v", sn)
+}
+
+func (r *repository) insertSentTelegramNotification(ctx context.Context, sn *sentNotification) error {
+	sql := `INSERT INTO sent_telegram_notifications (
+                                SENT_AT,
+                                LANGUAGE,
+                                TELEGRAM_USER_ID,
+                                UNIQUENESS,
+                                NOTIFICATION_TYPE,
+                                NOTIFICATION_CHANNEL,
+                                NOTIFICATION_CHANNEL_VALUE
+        	) VALUES ($1,$2,$3,$4,$5,$6,$7);`
+
+	_, err := storage.Exec(ctx, r.db, sql,
+		sn.SentAt.Time,
+		sn.Language,
+		sn.UserID,
+		sn.Uniqueness,
+		sn.NotificationType,
+		sn.NotificationChannel,
+		sn.NotificationChannelValue,
+	)
+
+	return errors.Wrapf(err, "failed to insert sent telegram notification %#v", sn)
+}
+
+func (r *repository) deleteSentTelegramNotification(ctx context.Context, sn *sentNotification) error {
+	sql := `DELETE FROM sent_telegram_notifications 
+			WHERE 
+			    user_id = $1 AND
+			    uniqueness = $2 AND
+			    notification_type = $3 AND
+			    notification_channel = $4 AND
+			    notification_channel_value = $5;`
+
+	_, err := storage.Exec(ctx, r.db, sql,
+		sn.UserID,
+		sn.Uniqueness,
+		sn.NotificationType,
+		sn.NotificationChannel,
+		sn.NotificationChannelValue,
+	)
+
+	return errors.Wrapf(err, "failed to insert sent telegram notification %#v", sn)
 }
 
 func (r *repository) insertSentAnnouncement(ctx context.Context, sa *sentAnnouncement) error {

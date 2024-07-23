@@ -35,6 +35,18 @@ CREATE TABLE IF NOT EXISTS sent_notifications  (
                     primary key(user_id,uniqueness,notification_type,notification_channel,notification_channel_value));
 CREATE INDEX IF NOT EXISTS sent_notifications_sent_at_ix ON sent_notifications (sent_at);
 --************************************************************************************************************************************
+-- sent_telegram_notifications
+CREATE TABLE IF NOT EXISTS sent_telegram_notifications  (
+                    sent_at                     TIMESTAMP NOT NULL,
+                    language                    TEXT NOT NULL,
+                    telegram_user_id            TEXT NOT NULL,
+                    uniqueness                  TEXT NOT NULL,
+                    notification_type           TEXT NOT NULL,
+                    notification_channel        TEXT NOT NULL,
+                    notification_channel_value  TEXT NOT NULL,
+                    primary key(telegram_user_id,uniqueness,notification_type,notification_channel,notification_channel_value));
+CREATE INDEX IF NOT EXISTS sent_telegram_notifications_sent_at_ix ON sent_telegram_notifications (sent_at);
+--************************************************************************************************************************************
 -- scheduled_notifications
 CREATE TABLE IF NOT EXISTS scheduled_notifications  (
                     i                           BIGINT generated always as identity NOT NULL,
