@@ -257,7 +257,6 @@ type (
 	languageCode     = string
 	telegramBotID    = string
 	telegramBotToken = string
-	telegramUserID   = string
 	user             struct {
 		LastPingCooldownEndedAt          *time.Time                      `json:"lastPingCooldownEndedAt,omitempty"`
 		DisabledPushNotificationDomains  *users.Enum[NotificationDomain] `json:"disabledPushNotificationDomains,omitempty"`
@@ -369,11 +368,6 @@ type (
 		tn        *telegram.Notification
 		sn        *sentNotification
 		scheduled scheduledNotification
-	}
-	telegramUserInfo struct {
-		UserID         string `json:"userId,omitempty"`
-		TelegramUserID string `json:"telegramUserId,omitempty"`
-		Language       string `json:"language,omitempty"`
 	}
 	config struct {
 		TenantName string `yaml:"tenantName"`
