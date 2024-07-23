@@ -162,6 +162,8 @@ func (p *processor) startOldSentNotificationsCleaner(ctx context.Context) {
 			const deadline = 30 * stdlibtime.Second
 			reqCtx, cancel := context.WithTimeout(ctx, deadline)
 			log.Error(errors.Wrap(p.deleteOldSentNotifications(reqCtx), "failed to deleteOldSentNotifications"))
+			cancel()
+			reqCtx, cancel = context.WithTimeout(ctx, deadline)
 			log.Error(errors.Wrap(p.deleteOldSentTelegramNotifications(reqCtx), "failed to deleteOldSentTelegramNotifications"))
 			cancel()
 		case <-ctx.Done():
