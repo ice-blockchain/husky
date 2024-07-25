@@ -226,7 +226,7 @@ func (r *repository) getTelegramLongPollingUpdates(ctx context.Context, botName,
 		if rErr := runConcurrentlyBatch(ctx, r.sendTelegramCommandNotification, notifications, func(arg *telegramNotification, err error) {
 			log.Error(errors.Wrapf(err, "can't send telegram command notification for bot:%v for:%+v", botName, arg))
 		}, func(_ *telegramNotification) {}); rErr != nil {
-			return errors.Wrapf(rErr, "can't send telegram command notification batch for bot:%v, for:%+v", botName, notifications)
+			log.Error(errors.Wrapf(rErr, "can't send telegram command notification batch for bot:%v for:%+v", botName, notifications))
 		}
 	}
 
@@ -241,6 +241,8 @@ func (r *repository) handleTelegramUpdates(
 		now           = time.Now()
 		maxUpdateID   = int64(0)
 		notifications = make([]*telegramNotification, 0, len(updates))
+		body          string
+		uniqueness    = stdlibtime.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, stdlibtime.UTC)
 	)
 	for _, upd := range updates {
 		if upd.UpdateID > maxUpdateID {
@@ -251,11 +253,6 @@ func (r *repository) handleTelegramUpdates(
 		}
 		if upd.Message.From.IsBot || !isBotCommand(upd) || !isAllowedCommand(TelegramCommand(upd.Message.Text)) {
 			log.Warn("The message is sent through the bot or is not a command", upd)
-
-			continue
-		}
-		if upd.Message.From.Username == "" {
-			log.Error(errors.Wrapf(errors.New("no username"), "no username for telegram user id:%v", upd.Message.From.ID))
 
 			continue
 		}
@@ -273,17 +270,26 @@ func (r *repository) handleTelegramUpdates(
 				log.Panic(fmt.Sprintf("no default translations provided for notification, lang:%v, notificationType:%v", defaultLanguage, notificationType)) //nolint:lll // .
 			}
 		}
+		if upd.Message.From.Username != "" {
+			body = tmpl.getBody(users.JSON{
+				"TenantName":   strings.ToUpper(r.cfg.TenantName),
+				"TokenName":    strings.ToUpper(r.cfg.TokenName),
+				"Username":     upd.Message.From.Username,
+				"WelcomeBonus": tokenomics.WelcomeBonusV2Amount,
+			})
+		} else {
+			body = tmpl.getAltBody(users.JSON{
+				"TenantName":   strings.ToUpper(r.cfg.TenantName),
+				"TokenName":    strings.ToUpper(r.cfg.TokenName),
+				"WelcomeBonus": tokenomics.WelcomeBonusV2Amount,
+			})
+		}
 		id := strconv.FormatInt(upd.Message.From.ID, 10)
 		messageID := strconv.FormatInt(upd.Message.MessageID, 10)
 		notification := &telegramNotification{
 			tn: &telegram.Notification{
-				ChatID: id,
-				Text: tmpl.getBody(users.JSON{
-					"TenantName":   strings.ToUpper(r.cfg.TenantName),
-					"TokenName":    strings.ToUpper(r.cfg.TokenName),
-					"Username":     upd.Message.From.Username,
-					"WelcomeBonus": tokenomics.WelcomeBonusV2Amount,
-				}),
+				ChatID:   id,
+				Text:     body,
 				BotToken: botToken,
 			},
 			sn: &sentNotification{
@@ -291,7 +297,7 @@ func (r *repository) handleTelegramUpdates(
 				Language: upd.Message.From.LanguageCode,
 				sentNotificationPK: sentNotificationPK{
 					UserID:                   id,
-					Uniqueness:               fmt.Sprintf("command_user%v_%v_%v", id, notificationType, messageID),
+					Uniqueness:               fmt.Sprintf("command_user%v_%v_%v_%v", id, notificationType, messageID, uniqueness),
 					NotificationType:         notificationType,
 					NotificationChannel:      TelegramNotificationChannel,
 					NotificationChannelValue: messageID,
