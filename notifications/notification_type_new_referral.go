@@ -31,7 +31,6 @@ func (r *repository) sendNewReferralNotification(ctx context.Context, us *users.
 	if us.User == nil || us.User.ReferredBy == "" || us.User.ReferredBy == us.User.ID ||
 		(referredByNotChanged && !usernameJustChanged) || (!referredByNotChanged && usernameEmpty) ||
 		us.User.ReferredBy == r.cfg.DefaultReferralName || us.User.ReferredBy == "bogus" || us.User.ReferredBy == "icenetwork" {
-
 		return nil
 	}
 
