@@ -270,17 +270,17 @@ func (r *repository) handleTelegramUpdates(
 				log.Panic(fmt.Sprintf("no default translations provided for notification, lang:%v, notificationType:%v", defaultLanguage, notificationType)) //nolint:lll // .
 			}
 		}
-		if upd.Message.From.Username != "" {
+		if upd.Message.From.Username == "" && upd.Message.Text == string(StartTelegramCommand) {
+			body = tmpl.getAltBody(users.JSON{
+				"TenantName":   strings.ToUpper(r.cfg.TenantName),
+				"TokenName":    strings.ToUpper(r.cfg.TokenName),
+				"WelcomeBonus": tokenomics.WelcomeBonusV2Amount,
+			})
+		} else {
 			body = tmpl.getBody(users.JSON{
 				"TenantName":   strings.ToUpper(r.cfg.TenantName),
 				"TokenName":    strings.ToUpper(r.cfg.TokenName),
 				"Username":     upd.Message.From.Username,
-				"WelcomeBonus": tokenomics.WelcomeBonusV2Amount,
-			})
-		} else {
-			body = tmpl.getAltBody(users.JSON{
-				"TenantName":   strings.ToUpper(r.cfg.TenantName),
-				"TokenName":    strings.ToUpper(r.cfg.TokenName),
 				"WelcomeBonus": tokenomics.WelcomeBonusV2Amount,
 			})
 		}
