@@ -351,7 +351,7 @@ func (r *repository) insertSentTelegramNotification(ctx context.Context, sn *sen
 func (r *repository) deleteSentTelegramNotification(ctx context.Context, sn *sentNotification) error {
 	sql := `DELETE FROM sent_telegram_notifications 
 			WHERE 
-			    user_id = $1 AND
+			    telegram_user_id = $1 AND
 			    uniqueness = $2 AND
 			    notification_type = $3 AND
 			    notification_channel = $4 AND
