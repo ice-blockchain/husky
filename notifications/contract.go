@@ -392,6 +392,7 @@ type (
 		WebAppLink              string                   `yaml:"webAppLink"`
 		WebSiteURL              string                   `yaml:"webSiteUrl"`
 		InviteURL               string                   `yaml:"inviteUrl"`
+		DefaultReferralName     string                   `yaml:"defaultReferralName"`
 		messagebroker.Config    `mapstructure:",squash"` //nolint:tagliatelle // Nope.
 		notificationDelayConfig `mapstructure:",squash"`
 		PingCooldown            stdlibtime.Duration `yaml:"pingCooldown"`
