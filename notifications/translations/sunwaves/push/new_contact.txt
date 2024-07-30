@@ -1,0 +1,206 @@
+{
+   "af":{
+      "body":"Een van jou vriende is nou deel van die ice-gemeenskap. 🚀",
+      "title":"👋 Jou vriend {{.Username}} het by ice aangesluit"
+   },
+   "am":{
+      "body":"ከጓደኞችዎ አንዱ አሁን የ ice ማህበረሰብ አካል ነው። 🚀",
+      "title":"👋 ጓደኛህ {{.Username}} iceን ተቀላቅሏል።"
+   },
+   "ar":{
+      "body":"أصبح أحد أصدقائك الآن جزءًا من مجتمع ice. 🚀",
+      "title":" انضم صديقك {{.Username}} إلى ice"
+   },
+   "az":{
+      "body":"Dostlarınızdan biri indi ice icmasının üzvüdür. 🚀",
+      "title":"👋 Dostunuz {{.Username}} ice-ə qoşuldu"
+   },
+   "bg":{
+      "body":"Един от вашите приятели вече е част от общността на ice. 🚀",
+      "title":"👋 Вашият приятел {{.Username}} се присъедини към ice"
+   },
+   "bn":{
+      "body":"আপনার বন্ধুদের একজন এখন ice সম্প্রদায়ের অংশ। 🚀",
+      "title":"👋 আপনার বন্ধু {{.Username}} ice-এ যোগ দিয়েছেন"
+   },
+   "cs":{
+      "body":"Jeden z vašich přátel je nyní součástí komunity ice. 🚀",
+      "title":"👋 Váš přítel {{.Username}} se připojil k ice"
+   },
+   "de":{
+      "body":"Einer Ihrer Freunde ist jetzt Teil der ice-Community. 🚀",
+      "title":"👋 Dein Freund {{.Username}} ist ice beigetreten"
+   },
+   "en":{
+      "body":"One of your friends is now part of the ice community. 🚀",
+      "title":"👋 Your friend {{.Username}} joined ice"
+   },
+   "es":{
+      "body":"Uno de tus amigos ahora es parte de la comunidad ice. 🚀",
+      "title":"👋 Tu amigo {{.Username}} se unió a ice"
+   },
+   "fa":{
+      "body":"یکی از دوستان شما اکنون بخشی از جامعه ice است. 🚀",
+      "title":"👋 دوست شما {{.Username}} به ice پیوست"
+   },
+   "fil":{
+      "body":"Isa sa iyong mga kaibigan ay bahagi na ngayon ng komunidad ng ice. 🚀",
+      "title":"👋 Sumali sa ice ang kaibigan mong si {{.Username}}"
+   },
+   "fr":{
+      "body":"Un de vos amis fait maintenant partie de la communauté ice. 🚀",
+      "title":"👋 Votre ami {{.Username}} a rejoint ice"
+   },
+   "ge":{
+      "body":"Ένας από τους φίλους σας είναι πλέον μέλος της κοινότητας ice. 🚀",
+      "title":"👋 Ο φίλος σας {{.Username}} εντάχθηκε στο ice"
+   },
+   "gu":{
+      "body":"તમારો એક મિત્ર હવે ice સમુદાયનો ભાગ છે. 🚀",
+      "title":"👋 તમારો મિત્ર {{.Username}} ice માં જોડાયો"
+   },
+   "he":{
+      "body":"אחד מחבריך הוא כעת חלק מקהילת ice. 🚀",
+      "title":"👋 החבר שלך {{.Username}} הצטרף ל-ice"
+   },
+   "hi":{
+      "body":"आपका एक मित्र अब ice समुदाय का हिस्सा है। 🚀",
+      "title":"👋 आपका मित्र {{.Username}} ice में शामिल हुआ"
+   },
+   "hu":{
+      "body":"Az egyik barátod mostantól az ice közösség tagja. 🚀",
+      "title":"👋 {{.Username}} barátod csatlakozott az ice-hez"
+   },
+   "id":{
+      "body":"Salah satu teman Anda sekarang menjadi bagian dari komunitas ice. 🚀",
+      "title":"👋 Temanmu {{.Username}} bergabung dengan ice"
+   },
+   "it":{
+      "body":"Uno dei tuoi amici fa ora parte della comunità ice. 🚀",
+      "title":"👋 Il tuo amico {{.Username}} si è unito all'ice"
+   },
+   "ja":{
+      "body":"あなたの友人の 1 人が ice コミュニティの一員になりました。 🚀",
+      "title":"👋 あなたの友人 {{.Username}} が ice に参加しました"
+   },
+   "jv":{
+      "body":"Salah sawijining kanca saiki dadi bagian saka komunitas ice. 🚀",
+      "title":"👋 Kancamu {{.Username}} melu ice"
+   },
+   "kn":{
+      "body":"ನಿಮ್ಮ ಸ್ನೇಹಿತರಲ್ಲಿ ಒಬ್ಬರು ಈಗ ice ಸಮುದಾಯದ ಭಾಗವಾಗಿದ್ದಾರೆ. 🚀",
+      "title":"👋 ನಿಮ್ಮ ಸ್ನೇಹಿತ {{.Username}} ice ಸೇರಿದ್ದಾರೆ"
+   },
+   "ko":{
+      "body":"친구 중 한 명이 이제 ice 커뮤니티의 일원이 되었습니다. 🚀",
+      "title":"👋 친구 {{.Username}}가 ice에 가입했습니다."
+   },
+   "mr":{
+      "body":"तुमचा एक मित्र आता ice समुदायाचा भाग आहे. 🚀",
+      "title":"👋 तुमचा मित्र {{.Username}} ice मध्ये सामील झाला"
+   },
+   "ms":{
+      "body":"Salah seorang rakan anda kini sebahagian daripada komuniti ice. 🚀",
+      "title":"👋 Rakan anda {{.Username}} menyertai ice"
+   },
+   "no":{
+      "body":"En av vennene dine er nå en del av ice-fellesskapet. 🚀",
+      "title":"👋 Vennen din {{.Username}} ble med i ice"
+   },
+   "pa":{
+      "body":"ਤੁਹਾਡੇ ਦੋਸਤਾਂ ਵਿੱਚੋਂ ਇੱਕ ਹੁਣ ice ਭਾਈਚਾਰੇ ਦਾ ਹਿੱਸਾ ਹੈ। 🚀",
+      "title":"👋 ਤੁਹਾਡਾ ਦੋਸਤ {{.Username}} ice ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਇਆ"
+   },
+   "pl":{
+      "body":"Jeden z twoich znajomych jest teraz częścią społeczności ice. 🚀",
+      "title":"👋 Twój przyjaciel {{.Username}} dołączył do ice"
+   },
+   "ps":{
+      "body":"ستاسو یو ملګری اوس د ice ټولنې برخه ده. 🚀",
+      "title":"👋 ستاسو ملګری {{.Username}} ice سره یوځای شو"
+   },
+   "pt":{
+      "body":"Um de seus amigos agora faz parte da comunidade ice. 🚀",
+      "title":"👋 Seu amigo {{.Username}} se juntou ao ice"
+   },
+   "ro":{
+      "body":"Unul dintre prietenii tăi face acum parte din comunitatea ice. 🚀",
+      "title":"👋 Prietenul tău {{.Username}} s-a alăturat ice"
+   },
+   "ru":{
+      "body":"Один из ваших друзей теперь является частью сообщества ice. 🚀",
+      "title":"👋 Ваш друг {{.Username}} присоединился к ice"
+   },
+   "sd":{
+      "body":"توھان جو ھڪڙو دوست ھاڻي ice ڪميونٽي جو حصو آھي. 🚀",
+      "title":"👋 توهان جو دوست {{.Username}} ice ۾ شامل ٿيو"
+   },
+   "sk":{
+      "body":"Jeden z vašich priateľov je teraz súčasťou komunity ice. 🚀",
+      "title":"👋 Váš priateľ {{.Username}} sa pripojil k ice"
+   },
+   "sl":{
+      "body":"Eden od vaših prijateljev je zdaj del skupnosti ice. 🚀",
+      "title":"👋 Tvoj prijatelj {{.Username}} se je pridružil ice"
+   },
+   "sq":{
+      "body":"Një nga miqtë tuaj tani është pjesë e komunitetit ice. 🚀",
+      "title":"👋 Miku juaj {{.Username}} iu bashkua ice"
+   },
+   "su":{
+      "body":"Salah sahiji babaturan anjeun ayeuna bagian tina komunitas ice. 🚀",
+      "title":"👋 Babaturan anjeun {{.Username}} gabung ka ice"
+   },
+   "sv":{
+      "body":"En av dina vänner är nu en del av ice-communityt. 🚀",
+      "title":"👋 Din vän {{.Username}} gick med i ice"
+   },
+   "ta":{
+      "body":"உங்கள் நண்பர்களில் ஒருவர் இப்போது ice சமூகத்தின் ஒரு பகுதியாக உள்ளார். 🚀",
+      "title":"👋 உங்கள் நண்பர் {{.Username}} ice இல் சேர்ந்தார்"
+   },
+   "te":{
+      "body":"మీ స్నేహితుల్లో ఒకరు ఇప్పుడు ice సంఘంలో భాగం. 🚀",
+      "title":"👋 మీ స్నేహితుడు {{.Username}} iceలో చేరారు"
+   },
+   "th":{
+      "body":"เพื่อนของคุณคนหนึ่งเป็นส่วนหนึ่งของชุมชน ice แล้ว 🚀",
+      "title":"👋 เพื่อนของคุณ {{.Username}} เข้าร่วม ice"
+   },
+   "tr":{
+      "body":"Arkadaşlarınızdan biri artık ice topluluğunun bir parçası. 🚀",
+      "title":"👋 Arkadaşınız {{.Username}} ice'ye katıldı"
+   },
+   "uk":{
+      "body":"Один із ваших друзів тепер є частиною спільноти ice. 🚀",
+      "title":"👋 Ваш друг {{.Username}} приєднався до ice"
+   },
+   "ur":{
+      "body":"آپ کا ایک دوست اب ice کمیونٹی کا حصہ ہے۔ 🚀",
+      "title":"👋 آپ کے دوست {{.Username}} نے ice میں شمولیت اختیار کی۔"
+   },
+   "vi":{
+      "body":"Một trong những người bạn của bạn hiện là thành viên của cộng đồng ice. 🚀",
+      "title":"👋 Bạn của bạn {{.Username}} đã tham gia ice"
+   },
+   "yo":{
+      "body":"Ọkan ninu awọn ọrẹ rẹ jẹ apakan ti agbegbe ice. 🚀",
+      "title":"👋 Ọrẹ rẹ {{.Username}} darapọ mọ ice"
+   },
+   "zh":{
+      "body":"你的一位朋友現在是 ice 社區的一員。 🚀",
+      "title":"👋 你的朋友{{.Username}} 加入了 ice"
+   },
+   "zh-hans":{
+      "body":"你的一位朋友现在是 ice 社区的一员。 🚀",
+      "title":"👋 你的朋友{{.Username}} 加入了 ice"
+   },
+   "zh-hant":{
+      "body":"你的一位朋友現在是 ice 社區的一員。 🚀",
+      "title":"👋 你的朋友{{.Username}} 加入了 ice"
+   },
+   "zu":{
+      "body":"Omunye wabangane bakho manje useyingxenye yomphakathi we-ice. 🚀",
+      "title":"👋 Umngane wakho u-{{.Username}} ujoyine i-ice"
+   }
+}

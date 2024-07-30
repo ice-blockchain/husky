@@ -1,0 +1,7 @@
+{
+   "en":{
+      "body":"🔥 <b>{{.Username}}</b> has joined your team.\n\nYou earned <b>{{.Amount}} {{.Coin}} tokens!</b> 🌟",
+      "altBody": "🔥 <b>{{.Username}}</b> has joined your team.\n\nYour team just got bigger! 🎉",
+      "buttonText": ["👉 View Team"]
+   }
+}
