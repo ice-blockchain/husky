@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"text/template"
 
 	"github.com/hashicorp/go-multierror"
@@ -58,11 +59,11 @@ func (t *pushNotificationTemplate) getAltBody(data any) string {
 	return bf.String()
 }
 
-func loadPushNotificationTranslationTemplates() {
+func loadPushNotificationTranslationTemplates(tenantName string) {
 	const totalLanguages = 50
 	allPushNotificationTemplates = make(map[NotificationType]map[languageCode]*pushNotificationTemplate, len(AllNotificationTypes))
 	for _, notificationType := range AllNotificationTypes {
-		content, fErr := translations.ReadFile(fmt.Sprintf("translations/push/%v.txt", notificationType))
+		content, fErr := translations.ReadFile(fmt.Sprintf("translations/%v/push/%v.txt", strings.ToLower(tenantName), notificationType))
 		log.Panic(fErr) //nolint:revive // Wrong.
 		allPushNotificationTemplates[notificationType] = make(map[languageCode]*pushNotificationTemplate, totalLanguages)
 		var languageData map[string]*struct {

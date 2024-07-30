@@ -131,10 +131,8 @@ var (
 		MiningEndingSoonNotificationType,
 		MiningExpiredNotificationType,
 		MiningNotActiveNotificationType,
-		InviteFriendNotificationType,
 		NewReferralNotificationType,
 		SocialsNotificationType,
-		ReplyNotificationType,
 		StartCommandNotificationType,
 	}
 	//nolint:gochecknoglobals // It's just for more descriptive validation messages.

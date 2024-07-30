@@ -26,12 +26,6 @@ import (
 	"github.com/ice-blockchain/wintr/time"
 )
 
-//nolint:gochecknoinits // We load embedded stuff at runtime.
-func init() {
-	loadPushNotificationTranslationTemplates()
-	loadTelegramNotificationTranslationTemplates()
-}
-
 func New(ctx context.Context, _ context.CancelFunc) Repository {
 	var cfg config
 	appcfg.MustLoadFromKey(applicationYamlKey, &cfg)
@@ -50,6 +44,9 @@ func New(ctx context.Context, _ context.CancelFunc) Repository {
 func StartProcessor(ctx context.Context, cancel context.CancelFunc) Processor { //nolint:funlen // A lot of startup & shutdown ceremony.
 	var cfg config
 	appcfg.MustLoadFromKey(applicationYamlKey, &cfg)
+
+	loadPushNotificationTranslationTemplates(cfg.TenantName)
+	loadTelegramNotificationTranslationTemplates(cfg.TenantName)
 
 	ddlWorkersParam := fmt.Sprintf(ddl, schedulerWorkersCount)
 

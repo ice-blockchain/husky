@@ -83,11 +83,11 @@ func (t *telegramNotificationTemplate) getInviteText(data any) string {
 	return bf.String()
 }
 
-func loadTelegramNotificationTranslationTemplates() { //nolint:funlen,revive,gocognit // .
+func loadTelegramNotificationTranslationTemplates(tenantName string) { //nolint:funlen,revive,gocognit // .
 	const totalLanguages = 50
 	allTelegramNotificationTemplates = make(map[NotificationType]map[languageCode]*telegramNotificationTemplate, len(AllTelegramNotificationTypes))
 	for _, notificationType := range AllTelegramNotificationTypes {
-		content, fErr := translations.ReadFile(fmt.Sprintf("translations/telegram/%v.txt", notificationType))
+		content, fErr := translations.ReadFile(fmt.Sprintf("translations/%v/telegram/%v.txt", strings.ToLower(tenantName), notificationType))
 		if fErr != nil {
 			panic(fErr)
 		}
@@ -152,16 +152,15 @@ func prepareTelegramButtonsForSocialNotificationType(cfg *config, tmpl *telegram
 
 		return nil
 	}
-	data := struct{ TenantName string }{TenantName: strings.ToUpper(cfg.TenantName)}
 	res := make([]telegram.Button, 0, len(tmpl.ButtonText))
 	for ix := range len(tmpl.buttonText) - 1 {
 		res = append(res, telegram.Button{
-			Text: tmpl.getButtonText(data, ix),
+			Text: tmpl.getButtonText(nil, ix),
 			URL:  urls[ix],
 		})
 	}
 	res = append(res, telegram.Button{
-		Text: tmpl.getButtonText(data, len(tmpl.buttonText)-1),
+		Text: tmpl.getButtonText(nil, len(tmpl.buttonText)-1),
 		URL:  cfg.WebAppLink,
 	})
 
@@ -272,14 +271,10 @@ func (r *repository) handleTelegramUpdates(
 		}
 		if upd.Message.From.Username == "" && upd.Message.Text == string(StartTelegramCommand) {
 			body = tmpl.getAltBody(users.JSON{
-				"TenantName":   strings.ToUpper(r.cfg.TenantName),
-				"TokenName":    strings.ToUpper(r.cfg.TokenName),
 				"WelcomeBonus": tokenomics.WelcomeBonusV2Amount,
 			})
 		} else {
 			body = tmpl.getBody(users.JSON{
-				"TenantName":   strings.ToUpper(r.cfg.TenantName),
-				"TokenName":    strings.ToUpper(r.cfg.TokenName),
 				"Username":     upd.Message.From.Username,
 				"WelcomeBonus": tokenomics.WelcomeBonusV2Amount,
 			})
