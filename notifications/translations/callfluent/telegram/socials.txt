@@ -2,8 +2,8 @@
     "en": {
         "body": "🌟 Join our social media channels to stay updated with the latest news and important announcements.",
         "buttonText": [
-                       "Callfluent TG Community",
-                       "Callfluent on X",
+                       "CallFluent TG Community",
+                       "CallFluent on X",
                        "ION TG Community",
                        "ION on X",
                        "🌟 Launch App!"
