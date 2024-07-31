@@ -27,6 +27,10 @@ import (
 func MustStartScheduler(ctx context.Context, cancel context.CancelFunc) *Scheduler {
 	var cfg config
 	appcfg.MustLoadFromKey(applicationYamlKey, &cfg)
+
+	loadPushNotificationTranslationTemplates(cfg.TenantName)
+	loadTelegramNotificationTranslationTemplates(cfg.TenantName)
+
 	ddlWorkersParam := fmt.Sprintf(ddl, schedulerWorkersCount)
 	sh := Scheduler{
 		cfg:                              &cfg,
