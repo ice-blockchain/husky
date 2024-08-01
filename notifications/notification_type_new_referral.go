@@ -196,7 +196,7 @@ func (r *repository) getNewReferralCoinAmount(ctx context.Context, referredBy st
 
 		return uint64(tokenomics.WelcomeBonusV2Amount)
 	}
-	if state[0].BalanceT1WelcomeBonusPending >= 25*tokenomics.WelcomeBonusV2Amount {
+	if state[0].BalanceT1WelcomeBonusPending >= 100000*tokenomics.WelcomeBonusV2Amount {
 		return 0
 	}
 	if state[0].PreStakingBonus == 0 {
