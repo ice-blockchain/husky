@@ -192,6 +192,15 @@ notifications: &notifications
       - name: enabled-roles
       - name: contacts-table
       - name: mining-sessions-table
+users:
+  wintr/connectors/storage/v2:
+    runDDL: true
+    primaryURL: postgresql://root:pass@localhost:5433/eskimo
+    credentials:
+      user: root
+      password: pass
+    replicaURLs:
+      - postgresql://root:pass@localhost:5433/eskimo
 notifications_test:
   <<: *notifications
   messageBroker:

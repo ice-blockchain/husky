@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	stdlibtime "time"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
@@ -13,11 +14,11 @@ import (
 	"github.com/ice-blockchain/eskimo/users"
 	"github.com/ice-blockchain/freezer/model"
 	"github.com/ice-blockchain/freezer/tokenomics"
+	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	storagev3 "github.com/ice-blockchain/wintr/connectors/storage/v3"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/notifications/inapp"
 	"github.com/ice-blockchain/wintr/notifications/push"
-	"github.com/ice-blockchain/wintr/notifications/telegram"
 	"github.com/ice-blockchain/wintr/time"
 )
 
@@ -126,54 +127,63 @@ func (r *repository) sendNewReferralNotification(ctx context.Context, us *users.
 			return errors.Wrapf(r.sendInAppNotification(ctx, in), "failed to sendInAppNotification for %v, notif:%#v", NewReferralNotificationType, in)
 		})
 	}
-	if tokens.TelegramBotID != "" && tokens.TelegramBotID != tokens.UserID && //nolint:nestif // .
-		tokens.TelegramUserID != "" && tokens.TelegramUserID != tokens.UserID {
-		tmplTelegram, found := allTelegramNotificationTemplates[NewReferralNotificationType][tokens.Language]
-		if !found {
-			log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` telegram config", tokens.Language, NewReferralNotificationType))
+	if rErr := r.removeScheduledNotifications(ctx, us.ReferredBy, []NotificationType{NewReferralNotificationType}); rErr != nil {
+		return errors.Wrapf(rErr, "can't remove scheduled notifications for:%v", us.ReferredBy)
+	}
+	newReferralCountLast24HInfo, gErr := r.getNewReferralCountLast24H(ctx, us.ReferredBy)
+	if gErr != nil {
+		return errors.Wrapf(gErr, "can't call getNewReferralCountLast24H for:%v", us.ReferredBy)
+	}
+	if newReferralCountLast24HInfo != nil && newReferralCountLast24HInfo.Count > 0 {
+		var scheduledFor *time.Time
+		var uniqueTime string
+		if r.cfg.Development {
+			uniqueTime = fmt.Sprintf("%v:%02d:%02d %02d:%02d:%02d", now.Year(), int(now.Month()), now.Day(), now.Hour(), now.Minute(), now.Second())
+			scheduledFor = time.New(time.Now().Add(1 * stdlibtime.Minute))
 		} else {
-			if botInfo, botFound := r.cfg.TelegramBots[strings.ToLower(tokens.TelegramBotID)]; botFound {
-				data.Username = us.User.Username
-				var body string
-				if data.Amount > 0 {
-					body = tmplTelegram.getBody(data)
-				} else {
-					body = tmplTelegram.getAltBody(data)
-				}
-				tn := &telegramNotification{
-					tn: &telegram.Notification{
-						ChatID:   tokens.TelegramUserID,
-						Text:     body,
-						BotToken: botInfo.BotToken,
-					},
-					sn: &sentNotification{
-						SentAt:   now,
-						Language: tokens.Language,
-						sentNotificationPK: sentNotificationPK{
-							UserID:                   us.User.ReferredBy,
-							Uniqueness:               us.User.ID,
-							NotificationType:         NewReferralNotificationType,
-							NotificationChannel:      TelegramNotificationChannel,
-							NotificationChannelValue: us.User.ID,
-						},
-					},
-				}
-				buttonText := tmplTelegram.getButtonText(nil, 0)
-				buttonLink := getTelegramDeeplink(NewReferralNotificationType, r.cfg, "", "")
-				if buttonText != "" && buttonLink != "" {
-					tn.tn.Buttons = append(tn.tn.Buttons, telegram.Button{
-						Text: buttonText,
-						URL:  buttonLink,
-					})
-				}
-				exConcurrently = append(exConcurrently, func() error {
-					return errors.Wrapf(r.sendTelegramNotification(ctx, tn), "failed to send telegram notification for %v, notif:%#v", NewReferralNotificationType, in)
-				})
-			}
+			daysPassed := (stdlibtime.Duration(time.Now().Sub(*newReferralCountLast24HInfo.CreatedAt.Time).Hours()/24) + 1) * 24 * stdlibtime.Hour
+			nextTime := time.New(newReferralCountLast24HInfo.CreatedAt.Add(daysPassed))
+			uniqueTime = fmt.Sprintf("%v:%02d:%02d %02d:%02d:%02d", nextTime.Year(), int(nextTime.Month()), nextTime.Day(), nextTime.Hour(), nextTime.Minute(), nextTime.Second()) //nolint:lll // .
+			scheduledFor = nextTime
+		}
+		if iErr := insertScheduledNotifications(ctx, r.db, []*scheduledNotification{{
+			ScheduledAt:              now,
+			ScheduledFor:             scheduledFor,
+			Language:                 us.Language,
+			UserID:                   us.ReferredBy,
+			NotificationType:         string(NewReferralNotificationType),
+			Uniqueness:               fmt.Sprintf("%v_%v_%v", us.ReferredBy, NewReferralNotificationType, uniqueTime),
+			NotificationChannel:      string(TelegramNotificationChannel),
+			NotificationChannelValue: us.ReferredBy,
+			Data: &users.JSON{
+				"TenantName":            r.cfg.TenantName,
+				"DailyNewReferralCount": newReferralCountLast24HInfo.Count,
+				"Amount":                r.getNewReferralCoinAmount(ctx, us.User.ReferredBy) * newReferralCountLast24HInfo.Count,
+				"Coin":                  strings.ToUpper(r.cfg.TokenName),
+			},
+		}}); iErr != nil {
+			return errors.Wrapf(iErr, "can't insert scheduled notifications for:%v", us.ReferredBy)
 		}
 	}
 
 	return errors.Wrap(executeConcurrently(exConcurrently...), "failed to executeConcurrently")
+}
+
+func (r *repository) getNewReferralCountLast24H(ctx context.Context, referredBy string) (info *newReferralCountLast24HInfo, err error) {
+	if ctx.Err() != nil {
+		return nil, errors.Wrap(ctx.Err(), "unexpected deadline")
+	}
+	sql := `SELECT 
+				COALESCE(count(*), 0) AS count,
+				(SELECT created_at FROM users WHERE id = $1) AS created_at
+			FROM users
+			WHERE referred_by = $1 AND created_at > $2`
+	resp, err := storage.Get[newReferralCountLast24HInfo](ctx, r.eskimoDB, sql, referredBy, time.New(time.Now().Add(-24*stdlibtime.Hour)))
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to select new referral count for referredBy:`%v`", referredBy)
+	}
+
+	return resp, nil
 }
 
 func (r *repository) getNewReferralCoinAmount(ctx context.Context, referredBy string) uint64 {

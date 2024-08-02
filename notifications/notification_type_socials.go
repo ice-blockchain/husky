@@ -45,6 +45,9 @@ func (r *repository) addScheduledSocialsNotifications(ctx context.Context, us *u
 			})
 		}
 	}
+	if !r.cfg.Development {
+		dayDuration = 5 * stdlibtime.Minute
+	}
 	scheduled = append(scheduled, &scheduledNotification{
 		ScheduledAt:              now,
 		ScheduledFor:             time.New(us.CreatedAt.Add(dayDuration)),

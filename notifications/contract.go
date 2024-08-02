@@ -210,6 +210,7 @@ type (
 		telemetryTelegramNotifications   *telemetry
 		telemetryAnnouncements           *telemetry
 		db                               *storage.DB
+		eskimoDB                         *storage.DB
 		wg                               *sync.WaitGroup
 		cancel                           context.CancelFunc
 	}
@@ -219,6 +220,7 @@ type (
 
 const (
 	applicationYamlKey          = "notifications"
+	eskimoApplicationYamlKey    = "users"
 	requestingUserIDCtxValueKey = "requestingUserIDCtxValueKey"
 	requestDeadline             = 30 * stdlibtime.Second
 
@@ -311,6 +313,7 @@ type (
 		cfg                         *config
 		shutdown                    func() error
 		db                          *storage.DB
+		eskimoDB                    *storage.DB
 		freezerDB                   storagev3.DB
 		mb                          messagebroker.Client
 		pushNotificationsClient     push.Client
@@ -357,6 +360,10 @@ type (
 		NotificationChannel      string      `json:"notificationChannel,omitempty" example:"email"`
 		NotificationChannelValue string      `json:"notificationChannelValue,omitempty" example:"jdoe@example.com"`
 		I                        int64       `json:"i" example:"1"`
+	}
+	newReferralCountLast24HInfo struct {
+		CreatedAt *time.Time `json:"createdAt,omitempty" example:"2022-01-03T16:20:52.156534Z"`
+		Count     uint64     `json:"count,omitempty" example:"10"`
 	}
 	invalidToken struct {
 		UserID string
