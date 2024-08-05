@@ -1,0 +1,206 @@
+{
+   "af":{
+      "body":"Die basis mynboukoers is gehalveer tot {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Mynboukoers verander 🚨"
+   },
+   "am":{
+      "body":"የመነሻ ገቢ መጠን በግማሽ ቀንሷል {{.BaseMiningRate}} ice/ሰ!",
+      "title":"🚨 የገቢ መጠን ተለውጧል 🚨"
+   },
+   "ar":{
+      "body":"تم تخفيض معدل الربح الأساسي إلى النصف إلى {{.BaseMiningRate}} ice / h!",
+      "title":"🚨 تغير معدل الربح🚨"
+   },
+   "az":{
+      "body":"Əsas qazanc dərəcəsi iki dəfə azaldılıb {{.BaseMiningRate}} ice/saat!",
+      "title":"🚨 Qazanc dərəcəsi dəyişdi 🚨"
+   },
+   "bg":{
+      "body":"Основният процент на печалба е намален наполовина до {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Степента на печалба е променена 🚨"
+   },
+   "bn":{
+      "body":"বেস আর্নিং রেট অর্ধেক করা হয়েছে {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 উপার্জনের হার পরিবর্তিত হয়েছে 🚨"
+   },
+   "cs":{
+      "body":"Základní výdělková sazba byla snížena na polovinu na {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Míra výdělku se změnila 🚨"
+   },
+   "de":{
+      "body":"Der Grundverdienst wurde auf {{.BaseMiningRate}} ice/h halbiert!",
+      "title":"🚨 Verdienstquote geändert 🚨"
+   },
+   "en":{
+      "body":"The base earning rate has been halved to {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Earning rate changed 🚨"
+   },
+   "es":{
+      "body":"¡La tasa de ganancia base se ha reducido a la mitad a {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 La tasa de ganancias cambió 🚨"
+   },
+   "fa":{
+      "body":"نرخ درآمد پایه نصف شده و به {{.BaseMiningRate}} ice/h کاهش یافته است!",
+      "title":"🚨 نرخ درآمد تغییر کرد 🚨"
+   },
+   "fil":{
+      "body":"Ang batayang rate ng kita ay hinati sa {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Binago ang rate ng kita 🚨"
+   },
+   "fr":{
+      "body":"Le taux de rémunération de base a été réduit de moitié à {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Le taux de gain a changé 🚨"
+   },
+   "ge":{
+      "body":"Ο βασικός ρυθμός εξόρυξης μειώθηκε στο μισό σε {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Η τιμή εξόρυξης άλλαξε 🚨"
+   },
+   "gu":{
+      "body":"બેઝ અર્નિંગ રેટ અડધો કરી દેવામાં આવ્યો છે {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 કમાણીનો દર બદલાયો 🚨"
+   },
+   "he":{
+      "body":"שיעור ההשתכרות הבסיסי הופחת ל-{{.BaseMiningRate}} ice/h!",
+      "title":"🚨 שיעור ההשתכרות השתנה 🚨"
+   },
+   "hi":{
+      "body":"आधार अर्जन दर [nw वैल] ice/h!",
+      "title":"🚨 कमाई का रेट बदला 🚨"
+   },
+   "hu":{
+      "body":"Az alap kereseti ráta felére csökkent, {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 A bevételi arány megváltozott 🚨"
+   },
+   "id":{
+      "body":"Tingkat perolehan dasar telah dibelah dua menjadi {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Tingkat penghasilan berubah 🚨"
+   },
+   "it":{
+      "body":"Il tasso di guadagno base è stato dimezzato a {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Il tasso di guadagno è cambiato 🚨"
+   },
+   "ja":{
+      "body":"基本獲得率が {{.BaseMiningRate}} ice/h に半分になりました!",
+      "title":"🚨獲得率変更🚨"
+   },
+   "jv":{
+      "body":"Tingkat pangentukan dhasar wis setengah dadi {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Tingkat penghasilan diganti 🚨"
+   },
+   "kn":{
+      "body":"ಮೂಲ ಗಳಿಕೆಯ ದರವನ್ನು {{.BaseMiningRate}} ice/h ಗೆ ಅರ್ಧಕ್ಕೆ ಇಳಿಸಲಾಗಿದೆ!",
+      "title":"🚨 ಗಳಿಕೆಯ ದರ ಬದಲಾಗಿದೆ 🚨"
+   },
+   "ko":{
+      "body":"기본 적립률이 {{.BaseMiningRate}} ice/h로 절반으로 줄었습니다!",
+      "title":"🚨 적립률 변경됨 🚨"
+   },
+   "mr":{
+      "body":"मूळ कमाई दर {{.BaseMiningRate}} ice/h वर निम्मा करण्यात आला आहे!",
+      "title":"🚨 कमाईचा दर बदलला 🚨"
+   },
+   "ms":{
+      "body":"Kadar pendapatan asas telah dikurangkan separuh kepada {{.BaseMiningRate}} ice/j!",
+      "title":"🚨 Kadar pendapatan berubah 🚨"
+   },
+   "no":{
+      "body":"Grunninntektsraten er halvert til {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Inntjeningsraten endret 🚨"
+   },
+   "pa":{
+      "body":"ਆਧਾਰ ਕਮਾਈ ਦਰ ਨੂੰ {{.BaseMiningRate}} ice/h ਤੱਕ ਅੱਧਾ ਕਰ ਦਿੱਤਾ ਗਿਆ ਹੈ!",
+      "title":"🚨 ਕਮਾਈ ਦੀ ਦਰ ਬਦਲ ਗਈ 🚨"
+   },
+   "pl":{
+      "body":"Podstawowa stawka zarobków została zmniejszona o połowę do {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Zmieniono stawkę zarobków 🚨"
+   },
+   "ps":{
+      "body":"د بیس عاید کچه {{.BaseMiningRate}} ice/h ته نیمه شوې ده!",
+      "title":"🚨 د عاید کچه بدله شوه 🚨"
+   },
+   "pt":{
+      "body":"A taxa de ganho base foi reduzida pela metade para {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Taxa de ganho alterada 🚨"
+   },
+   "ro":{
+      "body":"Rata de bază a câștigului a fost redusă la jumătate la {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Rata de câștig s-a schimbat 🚨"
+   },
+   "ru":{
+      "body":"Базовая ставка заработка уменьшена вдвое до {{.BaseMiningRate}} ice/ч!",
+      "title":"🚨 Ставка заработка изменена 🚨"
+   },
+   "sd":{
+      "body":"بنيادي آمدني جي شرح اڌ ڪئي وئي آهي {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 ڪمائي جي شرح تبديل ٿي وئي 🚨"
+   },
+   "sk":{
+      "body":"Základná sadzba zárobku bola znížená na polovicu na {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Miera zárobku sa zmenila 🚨"
+   },
+   "sl":{
+      "body":"Osnovna stopnja zaslužka je bila prepolovljena na {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Spremenjena stopnja zaslužka 🚨"
+   },
+   "sq":{
+      "body":"Norma bazë e fitimit është përgjysmuar në {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Norma e fitimit ndryshoi 🚨"
+   },
+   "su":{
+      "body":"Laju panghasilan dasar parantos diréduksi jadi {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Tingkat earning robah 🚨"
+   },
+   "sv":{
+      "body":"Grundinkomsten har halverats till {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Intjäningsgraden ändrad 🚨"
+   },
+   "ta":{
+      "body":"அடிப்படை வருவாய் விகிதம் பாதியாக குறைக்கப்பட்டது {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 வருவாய் விகிதம் மாற்றப்பட்டது🚨"
+   },
+   "te":{
+      "body":"మూల సంపాదన రేటు {{.BaseMiningRate}} ice/hకి సగానికి తగ్గించబడింది!",
+      "title":"🚨 సంపాదన రేటు మార్చబడింది 🚨"
+   },
+   "th":{
+      "body":"อัตรารายได้พื้นฐานลดลงครึ่งหนึ่งเป็น {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 อัตราการได้รับการเปลี่ยนแปลง 🚨"
+   },
+   "tr":{
+      "body":"Temel kazanç oranı {{.BaseMiningRate}} ice/h olarak yarıya indirildi!",
+      "title":"🚨 Kazanç oranı değişti 🚨"
+   },
+   "uk":{
+      "body":"Базову ставку заробітку зменшено вдвічі до {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Норма заробітку змінена 🚨"
+   },
+   "ur":{
+      "body":"بنیادی آمدنی کی شرح نصف کر دی گئی ہے {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 کمائی کی شرح بدل گئی 🚨"
+   },
+   "vi":{
+      "body":"Tỷ lệ thu nhập cơ bản đã giảm một nửa xuống còn {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Tỷ lệ thu nhập đã thay đổi 🚨"
+   },
+   "yo":{
+      "body":"Oṣuwọn gbigba ipilẹ ti jẹ idaji si {{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Oṣuwọn owo-owo ti yipada 🚨"
+   },
+   "zh":{
+      "body":"基本收入率已减半至 {{.BaseMiningRate}} ice/h！",
+      "title":"🚨 收益率改变了 🚨"
+   },
+   "zh-hans":{
+      "body":"基本收入率已减半至 {{.BaseMiningRate}} ice/h！",
+      "title":"🚨 收益率改变了 🚨"
+   },
+   "zh-hant":{
+      "body":"基本收入率已減半至 {{.BaseMiningRate}} ice/h！",
+      "title":"🚨 收益率改變了 🚨"
+   },
+   "zu":{
+      "body":"Izinga lokuhola eliyisisekelo lehliswe ngohhafu ukuze libe ngu-{{.BaseMiningRate}} ice/h!",
+      "title":"🚨 Izinga lokuhola lishintshile 🚨"
+   }
+}

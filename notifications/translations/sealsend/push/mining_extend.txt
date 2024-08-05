@@ -1,0 +1,202 @@
+{
+    "en": {
+        "title": "🚀  Extend your check-in session!🔓",
+        "body": "Press and hold the {{.TenantName}} logo button to keep earning {{.TenantName}}. 💰"
+    },
+    "ro": {
+        "title": "🚀 Prelungește-ți sesiunea de check-in!🔓",
+        "body": "Apăsați și mențineți apăsat butonul siglei {{.TenantName}} pentru a continua să câștigați {{.TenantName}}. 💰"
+    },
+    "el": {
+        "title": "🚀 Επεκτείνετε το check-in σας!🔓",
+        "body": "Πατήστε παρατεταμένα το κουμπί με το λογότυπο {{.TenantName}} για να συνεχίσετε να κερδίζετε {{.TenantName}}. 💰"
+    },
+    "af": {
+        "title": "🚀 Verleng jou inkloksessie!🔓",
+        "body": "Druk en hou die {{.TenantName}}-logoknoppie om aan te hou om {{.TenantName}} te verdien. 💰"
+    },
+    "am": {
+        "title": "🚀 የመግባት ክፍለ ጊዜዎን ያራዝሙ!🔓",
+        "body": "{{.TenantName}} ማግኘትዎን ለመቀጠል የ{{.TenantName}} አርማ አዝራሩን ተጭነው ይያዙ። 💰"
+    },
+    "ar": {
+        "title": "🚀 قم بتمديد جلسة تسجيل الوصول الخاصة بك!",
+        "body": "اضغط مع الاستمرار على زر شعار {{.TenantName}} للاستمرار في كسب {{.TenantName}}. 💰"
+    },
+    "az": {
+        "title": "🚀 Qeydiyyat seansını uzadın!🔓",
+        "body": "{{.TenantName}} qazanmağa davam etmək üçün {{.TenantName}} loqosu düyməsini basıb saxlayın. 💰"
+    },
+    "bg": {
+        "title": "🚀 Удължете сесията си за настаняване!🔓",
+        "body": "Натиснете и задръжте бутона с логото на {{.TenantName}}, за да продължите да печелите {{.TenantName}}. 💰"
+    },
+    "bn": {
+        "title": "🚀 আপনার চেক-ইন সেশন বাড়ান!🔓",
+        "body": "{{.TenantName}} উপার্জন চালিয়ে যেতে {{.TenantName}} লোগো বোতাম টিপুন এবং ধরে রাখুন। 💰"
+    },
+    "yo": {
+        "title": "🚀 Fa igba-iwọle rẹ pọ si!🔓",
+        "body": "Tẹ bọtini aami {{.TenantName}} mọlẹ lati tọju nini {{.TenantName}}. 💰"
+    },
+    "cs": {
+        "title": "🚀 Prodlužte si svůj check-in!🔓",
+        "body": "Chcete-li nadále vydělávat {{.TenantName}}, stiskněte a podržte tlačítko s logem {{.TenantName}}. 💰"
+    },
+    "de": {
+        "title": "🚀 Verlängern Sie Ihre Check-in-Sitzung!🔓",
+        "body": "Halte die {{.TenantName}}-Logo-Taste gedrückt, um weiterhin {{.TenantName}} zu verdienen. 💰"
+    },
+    "es": {
+        "title": "🚀 ¡Extiende tu sesión de check-in!🔓",
+        "body": "Mantenga presionado el botón con el logotipo de {{.TenantName}} para seguir ganando {{.TenantName}}. 💰"
+    },
+    "fa": {
+        "title": "🚀 جلسه حضور خود را تمدید کنید!🔓",
+        "body": "دکمه نشان‌واره {{.TenantName}} را فشار داده و نگه دارید تا به کسب درآمد {{.TenantName}} ادامه دهید. 💰"
+    },
+    "tl": {
+        "title": "🚀 Pahabain ang iyong check-in session!🔓",
+        "body": "Pindutin nang matagal ang {{.TenantName}} logo button para patuloy na kumita ng {{.TenantName}}. 💰"
+    },
+    "fr": {
+        "title": "🚀 Prolongez votre session d'enregistrement !🔓",
+        "body": "Appuyez et maintenez le bouton du logo {{.TenantName}} pour continuer à gagner {{.TenantName}}. 💰"
+    },
+    "gu": {
+        "title": "🚀 તમારું ચેક-ઇન સત્ર લંબાવો!🔓",
+        "body": "{{.TenantName}} કમાતા રહેવા માટે {{.TenantName}} લોગો બટન દબાવી રાખો. 💰"
+    },
+    "he": {
+        "title": "🚀 האריכו את פגישת הצ'ק אין שלכם!🔓",
+        "body": "לחץ והחזק את לחצן הלוגו של {{.TenantName}} כדי להמשיך להרוויח {{.TenantName}}. 💰"
+    },
+    "hi": {
+        "title": "🚀 अपना चेक-इन सत्र बढ़ाएँ!🔓",
+        "body": "{{.TenantName}} की कमाई जारी रखने के लिए {{.TenantName}} लोगो बटन को दबाकर रखें। 💰"
+    },
+    "hu": {
+        "title": "🚀 Hosszabbítsa meg a bejelentkezési időszakot!🔓",
+        "body": "Tartsa lenyomva az {{.TenantName}} logó gombot, hogy továbbra is {{.TenantName}}-t szerezzen. 💰"
+    },
+    "id": {
+        "title": "🚀 Perpanjang sesi check-in Anda!🔓",
+        "body": "Tekan dan tahan tombol logo {{.TenantName}} untuk terus mendapatkan {{.TenantName}}. 💰"
+    },
+    "it": {
+        "title": "🚀 Prolunga la tua sessione di check-in!🔓",
+        "body": "Tieni premuto il pulsante con il logo {{.TenantName}} per continuare a guadagnare {{.TenantName}}. 💰"
+    },
+    "ja": {
+        "title": "🚀 チェックインセッションを延長しましょう!🔓",
+        "body": "{{.TenantName}} ロゴ ボタンを長押しして、{{.TenantName}} を獲得し続けます。 💰"
+    },
+    "jv": {
+        "title": "🚀 Tambahake sesi check-in!🔓",
+        "body": "Pencet terus tombol logo {{.TenantName}} supaya entuk {{.TenantName}}. 💰"
+    },
+    "ko": {
+        "title": "🚀 체크인 시간 연장!🔓",
+        "body": "{{.TenantName}} 로고 버튼을 길게 누르면 {{.TenantName}}가 계속 적립됩니다. 💰"
+    },
+    "mr": {
+        "title": "🚀 तुमचे चेक-इन सत्र वाढवा!🔓",
+        "body": "{{.TenantName}} मिळवत राहण्यासाठी {{.TenantName}} लोगो बटण दाबा आणि धरून ठेवा. 💰"
+    },
+    "ms": {
+        "title": "🚀 Lanjutkan sesi daftar masuk anda!🔓",
+        "body": "Tekan dan tahan butang logo {{.TenantName}} untuk terus memperoleh {{.TenantName}}. 💰"
+    },
+    "no": {
+        "title": "🚀 Forleng innsjekkingsøkten!🔓",
+        "body": "Trykk og hold inne {{.TenantName}}-logoknappen for å fortsette å tjene {{.TenantName}}. 💰"
+    },
+    "pa": {
+        "title": "🚀 ਆਪਣੇ ਚੈੱਕ-ਇਨ ਸੈਸ਼ਨ ਨੂੰ ਵਧਾਓ!🔓",
+        "body": "{{.TenantName}} ਕਮਾਉਣਾ ਜਾਰੀ ਰੱਖਣ ਲਈ {{.TenantName}} ਲੋਗੋ ਬਟਨ ਨੂੰ ਦਬਾ ਕੇ ਰੱਖੋ। 💰"
+    },
+    "pl": {
+        "title": "🚀 Przedłuż swoją sesję meldunkową!🔓",
+        "body": "Naciśnij i przytrzymaj przycisk z logo {{.TenantName}}, aby nadal zdobywać {{.TenantName}}. 💰"
+    },
+    "ps": {
+        "title": "🚀 خپل د چیک ان سیشن پراخه کړئ!🔓",
+        "body": "د {{.TenantName}} لوګو تڼۍ کېکاږئ او د {{.TenantName}} لاسته راوړلو ته دوام ورکړئ. 💰"
+    },
+    "pt": {
+        "title": "🚀 Estenda sua sessão de check-in!🔓",
+        "body": "Pressione e segure o botão do logotipo {{.TenantName}} para continuar ganhando {{.TenantName}}. 💰"
+    },
+    "ru": {
+        "title": "🚀 Продлите сеанс регистрации!🔓",
+        "body": "Нажмите и удерживайте кнопку с логотипом {{.TenantName}}, чтобы продолжать зарабатывать {{.TenantName}}. 💰"
+    },
+    "sd": {
+        "title": "🚀 پنهنجو چيڪ ان سيشن وڌايو!🔓",
+        "body": "{{.TenantName}} ڪمائڻ جاري رکڻ لاءِ {{.TenantName}} لوگو بٽڻ کي دٻايو ۽ رکو. 💰"
+    },
+    "sk": {
+        "title": "🚀 Predĺžte si svoju registráciu!🔓",
+        "body": "Ak chcete naďalej zarábať {{.TenantName}}, stlačte a podržte tlačidlo s logom {{.TenantName}}. 💰"
+    },
+    "sl": {
+        "title": "🚀 Podaljšajte čas prijave!🔓",
+        "body": "Pritisnite in držite gumb z logotipom {{.TenantName}}, da še naprej zaslužite {{.TenantName}}. 💰"
+    },
+    "sq": {
+        "title": "🚀 Zgjate seancën e check-in-it!🔓",
+        "body": "Shtypni dhe mbani shtypur butonin e logos {{.TenantName}} për të vazhduar të fitoni {{.TenantName}}. 💰"
+    },
+    "sv": {
+        "title": "🚀 Förläng din incheckningssession!🔓",
+        "body": "Tryck och håll ned {{.TenantName}}-logotypen för att fortsätta tjäna {{.TenantName}}. 💰"
+    },
+    "ta": {
+        "title": "🚀 உங்கள் செக்-இன் அமர்வை நீட்டிக்கவும்!🔓",
+        "body": "தொடர்ந்து {{.TenantName}} ஐப் பெற {{.TenantName}} லோகோ பட்டனை அழுத்திப் பிடிக்கவும். 💰"
+    },
+    "te": {
+        "title": "🚀 మీ చెక్-ఇన్ సెషన్‌ను పొడిగించండి!🔓",
+        "body": "{{.TenantName}} సంపాదనను కొనసాగించడానికి {{.TenantName}} లోగో బటన్‌ను నొక్కి పట్టుకోండి. 💰"
+    },
+    "th": {
+        "title": "🚀 ขยายเวลาเช็คอินของคุณ!🔓",
+        "body": "กดปุ่มโลโก้ {{.TenantName}} ค้างไว้เพื่อรับ {{.TenantName}} ต่อไป 💰"
+    },
+    "su": {
+        "title": "🚀 Manjangkeun sési check-in anjeun!🔓",
+        "body": "Pencét jeung tahan tombol logo {{.TenantName}} pikeun terus earn {{.TenantName}}. 💰"
+    },
+    "kn": {
+        "title": "🚀 ನಿಮ್ಮ ಚೆಕ್-ಇನ್ ಅವಧಿಯನ್ನು ವಿಸ್ತರಿಸಿ!🔓",
+        "body": "{{.TenantName}} ಗಳಿಸುವುದನ್ನು ಮುಂದುವರಿಸಲು {{.TenantName}} ಲೋಗೋ ಬಟನ್ ಅನ್ನು ಒತ್ತಿ ಹಿಡಿದುಕೊಳ್ಳಿ. 💰"
+    },
+    "tr": {
+        "title": "🚀 Check-in seansınızı uzatın!🔓",
+        "body": "{{.TenantName}} kazanmaya devam etmek için {{.TenantName}} logosu düğmesini basılı tutun. 💰"
+    },
+    "zh-hant": {
+        "title": "🚀 延長簽到時間！🔓",
+        "body": "按住 {{.TenantName}} 徽標按鈕以繼續獲得 {{.TenantName}}。 💰"
+    },
+    "uk": {
+        "title": "🚀 Подовжте сеанс реєстрації!🔓",
+        "body": "Натисніть і утримуйте кнопку з логотипом {{.TenantName}}, щоб продовжувати заробляти {{.TenantName}}. 💰"
+    },
+    "ur": {
+        "title": "🚀 اپنا چیک ان سیشن بڑھائیں!🔓",
+        "body": "{{.TenantName}} حاصل کرنا جاری رکھنے کے لیے {{.TenantName}} لوگو بٹن کو دبائے رکھیں۔ 💰"
+    },
+    "vi": {
+        "title": "🚀 Kéo dài phiên đăng ký của bạn!🔓",
+        "body": "Nhấn và giữ nút logo {{.TenantName}} để tiếp tục kiếm {{.TenantName}}. 💰"
+    },
+    "zh": {
+        "title": "🚀 延长签到时间！🔓",
+        "body": "按住 {{.TenantName}} 徽标按钮以继续获得 {{.TenantName}}。 💰"
+    },
+    "zu": {
+        "title": "🚀 Nweba isikhathi sakho sokungena!🔓",
+        "body": "Cindezela futhi ubambe inkinobho yelogo ye-{{.TenantName}} ukuze uqhubeke uzuza i-{{.TenantName}}. 💰"
+    }
+}
