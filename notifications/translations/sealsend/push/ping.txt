@@ -1,0 +1,206 @@
+{
+   "af":{
+      "body":"Moenie sluimer nie, jy sal verloor! Begin jou inkloksessie 💪",
+      "title":"🔔 {{.Username}} het jou geping!"
+   },
+   "am":{
+      "body":"አታሸልብክ፣ ትሸነፋለህ! የመግባት ክፍለ ጊዜዎን ይጀምሩ 💪",
+      "title":"🔔 {{.Username}} አንገተህ!"
+   },
+   "ar":{
+      "body":"لا تغف ، ستخسر! ابدأ جلسة تسجيل الوصول 💪",
+      "title":"🔔 لقد تعرضت لضغوط من {{.Username}}!"
+   },
+   "az":{
+      "body":"Mürgüləmə, itirəcəksən! Qeydiyyat seansına başlayın 💪",
+      "title":"🔔 {{.Username}} sizə ping atdı!"
+   },
+   "bg":{
+      "body":"Не отлагайте, ще загубите! Започнете своята сесия за настаняване 💪",
+      "title":"🔔 {{.Username}} ви изпрати ping!"
+   },
+   "bn":{
+      "body":"স্নুজ করবেন না, আপনি হারাবেন! আপনার চেক-ইন সেশন শুরু করুন 💪",
+      "title":"🔔 {{.Username}} আপনাকে পিং করেছে!"
+   },
+   "cs":{
+      "body":"Neodkládejte, prohrajete! Začněte svou check-in relaci 💪",
+      "title":"🔔 {{.Username}} vám odeslal ping!"
+   },
+   "de":{
+      "body":"Schlummern Sie nicht, Sie werden verlieren! Starten Sie Ihre Check-in-Session 💪",
+      "title":"🔔 {{.Username}} hat dich gepingt!"
+   },
+   "en":{
+      "body":"Don't snooze, you'll lose! Start your check-in session 💪",
+      "title":"🔔 {{.Username}} has pinged you!"
+   },
+   "es":{
+      "body":"¡No te duermas, perderás! Inicia tu sesión de check-in 💪",
+      "title":"🔔 ¡{{.Username}} te ha hecho ping!"
+   },
+   "fa":{
+      "body":"چرت نزنید، ضرر می کنید! جلسه ورود خود را شروع کنید 💪",
+      "title":"🔔 {{.Username}} شما را پینگ کرده است!"
+   },
+   "fil":{
+      "body":"Huwag i-snooze, matatalo ka! Simulan ang iyong check-in session 💪",
+      "title":"🔔 Na-ping ka ni {{.Username}}!"
+   },
+   "fr":{
+      "body":"Ne roupillez pas, vous allez perdre! Commencez votre session d'enregistrement 💪",
+      "title":"🔔 {{.Username}} vous a envoyé un ping!"
+   },
+   "ge":{
+      "body":"Μην αναβάλετε, θα χάσετε! Ξεκινήστε τη συνεδρία του check-in 💪",
+      "title":"🔔 Το {{.Username}} σας έκανε ping!"
+   },
+   "gu":{
+      "body":"સ્નૂઝ કરશો નહીં, તમે હારી જશો! તમારું ચેક-ઇન સત્ર તમારું ચેક-ઇન સત્ર શરૂ કરો 💪",
+      "title":"🔔 {{.Username}} એ તમને પિંગ કર્યા છે!"
+   },
+   "he":{
+      "body":"אל תנדנד, אתה תפסיד! התחל את סשן הצ'ק-אין שלך 💪",
+      "title":"🔔 {{.Username}} שלח לך פינג!"
+   },
+   "hi":{
+      "body":"झपकी मत लो, तुम हार जाओगे! अपना चेक-इन सत्र शुरू करें 💪",
+      "title":"🔔 {{.Username}} ने आपको पिंग किया है!"
+   },
+   "hu":{
+      "body":"Ne szundikálj, veszítesz! Indítsa el a bejelentkezést 💪",
+      "title":"🔔 {{.Username}} pingált rád!"
+   },
+   "id":{
+      "body":"Jangan tunda, Anda akan kalah! Mulai sesi check-in Anda 💪",
+      "title":"🔔 {{.Username}} telah mem-ping Anda!"
+   },
+   "it":{
+      "body":"Non sonnecchiare, perderai! Inizia la tua sessione di check-in 💪",
+      "title":"🔔 {{.Username}} ti ha inviato un ping!"
+   },
+   "ja":{
+      "body":"うたた寝しないでください、あなたは負けます！ チェックイン セッションを開始します 💪",
+      "title":"🔔 {{.Username}} があなたに ping を送信しました!"
+   },
+   "jv":{
+      "body":"Aja tundha, sampeyan bakal ilang! Mulai sesi check-in 💪",
+      "title":"🔔 {{.Username}} wis ping sampeyan!"
+   },
+   "kn":{
+      "body":"ಸ್ನೂಜ್ ಮಾಡಬೇಡಿ, ನೀವು ಕಳೆದುಕೊಳ್ಳುತ್ತೀರಿ! ನಿಮ್ಮ ಚೆಕ್-ಇನ್ ಸೆಶನ್ ಅನ್ನು ಪ್ರಾರಂಭಿಸಿ 💪",
+      "title":"🔔 {{.Username}} ನಿಮಗೆ ಪಿಂಗ್ ಮಾಡಿದ್ದಾರೆ!"
+   },
+   "ko":{
+      "body":"졸지 마세요, 당신은 잃을 것입니다! 체크인 세션 시작 💪",
+      "title":"🔔 {{.Username}} 이 당신을 핑했습니다!"
+   },
+   "mr":{
+      "body":"स्नूझ करू नका, आपण गमावाल! तुमचे चेक-इन सत्र सुरू करा 💪",
+      "title":"🔔 {{.Username}} ने तुम्हाला पिंग केले आहे!"
+   },
+   "ms":{
+      "body":"Jangan tunda, anda akan rugi! Mulakan sesi daftar masuk anda 💪",
+      "title":"🔔 {{.Username}} pengguna telah menghantar ping kepada anda!"
+   },
+   "no":{
+      "body":"Ikke slumre, du vil tape! Start innsjekkingsøkten 💪",
+      "title":"🔔 {{.Username}} har pinget deg!"
+   },
+   "pa":{
+      "body":"ਸਨੂਜ਼ ਨਾ ਕਰੋ, ਤੁਸੀਂ ਹਾਰ ਜਾਓਗੇ! ਆਪਣਾ ਚੈੱਕ-ਇਨ ਸੈਸ਼ਨ ਸ਼ੁਰੂ ਕਰੋ 💪",
+      "title":"🔔 {{.Username}} ਨੇ ਤੁਹਾਨੂੰ ਪਿੰਗ ਕੀਤਾ ਹੈ!"
+   },
+   "pl":{
+      "body":"Nie śpij, przegrasz! Rozpocznij sesję meldunkową 💪",
+      "title":"🔔 {{.Username}} wysłał Ci ping!"
+   },
+   "ps":{
+      "body":"مه کوه، تاسو به له لاسه ورکړئ! خپل د چیک ان سیشن پیل کړئ 💪",
+      "title":"🔔 {{.Username}} تاسو پینګ کړی دی!"
+   },
+   "pt":{
+      "body":"Não adie, você perderá! Inicie a sua sessão de check-in 💪",
+      "title":"🔔 {{.Username}} enviou um ping para você!"
+   },
+   "ro":{
+      "body":"Nu amâna, vei pierde! Începeți sesiunea de check-in 💪",
+      "title":"🔔 {{.Username}} v-a trimis un ping!"
+   },
+   "ru":{
+      "body":"Не откладывай, проиграешь! Начните сеанс регистрации 💪",
+      "title":"🔔 {{.Username}} пропинговал вас!"
+   },
+   "sd":{
+      "body":"ننڊ نه ڪريو، توهان وڃائي ڇڏيندؤ! پنهنجو چيڪ ان سيشن شروع ڪريو 💪",
+      "title":"🔔 {{.Username}} توهان کي پنگ ڪيو آهي!"
+   },
+   "sk":{
+      "body":"Neodkladaj, prehráš! Začnite svoju registračnú reláciu 💪",
+      "title":"🔔 {{.Username}} vám poslal ping!"
+   },
+   "sl":{
+      "body":"Ne dremežajte, izgubili boste! Začnite sejo prijave 💪",
+      "title":"🔔 {{.Username}} vas je pingal!"
+   },
+   "sq":{
+      "body":"Mos u përgjum, do të humbisni! Filloni seancën tuaj të regjistrimit 💪",
+      "title":"🔔 {{.Username}} ju ka prekur!"
+   },
+   "su":{
+      "body":"Tong snooze, anjeun bakal éléh! Mimitian sési check-in anjeun 💪",
+      "title":"🔔 {{.Username}} geus ping anjeun!"
+   },
+   "sv":{
+      "body":"Snooza inte, du kommer att förlora! Starta din incheckningssession 💪",
+      "title":"🔔 {{.Username}} har pingat dig!"
+   },
+   "ta":{
+      "body":"உறக்கநிலை வேண்டாம், நீங்கள் இழப்பீர்கள்! உங்கள் செக்-இன் அமர்வைத் தொடங்கவும் 💪",
+      "title":"🔔 {{.Username}} உங்களுக்கு பிங் செய்துள்ளார்!"
+   },
+   "te":{
+      "body":"తాత్కాలికంగా ఆపివేయవద్దు, మీరు ఓడిపోతారు! మీ చెక్-ఇన్ సెషన్‌ను ప్రారంభించండి 💪",
+      "title":"🔔 {{.Username}} మీకు పింగ్ చేసారు!"
+   },
+   "th":{
+      "body":"อย่างีบหลับ คุณจะแพ้! เริ่มเซสชั่นเช็คอินของคุณ 💪",
+      "title":"🔔 {{.Username}} ส่ง Ping หาคุณ!"
+   },
+   "tr":{
+      "body":"Erteleme, kaybedersin! Check-in seansınızı başlatın 💪",
+      "title":"🔔 {{.Username}} size ping attı!"
+   },
+   "uk":{
+      "body":"Не дрімай, програєш! Розпочніть сеанс реєстрації 💪",
+      "title":"🔔 {{.Username}} надіслав вам запит!"
+   },
+   "ur":{
+      "body":"اسنوز نہ کریں، آپ ہار جائیں گے! اپنا چیک ان سیشن شروع کریں۔",
+      "title":"🔔 {{.Username}} نے آپ کو پنگ کیا ہے!"
+   },
+   "vi":{
+      "body":"Đừng ngủ, bạn sẽ thua! Bắt đầu buổi đăng ký của bạn 💪",
+      "title":"🔔 {{.Username}} đã liên lạc với bạn!"
+   },
+   "yo":{
+      "body":"Maṣe ṣan, iwọ yoo padanu! Bẹrẹ igba iwọle 💪",
+      "title":"🔔 {{.Username}} ti kọ ọ!"
+   },
+   "zh":{
+      "body":"不要打瞌睡，你會輸的！ 開始您的簽到環節💪",
+      "title":"🔔 {{.Username}} 已通知您"
+   },
+   "zh-hans":{
+      "body":"不要打瞌睡，你会输的！ 开始您的签到环节💪",
+      "title":"🔔 {{.Username}} 已通知您！"
+   },
+   "zh-hant":{
+      "body":"不要打瞌睡，你會輸的！ 開始您的簽到環節💪",
+      "title":"🔔 {{.Username}} 已通知您"
+   },
+   "zu":{
+      "body":"Ungasnuzi, uzolahlekelwa! Qala iseshini yakho yokungena 💪",
+      "title":"🔔 {{.Username}} ukuphikile!"
+   }
+}
