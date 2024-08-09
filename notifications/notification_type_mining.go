@@ -192,7 +192,10 @@ func (m *miningSessionSource) insertMiningScheduledNotifications(ctx context.Con
 		Uniqueness:               fmt.Sprintf("%v_%v_%v", *message.UserID, MiningEndingSoonNotificationType, uniquenessTime),
 		NotificationChannel:      string(TelegramNotificationChannel),
 		NotificationChannelValue: *message.UserID,
-		Data:                     &users.JSON{},
+		Data: &users.JSON{
+			"TenantName": m.cfg.TenantName,
+			"TokenName":  m.cfg.TokenName,
+		},
 	})
 
 	return errors.Wrapf(insertScheduledNotifications(ctx, m.db, scheduled), "can't execute insertScheduledNotifications:%#v", scheduled)
