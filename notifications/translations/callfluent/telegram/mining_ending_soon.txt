@@ -1,6 +1,6 @@
 {
     "en": {
-        "body": "🚨 <b>Time's Running Out</b> 🚨\n\nYou've got 1 hour left to extend your check-in session.",
+        "body": "Extend your mining session!\n\nTap the <b>{{.TenantName}}</b> logo button to keep earning <b>{{.TokenName}}</b> tokens.",
         "buttonText": ["👉 Extend Session"]
     }
 }

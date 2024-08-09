@@ -49,12 +49,12 @@ func StartProcessor(ctx context.Context, cancel context.CancelFunc) Processor { 
 	loadTelegramNotificationTranslationTemplates(cfg.TenantName)
 
 	ddlWorkersParam := fmt.Sprintf(ddl, schedulerWorkersCount)
-
 	var mbConsumer messagebroker.Client
 	prc := &processor{repository: &repository{
 		cfg:                         &cfg,
 		db:                          storage.MustConnect(context.Background(), ddlWorkersParam, applicationYamlKey), //nolint:contextcheck,lll // We need to gracefully shut it down.
-		freezerDB:                   storagev3.MustConnect(context.Background(), applicationYamlKey),                //nolint:contextcheck,lll // We need to gracefully shut it down.
+		eskimoDB:                    storage.MustConnect(ctx, "", eskimoApplicationYamlKey),
+		freezerDB:                   storagev3.MustConnect(context.Background(), applicationYamlKey), //nolint:contextcheck // We need to gracefully shut it down.
 		mb:                          messagebroker.MustConnect(ctx, applicationYamlKey),
 		pushNotificationsClient:     push.New(applicationYamlKey),
 		telegramNotificationsClient: telegram.New(applicationYamlKey),
@@ -79,7 +79,7 @@ func StartProcessor(ctx context.Context, cancel context.CancelFunc) Processor { 
 		&agendaContactsSource{processor: prc},
 		&miningSessionSource{processor: prc},
 	)
-	prc.shutdown = closeAll(mbConsumer, prc.mb, prc.db, prc.pushNotificationsClient.Close, prc.freezerDB.Close)
+	prc.shutdown = closeAll(mbConsumer, prc.mb, prc.db, prc.pushNotificationsClient.Close, prc.freezerDB.Close, prc.eskimoDB.Close)
 	go prc.startOldSentNotificationsCleaner(ctx)
 	go prc.startOldSentAnnouncementsCleaner(ctx)
 	go prc.startGetUpdatesTelegramLongPolling(ctx)
@@ -111,6 +111,9 @@ func closeAll(mbConsumer, mbProducer messagebroker.Client, db *storage.DB, other
 func (p *processor) CheckHealth(ctx context.Context) error {
 	if err := p.db.Ping(ctx); err != nil {
 		return errors.Wrap(err, "[health-check] failed to ping DB")
+	}
+	if err := p.eskimoDB.Ping(ctx); err != nil {
+		return errors.Wrap(err, "[health-check] failed to ping eskimo DB")
 	}
 	if err := p.checkFreezerDBHealth(ctx); err != nil {
 		return errors.Wrap(err, "[health-check] failed to checkFreezerDBHealth")

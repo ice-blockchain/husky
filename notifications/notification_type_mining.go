@@ -106,7 +106,7 @@ func (m *miningSessionSource) insertMiningScheduledNotifications(ctx context.Con
 		dayDuration = 24 * stdlibtime.Hour
 		uniquenessTime = fmt.Sprintf("%v:%02d:%02d %02d:%02d:%02d", now.Year(), int(now.Month()), now.Day(), now.Hour(), 0, 0)
 	}
-	scheduled := make([]*scheduledNotification, 0, notificationsNum)
+	scheduled := make([]*scheduledNotification, 0, notificationsNum+1)
 	for _, channel := range []NotificationChannel{PushNotificationChannel} {
 		scheduled = append(scheduled, &scheduledNotification{
 			ScheduledAt:              now,
@@ -183,10 +183,22 @@ func (m *miningSessionSource) insertMiningScheduledNotifications(ctx context.Con
 			Data:                     &users.JSON{},
 		})
 	}
+	scheduled = append(scheduled, &scheduledNotification{
+		ScheduledAt:              now,
+		ScheduledFor:             message.WarnAboutExpirationStartingAt,
+		Language:                 language,
+		UserID:                   *message.UserID,
+		NotificationType:         string(MiningEndingSoonNotificationType),
+		Uniqueness:               fmt.Sprintf("%v_%v_%v", *message.UserID, MiningEndingSoonNotificationType, uniquenessTime),
+		NotificationChannel:      string(TelegramNotificationChannel),
+		NotificationChannelValue: *message.UserID,
+		Data:                     &users.JSON{},
+	})
 
 	return errors.Wrapf(insertScheduledNotifications(ctx, m.db, scheduled), "can't execute insertScheduledNotifications:%#v", scheduled)
 }
 
+//nolint:dupl // .
 func insertScheduledNotifications(ctx context.Context, db *storage.DB, scheduled []*scheduledNotification) error {
 	const numFields = 9
 	values := make([]string, 0, numFields*len(scheduled))
