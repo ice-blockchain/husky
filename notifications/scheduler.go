@@ -262,7 +262,7 @@ func (s *Scheduler) runOneTimeMiningExtendFeature(ctx context.Context) {
 		ID       string
 		Language string
 	}
-	const limit = 10000
+	const limit = 1000
 	offset := uint64(0)
 	now := time.Now()
 	for {
@@ -276,11 +276,12 @@ func (s *Scheduler) runOneTimeMiningExtendFeature(ctx context.Context) {
 		resp, err := storage.Select[notActiveUser](ctx, s.eskimoDB, sql, now)
 		if err != nil {
 			log.Error(err, "can't get users to send the single mining extend message")
+			stdlibtime.Sleep(100 * stdlibtime.Millisecond) //nolint:gomnd,mnd // .
 
 			continue
 		}
 		if len(resp) == 0 {
-			return
+			break
 		}
 		var randMax int
 		if s.cfg.Development {
@@ -310,7 +311,10 @@ func (s *Scheduler) runOneTimeMiningExtendFeature(ctx context.Context) {
 		}
 
 		offset += limit
+		stdlibtime.Sleep(100 * stdlibtime.Millisecond) //nolint:gomnd,mnd // .
 	}
+	diff := stdlibtime.Since(*now.Time)
+	log.Info("Finished handling one time mining extend notifications generation in", diff)
 }
 
 //nolint:dupl // .
