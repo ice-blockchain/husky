@@ -317,7 +317,6 @@ func (s *Scheduler) runOneTimeMiningExtendFeature(ctx context.Context) {
 	log.Info("Finished handling one time mining extend notifications generation in", diff)
 }
 
-//nolint:dupl // .
 func insertScheduledNotificationsWithSentCheck(ctx context.Context, db *storage.DB, scheduled []*scheduledNotification) error {
 	const numFields = 9
 	values := make([]string, 0, numFields*len(scheduled))
@@ -326,6 +325,7 @@ func insertScheduledNotificationsWithSentCheck(ctx context.Context, db *storage.
 		values = append(values, fmt.Sprintf("(to_timestamp($%[1]v, 'YYYY-MM-DD HH24:MI:SS'), to_timestamp($%[2]v, 'YYYY-MM-DD HH24:MI:SS'), $%[3]v::jsonb, $%[4]v, $%[5]v, $%[6]v, $%[7]v, $%[8]v, $%[9]v)", ix*numFields+1, ix*numFields+2, ix*numFields+3, ix*numFields+4, ix*numFields+5, ix*numFields+6, ix*numFields+7, ix*numFields+8, ix*numFields+9)) //nolint:lll,gomnd,mnd // .
 		params = append(params, sch.ScheduledAt.Time, sch.ScheduledFor.Time, sch.Data, sch.Language, sch.UserID, sch.Uniqueness, sch.NotificationType, sch.NotificationChannel, sch.NotificationChannelValue)                                                                                                                                                 //nolint:lll // .
 	}
+	//nolint:lll // .
 	sql := fmt.Sprintf(`
 				INSERT INTO scheduled_notifications(
 					scheduled_at,
@@ -338,8 +338,10 @@ func insertScheduledNotificationsWithSentCheck(ctx context.Context, db *storage.
 					notification_channel,
 					notification_channel_value
 				)
-				SELECT * FROM (VALUES %[1]v)
-				WHERE NOT EXISTS (SELECT user_id FROM sent_notifications)`, strings.Join(values, ","))
+				SELECT * FROM (VALUES %[1]v) AS t(scheduled_at, scheduled_for, data, language, user_id, uniqueness, notification_type, notification_channel, notification_channel_value)
+				WHERE t.user_id NOT IN (SELECT user_id FROM sent_notifications WHERE uniqueness = user_id || '_%[2]v' || '_single')
+				ON CONFLICT (user_id,uniqueness,notification_type,notification_channel,notification_channel_value)
+				DO NOTHING`, strings.Join(values, ","), MiningEndingSoonNotificationType)
 	_, err := storage.Exec(ctx, db, sql, params...)
 
 	return errors.Wrapf(err, "can't execute insert scheduled notifications records:%#v", values)
