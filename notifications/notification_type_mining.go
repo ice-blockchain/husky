@@ -201,7 +201,6 @@ func (m *miningSessionSource) insertMiningScheduledNotifications(ctx context.Con
 	return errors.Wrapf(insertScheduledNotifications(ctx, m.db, scheduled), "can't execute insertScheduledNotifications:%#v", scheduled)
 }
 
-//nolint:dupl // .
 func insertScheduledNotifications(ctx context.Context, db *storage.DB, scheduled []*scheduledNotification) error {
 	const numFields = 9
 	values := make([]string, 0, numFields*len(scheduled))
