@@ -18,7 +18,6 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ice-blockchain/eskimo/users"
-	"github.com/ice-blockchain/freezer/tokenomics"
 	"github.com/ice-blockchain/wintr/log"
 	"github.com/ice-blockchain/wintr/notifications/telegram"
 	"github.com/ice-blockchain/wintr/time"
@@ -271,12 +270,12 @@ func (r *repository) handleTelegramUpdates(
 		}
 		if upd.Message.From.Username == "" && upd.Message.Text == string(StartTelegramCommand) {
 			body = tmpl.getAltBody(users.JSON{
-				"WelcomeBonus": tokenomics.WelcomeBonusV2Amount,
+				"WelcomeBonus": r.cfg.WelcomeBonusV2Amount,
 			})
 		} else {
 			body = tmpl.getBody(users.JSON{
 				"Username":     upd.Message.From.Username,
-				"WelcomeBonus": tokenomics.WelcomeBonusV2Amount,
+				"WelcomeBonus": r.cfg.WelcomeBonusV2Amount,
 			})
 		}
 		id := strconv.FormatInt(upd.Message.From.ID, 10)

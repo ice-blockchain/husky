@@ -5,6 +5,8 @@ logger:
   encoder: console
   level: info
 notifications: &notifications
+  welcomeBonusV2Amount: 500
+  maxReferralsCount: 200
   tenantName: BogusName
   deeplinkScheme: staging.ice.app
   pingCooldown: 1m

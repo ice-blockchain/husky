@@ -405,6 +405,8 @@ type (
 			Hour    int                `yaml:"hour"`
 			Minutes int                `yaml:"minutes"`
 		} `yaml:"weeklyStats"`
-		Development bool `yaml:"development"`
+		MaxReferralsCount    int64   `yaml:"maxReferralsCount"`
+		WelcomeBonusV2Amount float64 `yaml:"welcomeBonusV2Amount"`
+		Development          bool    `yaml:"development"`
 	}
 )
