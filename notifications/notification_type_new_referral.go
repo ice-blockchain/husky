@@ -191,7 +191,7 @@ func (r *repository) getNewReferralCoinAmount(ctx context.Context, referredBy st
 	if err != nil {
 		log.Error(errors.Wrapf(err, "failed to tokenomics.GetInternalID for referredBy: %v", referredBy))
 
-		return uint64(tokenomics.WelcomeBonusV2Amount)
+		return uint64(r.cfg.WelcomeBonusV2Amount)
 	}
 	state, err := storagev3.Get[struct {
 		model.UserIDField
@@ -204,14 +204,14 @@ func (r *repository) getNewReferralCoinAmount(ctx context.Context, referredBy st
 		}
 		log.Error(errors.Wrapf(err, "failed to get PreStakingBonus for freezerInternalID:%v referredBy:%v", freezerInternalID, referredBy))
 
-		return uint64(tokenomics.WelcomeBonusV2Amount)
+		return uint64(r.cfg.WelcomeBonusV2Amount)
 	}
-	if state[0].BalanceT1WelcomeBonusPending >= 200*tokenomics.WelcomeBonusV2Amount {
+	if state[0].BalanceT1WelcomeBonusPending >= float64(r.cfg.MaxReferralsCount)*r.cfg.WelcomeBonusV2Amount {
 		return 0
 	}
 	if state[0].PreStakingBonus == 0 {
-		return uint64(tokenomics.WelcomeBonusV2Amount)
+		return uint64(r.cfg.WelcomeBonusV2Amount)
 	}
 
-	return uint64((state[0].PreStakingBonus + 100.0) * tokenomics.WelcomeBonusV2Amount / 100.0) //nolint:gomnd,mnd // Nope.
+	return uint64((state[0].PreStakingBonus + 100.0) * r.cfg.WelcomeBonusV2Amount / 100.0) //nolint:gomnd,mnd // Nope.
 }
