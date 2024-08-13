@@ -405,8 +405,8 @@ type (
 			Hour    int                `yaml:"hour"`
 			Minutes int                `yaml:"minutes"`
 		} `yaml:"weeklyStats"`
-		MaxReferralsCount    int64   `yaml:"maxReferralsCount"`
-		WelcomeBonusV2Amount float64 `yaml:"welcomeBonusV2Amount"`
+		MaxReferralsCount    int64   `yaml:"maxReferralsCount" mapstructure:"maxReferralsCount"`
+		WelcomeBonusV2Amount float64 `yaml:"welcomeBonusV2Amount" mapstructure:"welcomeBonusV2Amount"`
 		Development          bool    `yaml:"development"`
 	}
 )
