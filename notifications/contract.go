@@ -210,7 +210,6 @@ type (
 		telemetryTelegramNotifications   *telemetry
 		telemetryAnnouncements           *telemetry
 		db                               *storage.DB
-		eskimoDB                         *storage.DB
 		wg                               *sync.WaitGroup
 		cancel                           context.CancelFunc
 	}
