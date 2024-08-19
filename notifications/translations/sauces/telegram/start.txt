@@ -1,0 +1,12 @@
+{
+    "en": {
+        "body": "<b>Hi @{{.Username}}!</b>\n\n⏰ Tap on the <b>SAUCES</b> button every 24 hours to see your coin balance increase.\n\n👬 Build your team, complete tasks and increase your coins earnings! For each friend you invite, you both receive <b>{{.WelcomeBonus}} SAUCE tokens</b>.\n\n🌟 The <b>SAUCES Token</b> is a utility token designed to enhance the festival experience by providing exclusive benefits, fostering community engagement, and facilitating seamless transactions within the Sunwaves ecosystem.",
+        "altBody": "<b>Hi!</b>\n\n⏰ Tap on the <b>SAUCES</b> button every 24 hours to see your coin balance increase.\n\n👬 Build your team, complete tasks and increase your coins earnings! For each friend you invite, you both receive <b>{{.WelcomeBonus}} SAUCE tokens</b>.\n\n🌟 The <b>SAUCES Token</b> is a utility token designed to enhance the festival experience by providing exclusive benefits, fostering community engagement, and facilitating seamless transactions within the Sunwaves ecosystem.",
+        "buttonText": [
+                       "🌟 Start Now!",
+                       "👾 Join TG Community",
+                       "🤖 Join X Community",
+                       "📋 Knowledge Base"
+                       ]
+    }
+}

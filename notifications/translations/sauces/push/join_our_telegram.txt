@@ -1,0 +1,202 @@
+{
+    "en": {
+        "title": "📣 Join our Telegram community!",
+        "body": "Join our community channel for exclusive updates."
+    },
+    "ro": {
+        "title": "📣 Alăturați-vă comunității noastre Telegram!",
+        "body": "Alăturați-vă canalului comunității noastre pentru actualizări exclusive."
+    },
+    "el": {
+        "title": "📣 Γίνετε μέλος της κοινότητάς μας στο Telegram!",
+        "body": "Εγγραφείτε στο κοινοτικό μας κανάλι για αποκλειστικές ενημερώσεις."
+    },
+    "af": {
+        "title": "📣 Sluit aan by ons Telegram-gemeenskap!",
+        "body": "Sluit aan by ons gemeenskapskanaal vir eksklusiewe opdaterings."
+    },
+    "am": {
+        "title": "📣 የቴሌግራም ማህበረሰባችንን ይቀላቀሉ!",
+        "body": "ለልዩ ዝመናዎች የማህበረሰብ ቻናላችንን ይቀላቀሉ።"
+    },
+    "ar": {
+        "title": "📣 انضم إلى مجتمع Telegram لدينا!",
+        "body": "انضم إلى قناة مجتمعنا للحصول على تحديثات حصرية."
+    },
+    "az": {
+        "title": "📣 Telegram icmamıza qoşulun!",
+        "body": "Eksklüziv yeniləmələr üçün icma kanalımıza qoşulun."
+    },
+    "bg": {
+        "title": "📣 Присъединете се към нашата общност в Telegram!",
+        "body": "Присъединете се към нашия канал на общността за изключителни актуализации."
+    },
+    "bn": {
+        "title": "📣 আমাদের টেলিগ্রাম সম্প্রদায়ে যোগ দিন!",
+        "body": "একচেটিয়া আপডেটের জন্য আমাদের কমিউনিটি চ্যানেলে যোগ দিন।"
+    },
+    "yo": {
+        "title": "📣 Darapọ mọ agbegbe Telegram wa!",
+        "body": "Darapọ mọ ikanni agbegbe wa fun awọn imudojuiwọn iyasọtọ."
+    },
+    "cs": {
+        "title": "📣 Připojte se k naší komunitě Telegram!",
+        "body": "Připojte se k našemu komunitnímu kanálu a získejte exkluzivní aktualizace."
+    },
+    "de": {
+        "title": "📣 Tritt unserer Telegram-Community bei!",
+        "body": "Treten Sie unserem Community-Kanal bei, um exklusive Updates zu erhalten."
+    },
+    "es": {
+        "title": "📣 ¡Únete a nuestra comunidad de Telegram!",
+        "body": "Únase a nuestro canal comunitario para recibir actualizaciones exclusivas."
+    },
+    "fa": {
+        "title": "📣 به انجمن تلگرام ما بپیوندید!",
+        "body": "برای به روز رسانی های اختصاصی به کانال انجمن ما بپیوندید."
+    },
+    "tl": {
+        "title": "📣 Sumali sa aming komunidad ng Telegram!",
+        "body": "Sumali sa aming channel ng komunidad para sa mga eksklusibong update."
+    },
+    "fr": {
+        "title": "📣 Rejoignez notre communauté Telegram !",
+        "body": "Rejoignez notre chaîne communautaire pour des mises à jour exclusives."
+    },
+    "gu": {
+        "title": "📣 અમારા ટેલિગ્રામ સમુદાયમાં જોડાઓ!",
+        "body": "વિશિષ્ટ અપડેટ્સ માટે અમારી સમુદાય ચેનલમાં જોડાઓ."
+    },
+    "he": {
+        "title": "📣 הצטרף לקהילת הטלגרם שלנו!",
+        "body": "הצטרף לערוץ הקהילה שלנו לקבלת עדכונים בלעדיים."
+    },
+    "hi": {
+        "title": "📣 हमारे टेलीग्राम समुदाय में शामिल हों!",
+        "body": "विशेष अपडेट के लिए हमारे सामुदायिक चैनल से जुड़ें।"
+    },
+    "hu": {
+        "title": "📣 Csatlakozz Telegram közösségünkhöz!",
+        "body": "Csatlakozzon közösségi csatornánkhoz az exkluzív frissítésekért."
+    },
+    "id": {
+        "title": "📣 Bergabunglah dengan komunitas Telegram kami!",
+        "body": "Bergabunglah dengan saluran komunitas kami untuk pembaruan eksklusif."
+    },
+    "it": {
+        "title": "📣 Unisciti alla nostra community di Telegram!",
+        "body": "Unisciti al nostro canale della community per aggiornamenti esclusivi."
+    },
+    "ja": {
+        "title": "📣 Telegram コミュニティに参加しましょう!",
+        "body": "コミュニティ チャンネルに参加して、最新情報を入手してください。"
+    },
+    "jv": {
+        "title": "📣 Gabung karo komunitas Telegram kita!",
+        "body": "Gabung saluran komunitas kita kanggo nganyari eksklusif."
+    },
+    "ko": {
+        "title": "📣 텔레그램 커뮤니티에 가입하세요!",
+        "body": "독점 업데이트를 위해 커뮤니티 채널에 가입하세요."
+    },
+    "mr": {
+        "title": "📣 आमच्या टेलिग्राम समुदायात सामील व्हा!",
+        "body": "अनन्य अद्यतनांसाठी आमच्या समुदाय चॅनेलमध्ये सामील व्हा."
+    },
+    "ms": {
+        "title": "📣 Sertai komuniti Telegram kami!",
+        "body": "Sertai saluran komuniti kami untuk kemas kini eksklusif."
+    },
+    "no": {
+        "title": "📣 Bli med i Telegram-fellesskapet vårt!",
+        "body": "Bli med i fellesskapskanalen vår for eksklusive oppdateringer."
+    },
+    "pa": {
+        "title": "📣 ਸਾਡੇ ਟੈਲੀਗ੍ਰਾਮ ਭਾਈਚਾਰੇ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ!",
+        "body": "ਵਿਸ਼ੇਸ਼ ਅੱਪਡੇਟ ਲਈ ਸਾਡੇ ਕਮਿਊਨਿਟੀ ਚੈਨਲ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ।"
+    },
+    "pl": {
+        "title": "📣 Dołącz do naszej społeczności Telegram!",
+        "body": "Dołącz do naszego kanału społecznościowego, aby otrzymywać ekskluzywne aktualizacje."
+    },
+    "ps": {
+        "title": "📣 زموږ د ټیلیګرام ټولنې سره یوځای شئ!",
+        "body": "د ځانګړي تازه معلوماتو لپاره زموږ د ټولنې چینل کې ګډون وکړئ."
+    },
+    "pt": {
+        "title": "📣 Junte-se à nossa comunidade do Telegram!",
+        "body": "Junte-se ao nosso canal da comunidade para atualizações exclusivas."
+    },
+    "ru": {
+        "title": "📣 Присоединяйтесь к нашему сообществу Telegram!",
+        "body": "Присоединяйтесь к нашему каналу сообщества для эксклюзивных обновлений."
+    },
+    "sd": {
+        "title": "📣 اسان جي ٽيليگرام ڪميونٽي ۾ شامل ٿيو!",
+        "body": "خاص اپڊيٽ لاءِ اسان جي ڪميونٽي چينل ۾ شامل ٿيو."
+    },
+    "sk": {
+        "title": "📣 Pripojte sa k našej telegramovej komunite!",
+        "body": "Pripojte sa k nášmu komunitnému kanálu a získajte exkluzívne aktualizácie."
+    },
+    "sl": {
+        "title": "📣 Pridružite se naši skupnosti Telegram!",
+        "body": "Pridružite se našemu kanalu skupnosti za ekskluzivne posodobitve."
+    },
+    "sq": {
+        "title": "📣 Bashkohuni me komunitetin tonë Telegram!",
+        "body": "Bashkohuni në kanalin tonë të komunitetit për përditësime ekskluzive."
+    },
+    "sv": {
+        "title": "📣 Gå med i vår Telegram-gemenskap!",
+        "body": "Gå med i vår communitykanal för exklusiva uppdateringar."
+    },
+    "ta": {
+        "title": "📣 எங்கள் டெலிகிராம் சமூகத்தில் சேரவும்!",
+        "body": "பிரத்தியேக புதுப்பிப்புகளுக்கு எங்கள் சமூக சேனலில் சேரவும்."
+    },
+    "te": {
+        "title": "📣 మా టెలిగ్రామ్ సంఘంలో చేరండి!",
+        "body": "ప్రత్యేకమైన అప్‌డేట్‌ల కోసం మా కమ్యూనిటీ ఛానెల్‌లో చేరండి."
+    },
+    "th": {
+        "title": "📣 เข้าร่วมชุมชนโทรเลขของเรา!",
+        "body": "เข้าร่วมช่องชุมชนของเราเพื่อรับการอัปเดตพิเศษ"
+    },
+    "su": {
+        "title": "📣 Miluan komunitas Telegram kami!",
+        "body": "Miluan saluran komunitas kami pikeun apdet ekslusif."
+    },
+    "kn": {
+        "title": "📣 ನಮ್ಮ ಟೆಲಿಗ್ರಾಮ್ ಸಮುದಾಯಕ್ಕೆ ಸೇರಿ!",
+        "body": "ವಿಶೇಷ ನವೀಕರಣಗಳಿಗಾಗಿ ನಮ್ಮ ಸಮುದಾಯ ಚಾನಲ್‌ಗೆ ಸೇರಿ."
+    },
+    "tr": {
+        "title": "📣 Telegram topluluğumuza katılın!",
+        "body": "Özel güncellemeler için topluluk kanalımıza katılın."
+    },
+    "zh-hant": {
+        "title": "📣 加入我們的 Telegram 社區！",
+        "body": "加入我們的社區頻道以獲取獨家更新。"
+    },
+    "uk": {
+        "title": "📣 Приєднуйтесь до нашої спільноти Telegram!",
+        "body": "Приєднуйтесь до нашого каналу спільноти, щоб отримувати ексклюзивні оновлення."
+    },
+    "ur": {
+        "title": "📣 ہماری ٹیلیگرام کمیونٹی میں شامل ہوں!",
+        "body": "خصوصی اپ ڈیٹس کے لیے ہمارے کمیونٹی چینل میں شامل ہوں۔"
+    },
+    "vi": {
+        "title": "📣 Tham gia cộng đồng Telegram của chúng tôi!",
+        "body": "Tham gia kênh cộng đồng của chúng tôi để cập nhật độc quyền."
+    },
+    "zh": {
+        "title": "📣 加入我们的 Telegram 社区！",
+        "body": "加入我们的社区频道以获取独家更新。"
+    },
+    "zu": {
+        "title": "📣 Joyina umphakathi wethu weTelegram!",
+        "body": "Joyina isiteshi sethu somphakathi ukuze uthole izibuyekezo ezikhethekile."
+    }
+}
