@@ -1,6 +1,6 @@
 module github.com/ice-blockchain/husky
 
-go 1.22
+go 1.23
 
 require (
 	github.com/goccy/go-json v0.10.3
