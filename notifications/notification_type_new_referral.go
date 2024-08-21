@@ -5,7 +5,6 @@ package notifications
 import (
 	"context"
 	"fmt"
-	"strings"
 	stdlibtime "time"
 
 	"github.com/hashicorp/go-multierror"
@@ -159,7 +158,7 @@ func (r *repository) sendNewReferralNotification(ctx context.Context, us *users.
 				"TenantName":            r.cfg.TenantName,
 				"DailyNewReferralCount": newReferralCountLast24HInfo.Count,
 				"Amount":                r.getNewReferralCoinAmount(ctx, us.User.ReferredBy) * newReferralCountLast24HInfo.Count,
-				"Coin":                  strings.ToUpper(r.cfg.TokenName),
+				"Coin":                  r.cfg.TokenName,
 			},
 		}}); iErr != nil {
 			return errors.Wrapf(iErr, "can't insert scheduled notifications for:%v", us.ReferredBy)
