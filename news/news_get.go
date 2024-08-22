@@ -17,7 +17,7 @@ func (r *repository) GetNews(ctx context.Context, newsType Type, language string
 	if ctx.Err() != nil {
 		return nil, errors.Wrap(ctx.Err(), "get news failed because context failed")
 	}
-	args := []any{requestingUserID(ctx), language, newsType, int64(limit), int64(offset), createdAfter.Time}
+	args := []any{requestingUserID(ctx), language, newsType, int64(limit), int64(offset), createdAfter.Time} //nolint:gosec // .
 	sql := fmt.Sprintf(`SELECT (nvu.created_at IS NOT NULL OR nvu_en.created_at IS NOT NULL OR COALESCE(n.created_at,n_en.created_at) < $6::timestamp) AS viewed,
 					    COALESCE(n_en.created_at,n.created_at) AS created_at,
 						COALESCE(n.updated_at, n_en.updated_at) AS updated_at,
