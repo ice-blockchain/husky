@@ -2,8 +2,8 @@
     "en": {
         "body": "🌟 Join our social media channels to stay updated with the latest news and important announcements.",
         "buttonText": [
-                       "SAUCES TG Community",
-                       "SAUCES on X",
+                       "Sauces TG Community",
+                       "Sauces on X",
                        "ION TG Community",
                        "ION on X",
                        "🌟 Launch App!"
