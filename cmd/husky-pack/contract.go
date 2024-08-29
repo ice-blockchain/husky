@@ -60,7 +60,7 @@ type (
 
 const (
 	applicationYamlKey = "cmd/husky-pack"
-	swaggerRoot        = "/notifications/w"
+	swaggerRootSuffix  = "/notifications/w"
 )
 
 // .
@@ -277,5 +277,6 @@ type (
 	config struct {
 		Host    string `yaml:"host"`
 		Version string `yaml:"version"`
+		Tenant  string `yaml:"tenant"`
 	}
 )

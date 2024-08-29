@@ -8,6 +8,7 @@ cmd/husky:
   host: localhost:4443
   version: local
   defaultEndpointTimeout: 30s
+  tenant: sunwaves
   httpServer:
     port: 4443
     certPath: cmd/husky/.testdata/localhost.crt
