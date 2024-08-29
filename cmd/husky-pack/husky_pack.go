@@ -31,6 +31,10 @@ func main() {
 	appcfg.MustLoadFromKey(applicationYamlKey, &cfg)
 	api.SwaggerInfo.Host = cfg.Host
 	api.SwaggerInfo.Version = cfg.Version
+	swaggerRoot := swaggerRootSuffix
+	if cfg.Tenant != "" {
+		swaggerRoot = "/" + cfg.Tenant + swaggerRootSuffix
+	}
 	server.New(new(service), applicationYamlKey, swaggerRoot).ListenAndServe(ctx, cancel)
 }
 
