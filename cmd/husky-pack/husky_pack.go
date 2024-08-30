@@ -31,11 +31,12 @@ func main() {
 	appcfg.MustLoadFromKey(applicationYamlKey, &cfg)
 	api.SwaggerInfo.Host = cfg.Host
 	api.SwaggerInfo.Version = cfg.Version
-	swaggerRoot := swaggerRootSuffix
+	nginxPrefix := ""
 	if cfg.Tenant != "" {
-		swaggerRoot = "/" + cfg.Tenant + swaggerRootSuffix
+		nginxPrefix = "/" + cfg.Tenant
+		api.SwaggerInfo.BasePath = nginxPrefix
 	}
-	server.New(new(service), applicationYamlKey, swaggerRoot).ListenAndServe(ctx, cancel)
+	server.New(new(service), applicationYamlKey, swaggerRootSuffix, nginxPrefix).ListenAndServe(ctx, cancel)
 }
 
 func (s *service) RegisterRoutes(router *server.Router) {
