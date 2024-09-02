@@ -5,6 +5,7 @@ package notifications
 import (
 	"context"
 	"fmt"
+	"math/rand"
 	"strconv"
 	"strings"
 	stdlibtime "time"
@@ -17,15 +18,14 @@ import (
 	"github.com/ice-blockchain/wintr/time"
 )
 
-//nolint:funlen,gocognit,gocyclo,revive,cyclop // .
+//nolint:funlen,gocognit,gocyclo,revive,cyclop,maintidx // .
 func (s *Scheduler) runTelegramNotificationsProcessor(ctx context.Context, workerNumber int64) {
-	schedulerTelegramBatchSize := s.getTelegramBatchSize()
 	var (
 		batchNumber                 int64
 		now, lastIterationStartedAt = time.Now(), time.Now()
 		errs                        = make([]error, 0)
 		successedNotifications      = make([]*sentNotification, 0, schedulerTelegramBatchSize)
-		toSendTelegramNotifications = make([]*telegramNotification, 0, schedulerTelegramBatchSize)
+		toSendTelegramNotifications = make([]*telegramNotification, 0, s.telegramBotMessageBatchLimit())
 		notifications               = make([]*scheduledNotificationInfo, schedulerTelegramBatchSize)
 		failedTelegramNotifications = make([]*scheduledNotification, 0, schedulerTelegramBatchSize)
 		err                         error
@@ -42,8 +42,7 @@ func (s *Scheduler) runTelegramNotificationsProcessor(ctx context.Context, worke
 		notifications = notifications[:0]
 		failedTelegramNotifications = failedTelegramNotifications[:0]
 		lastIterationStartedAt = now
-
-		stdlibtime.Sleep(1 * stdlibtime.Second)
+		randomDelay(3) //nolint:gomnd,mnd // .
 	}
 
 	for ctx.Err() == nil {
@@ -67,7 +66,6 @@ func (s *Scheduler) runTelegramNotificationsProcessor(ctx context.Context, worke
 		/******************************************************************************************************************************************************
 			2. Processing batch of notifications.
 		******************************************************************************************************************************************************/
-		before = time.Now()
 		for _, notification := range notifications {
 			tmpl, found := allTelegramNotificationTemplates[NotificationType(notification.NotificationType)][notification.Language]
 			if !found {
@@ -132,35 +130,68 @@ func (s *Scheduler) runTelegramNotificationsProcessor(ctx context.Context, worke
 				}
 			}
 			toSendTelegramNotifications = append(toSendTelegramNotifications, tn)
-		}
 
-		/******************************************************************************************************************************************************
-			3. Send all notifications concurrently.
-		******************************************************************************************************************************************************/
-		if eErr := runConcurrentlyBatch(ctx, s.sendTelegramNotification, toSendTelegramNotifications, func(arg *telegramNotification, err error) {
-			if errors.Is(err, telegram.ErrTelegramNotificationBadRequest) || errors.Is(err, telegram.ErrTelegramNotificationChatNotFound) ||
-				errors.Is(err, telegram.ErrTelegramNotificationForbidden) {
+			if len(toSendTelegramNotifications) >= int(s.telegramBotMessageBatchLimit()) {
+				/******************************************************************************************************************************************************
+					3. Send telegram bot batch notifications concurrently.
+				******************************************************************************************************************************************************/
+				before = time.Now()
+				if eErr := runConcurrentlyBatch(ctx, s.sendTelegramNotification, toSendTelegramNotifications, func(arg *telegramNotification, err error) {
+					if errors.Is(err, telegram.ErrTelegramNotificationBadRequest) || errors.Is(err, telegram.ErrTelegramNotificationChatNotFound) ||
+						errors.Is(err, telegram.ErrTelegramNotificationForbidden) {
+						s.schedulerTelegramNotificationsMX.Lock()
+						defer s.schedulerTelegramNotificationsMX.Unlock()
+
+						failedTelegramNotifications = append(failedTelegramNotifications, &arg.scheduled)
+					} else {
+						log.Error(errors.Wrapf(err, "can't send telegram notification for:%v", arg.sn.UserID))
+					}
+				}, func(arg *telegramNotification) {
+					s.schedulerTelegramNotificationsMX.Lock()
+					defer s.schedulerTelegramNotificationsMX.Unlock()
+
+					successedNotifications = append(successedNotifications, arg.sn)
+				}); eErr != nil {
+					log.Error(errors.Wrapf(eErr, "[scheduler] failed to execute concurrently sending telegram notifications for batchNumber:%v,workerNumber:%v", batchNumber, workerNumber)) //nolint:lll // .
+				}
+				if len(toSendTelegramNotifications) > 0 {
+					go s.telemetryTelegramNotifications.collectElapsed(2, *before.Time) //nolint:gomnd,mnd // .
+				}
+
+				toSendTelegramNotifications = toSendTelegramNotifications[:0]
+				stdlibtime.Sleep(4 * stdlibtime.Second) //nolint:gomnd,mnd // .
+			}
+		}
+		if len(toSendTelegramNotifications) > 0 {
+			/******************************************************************************************************************************************************
+				4. Send last telegram bot batch notifications concurrently.
+			******************************************************************************************************************************************************/
+			before = time.Now()
+			if eErr := runConcurrentlyBatch(ctx, s.sendTelegramNotification, toSendTelegramNotifications, func(arg *telegramNotification, err error) {
+				if errors.Is(err, telegram.ErrTelegramNotificationBadRequest) || errors.Is(err, telegram.ErrTelegramNotificationChatNotFound) ||
+					errors.Is(err, telegram.ErrTelegramNotificationForbidden) {
+					s.schedulerTelegramNotificationsMX.Lock()
+					defer s.schedulerTelegramNotificationsMX.Unlock()
+
+					failedTelegramNotifications = append(failedTelegramNotifications, &arg.scheduled)
+				} else {
+					log.Error(errors.Wrapf(err, "can't send telegram notification for:%v", arg.sn.UserID))
+				}
+			}, func(arg *telegramNotification) {
 				s.schedulerTelegramNotificationsMX.Lock()
 				defer s.schedulerTelegramNotificationsMX.Unlock()
 
-				failedTelegramNotifications = append(failedTelegramNotifications, &arg.scheduled)
-			} else {
-				log.Error(errors.Wrapf(err, "can't send telegram notification for:%v", arg.sn.UserID))
+				successedNotifications = append(successedNotifications, arg.sn)
+			}); eErr != nil {
+				log.Error(errors.Wrapf(eErr, "[scheduler] failed to execute concurrently sending telegram notifications for batchNumber:%v,workerNumber:%v", batchNumber, workerNumber)) //nolint:lll // .
 			}
-		}, func(arg *telegramNotification) {
-			s.schedulerTelegramNotificationsMX.Lock()
-			defer s.schedulerTelegramNotificationsMX.Unlock()
-
-			successedNotifications = append(successedNotifications, arg.sn)
-		}); eErr != nil {
-			log.Error(errors.Wrapf(eErr, "[scheduler] failed to execute concurrently sending telegram notifications for batchNumber:%v,workerNumber:%v", batchNumber, workerNumber)) //nolint:lll // .
-		}
-		if len(toSendTelegramNotifications) > 0 {
-			go s.telemetryTelegramNotifications.collectElapsed(2, *before.Time) //nolint:gomnd,mnd // .
+			if len(toSendTelegramNotifications) > 0 {
+				go s.telemetryTelegramNotifications.collectElapsed(2, *before.Time) //nolint:gomnd,mnd // .
+			}
 		}
 
 		/******************************************************************************************************************************************************
-			4. Delete notifications from scheduled.
+			5. Delete notifications from scheduled.
 		******************************************************************************************************************************************************/
 		before = time.Now()
 		reqCtx, reqCancel = context.WithTimeout(ctx, requestDeadline)
@@ -195,10 +226,15 @@ func (s *Scheduler) sendTelegramNotification(ctx context.Context, tn *telegramNo
 	return errors.Wrapf(s.telegramNotificationsClient.Send(ctx, tn.tn), "can't send telegram notification for pn:%#v", tn)
 }
 
-func (s *Scheduler) getTelegramBatchSize() int64 {
+func (s *Scheduler) telegramBotMessageBatchLimit() int64 {
 	if len(s.cfg.TelegramBots) < 5 { //nolint:gomnd,mnd // .
 		return 10 //nolint:gomnd,mnd // .
 	}
 
 	return int64(len(s.cfg.TelegramBots))
+}
+
+func randomDelay(sec int) {
+	randVal := 1 + rand.Intn(sec) //nolint:gosec // Not an issue.
+	stdlibtime.Sleep(stdlibtime.Duration(randVal) * stdlibtime.Second)
 }

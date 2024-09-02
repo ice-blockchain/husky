@@ -88,6 +88,7 @@ CREATE TABLE IF NOT EXISTS scheduled_announcements (
                     primary key(uniqueness,notification_type,notification_channel,notification_channel_value));
 CREATE UNIQUE INDEX IF NOT EXISTS scheduled_announcements_i_ix ON scheduled_announcements (i);
 CREATE INDEX IF NOT EXISTS scheduled_announcements_mod_i_ix ON scheduled_announcements (MOD(i, %[1]v),scheduled_for ASC);
+CREATE INDEX IF NOT EXISTS scheduled_announcements_scheduled_for_ix ON scheduled_announcements (scheduled_for ASC);
 --************************************************************************************************************************************
 -- device_metadata
 CREATE TABLE IF NOT EXISTS device_metadata (

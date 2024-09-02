@@ -223,9 +223,10 @@ const (
 	requestingUserIDCtxValueKey = "requestingUserIDCtxValueKey"
 	requestDeadline             = 30 * stdlibtime.Second
 
-	schedulerWorkersCount    int64 = 10
-	schedulerPushBatchSize   int64 = 250
-	telegramLongPollingLimit int64 = 100
+	schedulerWorkersCount      int64 = 10
+	schedulerPushBatchSize     int64 = 250
+	telegramLongPollingLimit   int64 = 100
+	schedulerTelegramBatchSize int64 = 250
 
 	defaultLanguage = "en"
 	// Protection from getting ErrDuplicate on session creation due to ReferralsCountChangeGuardUpdatedAt on freezer.
@@ -405,8 +406,9 @@ type (
 			Hour    int                `yaml:"hour"`
 			Minutes int                `yaml:"minutes"`
 		} `yaml:"weeklyStats"`
-		MaxReferralsCount    int64   `yaml:"maxReferralsCount" mapstructure:"maxReferralsCount"`
-		WelcomeBonusV2Amount float64 `yaml:"welcomeBonusV2Amount" mapstructure:"welcomeBonusV2Amount"`
-		Development          bool    `yaml:"development"`
+		MaxReferralsCount                           int64   `yaml:"maxReferralsCount" mapstructure:"maxReferralsCount"`
+		WelcomeBonusV2Amount                        float64 `yaml:"welcomeBonusV2Amount" mapstructure:"welcomeBonusV2Amount"`
+		Development                                 bool    `yaml:"development"`
+		ScheduledAnnouncementsPartitionsModeEnabled bool    `yaml:"scheduledAnnouncementsPartitionsModeEnabled" mapstructure:"scheduledAnnouncementsPartitionsModeEnabled"` //nolint:lll // .
 	}
 )
