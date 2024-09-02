@@ -48,21 +48,36 @@ func MustStartScheduler(ctx context.Context, cancel context.CancelFunc) *Schedul
 	}
 	go sh.startWeeklyStatsUpdater(ctx)
 	sh.wg = new(sync.WaitGroup)
-	sh.wg.Add(3 * int(schedulerWorkersCount)) //nolint:gomnd,mnd // .
+	var wgCount int
+	if cfg.ScheduledAnnouncementsPartitionsModeEnabled {
+		wgCount = 3 * int(schedulerWorkersCount)
+	} else {
+		wgCount = 2*int(schedulerWorkersCount) + 1
+	}
+	sh.wg.Add(wgCount)
 	sh.cancel = cancel
+
 	for workerNumber := range schedulerWorkersCount {
 		go func(wn int64) {
 			defer sh.wg.Done()
 			sh.runPushNotificationsProcessor(ctx, wn)
 		}(workerNumber)
-		go func(wn int64) {
-			defer sh.wg.Done()
-			sh.runPushAnnouncementsProcessor(ctx, wn)
-		}(workerNumber)
+		if cfg.ScheduledAnnouncementsPartitionsModeEnabled {
+			go func(wn int64) {
+				defer sh.wg.Done()
+				sh.runPushAnnouncementsProcessor(ctx, wn)
+			}(workerNumber)
+		}
 		go func(wn int64) {
 			defer sh.wg.Done()
 			sh.runTelegramNotificationsProcessor(ctx, wn)
 		}(workerNumber)
+	}
+	if !cfg.ScheduledAnnouncementsPartitionsModeEnabled {
+		go func() {
+			defer sh.wg.Done()
+			sh.runPushAnnouncementsProcessor(ctx, 0)
+		}()
 	}
 
 	return &sh
@@ -174,11 +189,24 @@ func getDomainByNotificationType(nt NotificationType) NotificationDomain {
 	return ""
 }
 
+//nolint:funlen // .
 func (s *Scheduler) fetchScheduledNotifications(
 	ctx context.Context, now *time.Time, notificationChannel NotificationChannel, batchSize, workerNumber int64,
 ) (resp []*scheduledNotificationInfo, err error) {
+	dmSQL := ""
+	dmSelectFieldSQL := "ARRAY['']"
+	if notificationChannel == PushNotificationChannel {
+		dmSQL = fmt.Sprintf(`LEFT JOIN device_metadata dm
+					ON (u.disabled_push_notification_domains IS NULL 
+						OR NOT (u.disabled_push_notification_domains && ARRAY['%v'] )
+					)
+					AND dm.user_id = u.user_id
+					AND dm.push_notification_token IS NOT NULL 
+					AND dm.push_notification_token != ''`, AllNotificationDomain)
+		dmSelectFieldSQL = "array_agg(dm.push_notification_token) filter (where dm.push_notification_token is not null)"
+	}
 	sql := fmt.Sprintf(`SELECT sn.*,
-				   array_agg(dm.push_notification_token) filter (where dm.push_notification_token is not null)  AS push_notification_tokens,
+				  %[5]v AS push_notification_tokens,
 				   u.disabled_push_notification_domains,
 				   COALESCE(u.telegram_user_id, '') AS telegram_user_id,
 				   COALESCE(u.telegram_bot_id, '') AS telegram_bot_id,
@@ -186,13 +214,7 @@ func (s *Scheduler) fetchScheduledNotifications(
 			FROM scheduled_notifications sn
 				JOIN users u
 					ON sn.user_id = u.user_id
-				LEFT JOIN device_metadata dm
-					ON (u.disabled_push_notification_domains IS NULL 
-						OR NOT (u.disabled_push_notification_domains && ARRAY['%v'] )
-					)
-					AND dm.user_id = u.user_id
-					AND dm.push_notification_token IS NOT NULL 
-					AND dm.push_notification_token != ''
+				%[1]v
 				WHERE MOD(i, %[2]v) = %[3]v 
 				      AND scheduled_for <= $1
 					  AND notification_channel = $2
@@ -201,7 +223,7 @@ func (s *Scheduler) fetchScheduledNotifications(
 						 u.telegram_user_id,u.telegram_bot_id, u.username
 				ORDER BY MOD(i, %[2]v), scheduled_for ASC
 				LIMIT %[4]v`,
-		AllNotificationDomain, schedulerWorkersCount, workerNumber, batchSize)
+		dmSQL, schedulerWorkersCount, workerNumber, batchSize, dmSelectFieldSQL)
 	resp, err = storage.ExecMany[scheduledNotificationInfo](ctx, s.db, sql, now.Time, notificationChannel)
 
 	return resp, errors.Wrapf(err, "failed to fetch scheduled notifications worker:%v", workerNumber)

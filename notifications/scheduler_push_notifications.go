@@ -5,7 +5,6 @@ package notifications
 import (
 	"context"
 	"fmt"
-	stdlibtime "time"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
@@ -42,8 +41,7 @@ func (s *Scheduler) runPushNotificationsProcessor(ctx context.Context, workerNum
 		notifications = notifications[:0]
 		toDelete = toDelete[:0]
 		lastIterationStartedAt = now
-
-		stdlibtime.Sleep(1 * stdlibtime.Second)
+		randomDelay(3) //nolint:gomnd,mnd // .
 	}
 
 	for ctx.Err() == nil {

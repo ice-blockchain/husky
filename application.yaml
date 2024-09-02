@@ -73,6 +73,7 @@ news: &news
     urlUpload: https://storage.bunnycdn.com/ice-staging/news
     urlDownload: https://ice-staging.b-cdn.net/news
 notifications: &notifications
+  scheduledAnnouncementsPartitionsModeEnabled: false 
   welcomeBonusV2Amount: 500
   maxReferralsCount: 200
   defaultReferralName: sunwaves

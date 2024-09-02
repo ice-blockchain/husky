@@ -6,7 +6,6 @@ import (
 	"context"
 	"fmt"
 	"strings"
-	stdlibtime "time"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
@@ -39,8 +38,7 @@ func (s *Scheduler) runPushAnnouncementsProcessor(ctx context.Context, workerNum
 		announcements = announcements[:0]
 		successedAnnouncements = successedAnnouncements[:0]
 		lastIterationStartedAt = now
-
-		stdlibtime.Sleep(1 * stdlibtime.Second)
+		randomDelay(10) //nolint:gomnd,mnd // .
 	}
 	for ctx.Err() == nil {
 		/******************************************************************************************************************************************************
@@ -48,7 +46,11 @@ func (s *Scheduler) runPushAnnouncementsProcessor(ctx context.Context, workerNum
 		******************************************************************************************************************************************************/
 		before := time.Now()
 		reqCtx, reqCancel := context.WithTimeout(ctx, requestDeadline)
-		announcements, err = s.fetchScheduledAnnouncements(reqCtx, now, workerNumber)
+		if s.cfg.ScheduledAnnouncementsPartitionsModeEnabled {
+			announcements, err = s.fetchScheduledAnnouncementsPartition(reqCtx, now, workerNumber)
+		} else {
+			announcements, err = s.fetchScheduledAnnouncements(reqCtx, now)
+		}
 		if err != nil {
 			log.Error(errors.Wrapf(err, "[scheduler] failed to fetch scheduled announcements for batchNumber:%v,workerNumber:%v", batchNumber, workerNumber))
 			resetVars(false)
@@ -147,16 +149,27 @@ func (s *Scheduler) broadcastPushNotification(
 	return errors.Wrapf(s.pushNotificationsClient.Broadcast(ctx, bpn.pn), "can't broadcast push notification for:%#v", bpn)
 }
 
-func (s *Scheduler) fetchScheduledAnnouncements(ctx context.Context, now *time.Time, workerNumber int64) (resp []*scheduledAnnouncement, err error) {
+func (s *Scheduler) fetchScheduledAnnouncementsPartition(ctx context.Context, now *time.Time, workerNumber int64) (resp []*scheduledAnnouncement, err error) {
 	sql := fmt.Sprintf(`SELECT *
 							FROM scheduled_announcements
 						WHERE MOD(i, %[1]v) = %[2]v
-					  		  AND scheduled_for <= $1
+							AND scheduled_for <= $1
 						ORDER BY MOD(i, %[1]v), scheduled_for ASC
 						LIMIT %[3]v;`, schedulerWorkersCount, workerNumber, schedulerPushBatchSize)
 	resp, err = storage.ExecMany[scheduledAnnouncement](ctx, s.db, sql, now.Time)
 
 	return resp, errors.Wrapf(err, "failed to fetch scheduled announcements for worker:%v", workerNumber)
+}
+
+func (s *Scheduler) fetchScheduledAnnouncements(ctx context.Context, now *time.Time) (resp []*scheduledAnnouncement, err error) {
+	sql := fmt.Sprintf(`SELECT *
+						FROM scheduled_announcements
+							WHERE scheduled_for <= $1
+						ORDER BY scheduled_for ASC
+						LIMIT %[1]v;`, schedulerPushBatchSize)
+	resp, err = storage.ExecMany[scheduledAnnouncement](ctx, s.db, sql, now.Time)
+
+	return resp, errors.Wrapf(err, "failed to fetch scheduled announcements")
 }
 
 func (s *Scheduler) markScheduledAnnouncementAsSent(
