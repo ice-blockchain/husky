@@ -193,20 +193,19 @@ func getDomainByNotificationType(nt NotificationType) NotificationDomain {
 func (s *Scheduler) fetchScheduledNotifications(
 	ctx context.Context, now *time.Time, notificationChannel NotificationChannel, batchSize, workerNumber int64,
 ) (resp []*scheduledNotificationInfo, err error) {
-	dmSQL := ""
 	dmSelectFieldSQL := "ARRAY['']"
 	if notificationChannel == PushNotificationChannel {
-		dmSQL = fmt.Sprintf(`LEFT JOIN device_metadata dm
-					ON (u.disabled_push_notification_domains IS NULL 
-						OR NOT (u.disabled_push_notification_domains && ARRAY['%v'] )
-					)
-					AND dm.user_id = u.user_id
-					AND dm.push_notification_token IS NOT NULL 
-					AND dm.push_notification_token != ''`, AllNotificationDomain)
-		dmSelectFieldSQL = "array_agg(dm.push_notification_token) filter (where dm.push_notification_token is not null)"
+		dmSelectFieldSQL = fmt.Sprintf(`(SELECT array_agg(dm.push_notification_token) filter (where dm.push_notification_token is not null) 
+								FROM device_metadata dm 
+								WHERE dm.user_id = u.user_id AND
+									  dm.push_notification_token IS NOT NULL AND
+									  dm.push_notification_token != '' AND
+									  (u.disabled_push_notification_domains IS NULL 
+									  OR NOT (u.disabled_push_notification_domains && ARRAY['%v']))
+							)`, AllNotificationDomain)
 	}
 	sql := fmt.Sprintf(`SELECT sn.*,
-				  %[5]v AS push_notification_tokens,
+				  %[4]v AS push_notification_tokens,
 				   u.disabled_push_notification_domains,
 				   COALESCE(u.telegram_user_id, '') AS telegram_user_id,
 				   COALESCE(u.telegram_bot_id, '') AS telegram_bot_id,
@@ -214,16 +213,12 @@ func (s *Scheduler) fetchScheduledNotifications(
 			FROM scheduled_notifications sn
 				JOIN users u
 					ON sn.user_id = u.user_id
-				%[1]v
-				WHERE MOD(i, %[2]v) = %[3]v 
+				WHERE MOD(i, %[1]v) = %[2]v 
 				      AND scheduled_for <= $1
 					  AND notification_channel = $2
-				GROUP BY sn.i, sn.scheduled_at, sn.scheduled_for, sn.data, sn.language, sn.user_id, sn.uniqueness, sn.notification_type,
-						 sn.notification_channel, sn.notification_channel_value, u.disabled_push_notification_domains,
-						 u.telegram_user_id,u.telegram_bot_id, u.username
-				ORDER BY MOD(i, %[2]v), scheduled_for ASC
-				LIMIT %[4]v`,
-		dmSQL, schedulerWorkersCount, workerNumber, batchSize, dmSelectFieldSQL)
+				ORDER BY MOD(i, %[1]v), scheduled_for ASC, notification_channel
+				LIMIT %[3]v`,
+		schedulerWorkersCount, workerNumber, batchSize, dmSelectFieldSQL)
 	resp, err = storage.ExecMany[scheduledNotificationInfo](ctx, s.db, sql, now.Time, notificationChannel)
 
 	return resp, errors.Wrapf(err, "failed to fetch scheduled notifications worker:%v", workerNumber)
