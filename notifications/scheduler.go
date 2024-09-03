@@ -257,16 +257,12 @@ func (s *Scheduler) deleteScheduledNotifications(ctx context.Context, notificati
 	if len(notifications) == 0 {
 		return nil
 	}
-	const numFields = 5
-	values := make([]string, 0, numFields*len(notifications))
-	params := make([]any, 0, numFields*len(notifications))
-	for idx, n := range notifications {
-		values = append(values, fmt.Sprintf("($%[1]v, $%[2]v, $%[3]v, $%[4]v, $%[5]v)", idx*numFields+1, idx*numFields+2, idx*numFields+3, idx*numFields+4, idx*numFields+5)) //nolint:gomnd,mnd,lll // .
-		params = append(params, n.UserID, n.Uniqueness, n.NotificationType, n.NotificationChannel, n.NotificationChannelValue)
+	indexes := make([]int64, 0, len(notifications))
+	for _, n := range notifications {
+		indexes = append(indexes, n.I)
 	}
-	sql := fmt.Sprintf(`DELETE FROM scheduled_notifications 
-							   WHERE (user_id, uniqueness, notification_type, notification_channel, notification_channel_value) IN (%v)`, strings.Join(values, ","))
-	_, err := storage.Exec(ctx, s.db, sql, params...)
+	sql := `DELETE FROM scheduled_notifications WHERE i = ANY($1)`
+	_, err := storage.Exec(ctx, s.db, sql, indexes)
 
 	return errors.Wrapf(err, "failed to delete scheduled notifications %#v", notifications)
 }
