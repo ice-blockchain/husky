@@ -1,12 +1,12 @@
 {
     "en": {
-        "body": "<b>Hi @{{.Username}}!</b>\n\n⏰ Tap on the <b>CallFluent</b> button every 24 hours to see your coin balance increase.\n\n👬 Build your team, complete tasks and increase your coins earnings! For each friend you invite, you both receive <b>{{.WelcomeBonus}} CALL tokens</b>.\n\n🌟 <b>CallFluent</b> automates your phone calls with human-like AI agents that drive sales, handle support 24/7, book appointments, and integrate seamlessly with your CRM and team. Boost business efficiency and cut staffing costs with advanced, customizable voice technology.",
-        "altBody": "<b>Hi!</b>\n\n⏰ Tap on the <b>CallFluent</b> button every 24 hours to see your coin balance increase.\n\n👬 Build your team, complete tasks and increase your coins earnings! For each friend you invite, you both receive <b>{{.WelcomeBonus}} CALL tokens</b>.\n\n🌟 <b>CallFluent</b> automates your phone calls with human-like AI agents that drive sales, handle support 24/7, book appointments, and integrate seamlessly with your CRM and team. Boost business efficiency and cut staffing costs with advanced, customizable voice technology.",
+        "body": "<b>Hi @{{.Username}}!</b>\n\n⏰ Tap on the <b>DoctorX</b> button every 24 hours to see your coin balance increase.\n\n👬 Build your team, complete tasks and increase your coins earnings! For each friend you invite, you both receive <b>{{.WelcomeBonus}} DRX tokens</b>.\n\n🌟 <b>DoctorX</b> is here to turbocharge your meme game! Forget complicated utilities—just tap, stack, and meme your way to exclusive perks. Whether you're earning DRX or laughing with friends, it's all about keeping the vibes high and the fun rolling. DoctorX isn't just a token—it's your all-access pass to meme-filled crypto chaos!",
+        "altBody": "<b>Hi!</b>\n\n⏰ Tap on the <b>DoctorX</b> button every 24 hours to see your coin balance increase.\n\n👬 Build your team, complete tasks and increase your coins earnings! For each friend you invite, you both receive <b>{{.WelcomeBonus}} DRX tokens</b>.\n\n🌟 <b>DoctorX</b> is here to turbocharge your meme game! Forget complicated utilities—just tap, stack, and meme your way to exclusive perks. Whether you're earning DRX or laughing with friends, it's all about keeping the vibes high and the fun rolling. DoctorX isn't just a token—it's your all-access pass to meme-filled crypto chaos!",
         "buttonText": [
-                       "🌟 Start Now!",
-                       "👾 Join TG Community",
-                       "🤖 Join X Community",
-                       "📋 Knowledge Base"
+                       "🌟 Start Now!",
+                       "👾 Join TG Community",
+                       "🤖 Join X Community",
+                       "📋 Knowledge Base"
                        ]
     }
 }
