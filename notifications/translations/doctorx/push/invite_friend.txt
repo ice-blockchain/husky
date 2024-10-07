@@ -1,0 +1,202 @@
+{
+    "en": {
+        "title": "👋  Invite friends, earn more {{.TenantName}}!",
+        "body": "Bring your friends to the network and watch your {{.TenantName}} balance grow!"
+    },
+    "ro": {
+        "title": "👋 Invită prieteni, câștigă mai mult {{.TenantName}}!",
+        "body": "Aduceți-vă prietenii în rețea și urmăriți cum crește soldul {{.TenantName}}!"
+    },
+    "el": {
+        "title": "👋 Προσκαλέστε φίλους, κερδίστε περισσότερο {{.TenantName}}!",
+        "body": "Φέρτε τους φίλους σας στο δίκτυο και παρακολουθήστε το υπόλοιπο {{.TenantName}} να μεγαλώνει!"
+    },
+    "af": {
+        "title": "👋 Nooi vriende, verdien meer {{.TenantName}}!",
+        "body": "Bring jou vriende na die netwerk en kyk hoe jou {{.TenantName}}-balans groei!"
+    },
+    "am": {
+        "title": "👋 ጓደኞችን ይጋብዙ፣ ተጨማሪ {{.TenantName}} ያግኙ!",
+        "body": "ጓደኞችዎን ወደ አውታረ መረቡ ያቅርቡ እና የ {{.TenantName}} ቀሪ ሒሳብ እያደገ ይመልከቱ!"
+    },
+    "ar": {
+        "title": "👋  قم بدعوة الأصدقاء واكسب المزيد من {{.TenantName}}!",
+        "body": "قم بإحضار أصدقائك إلى الشبكة وشاهد رصيد {{.TenantName}} الخاص بك ينمو!"
+    },
+    "az": {
+        "title": "👋 Dostlarınızı dəvət edin, daha çox {{.TenantName}} qazanın!",
+        "body": "Dostlarınızı şəbəkəyə gətirin və {{.TenantName}} balansınızın böyüməsinə baxın!"
+    },
+    "bg": {
+        "title": "👋 Поканете приятели, спечелете повече {{.TenantName}}!",
+        "body": "Доведете приятелите си в мрежата и гледайте как вашият {{.TenantName}} баланс расте!"
+    },
+    "bn": {
+        "title": "👋 বন্ধুদের আমন্ত্রণ জানান, আরও {{.TenantName}} উপার্জন করুন!",
+        "body": "আপনার বন্ধুদের নেটওয়ার্কে আনুন এবং আপনার {{.TenantName}} ব্যালেন্স বাড়তে দেখুন!"
+    },
+    "yo": {
+        "title": "👋 Pe awọn ọrẹ, jo'gun {{.TenantName}} diẹ sii!",
+        "body": "Mu awọn ọrẹ rẹ wa si nẹtiwọọki ki o wo iwọntunwọnsi {{.TenantName}} rẹ dagba!"
+    },
+    "cs": {
+        "title": "👋 Pozvěte přátele, vydělejte více {{.TenantName}}!",
+        "body": "Přiveďte své přátele k síti a sledujte, jak váš zůstatek {{.TenantName}} roste!"
+    },
+    "de": {
+        "title": "👋 Lade Freunde ein, verdiene mehr {{.TenantName}}!",
+        "body": "Bringen Sie Ihre Freunde ins Netzwerk und sehen Sie zu, wie Ihr {{.TenantName}}-Guthaben wächst!"
+    },
+    "es": {
+        "title": "👋 ¡Invita a amigos, gana más {{.TenantName}}!",
+        "body": "¡Trae a tus amigos a la red y observa cómo crece tu saldo {{.TenantName}}!"
+    },
+    "fa": {
+        "title": "👋 دوستان را دعوت کنید، {{.TenantName}} بیشتری کسب کنید!",
+        "body": "دوستان خود را به شبکه بیاورید و رشد تعادل {{.TenantName}} خود را تماشا کنید!"
+    },
+    "tl": {
+        "title": "👋 Mag-imbita ng mga kaibigan, kumita ng mas maraming {{.TenantName}}!",
+        "body": "Dalhin ang iyong mga kaibigan sa network at panoorin ang paglaki ng iyong balanse sa {{.TenantName}}!"
+    },
+    "fr": {
+        "title": "👋 Invitez des amis, gagnez plus d'{{.TenantName}} !",
+        "body": "Amenez vos amis sur le réseau et regardez votre solde {{.TenantName}} augmenter !"
+    },
+    "gu": {
+        "title": "👋 મિત્રોને આમંત્રિત કરો, વધુ {{.TenantName}} કમાઓ!",
+        "body": "તમારા મિત્રોને નેટવર્ક પર લાવો અને તમારું {{.TenantName}} બેલેન્સ વધતું જુઓ!"
+    },
+    "he": {
+        "title": "👋 הזמן חברים, הרוויח יותר {{.TenantName}}!",
+        "body": "הביאו את החברים שלכם לרשת וצפו במאזן ה-{{.TenantName}} שלכם גדל!"
+    },
+    "hi": {
+        "title": "👋 मित्रों को आमंत्रित करें, अधिक {{.TenantName}} कमाएँ!",
+        "body": "अपने दोस्तों को नेटवर्क पर लाएँ और अपना {{.TenantName}} बैलेंस बढ़ता हुआ देखें!"
+    },
+    "hu": {
+        "title": "👋 Hívja meg barátait, keressen több {{.TenantName}}-t!",
+        "body": "Hozd barátaidat a hálózathoz, és figyeld az {{.TenantName}}-egyenleged növekedését!"
+    },
+    "id": {
+        "title": "👋 Undang teman, dapatkan lebih banyak {{.TenantName}}!",
+        "body": "Bawa teman Anda ke jaringan dan saksikan saldo {{.TenantName}} Anda bertambah!"
+    },
+    "it": {
+        "title": "👋 Invita gli amici, guadagna più {{.TenantName}}!",
+        "body": "Porta i tuoi amici in rete e guarda crescere il tuo saldo {{.TenantName}}!"
+    },
+    "ja": {
+        "title": "👋 友達を招待して、より多くの {{.TenantName}} を獲得しましょう!",
+        "body": "友達をネットワークに連れて行き、{{.TenantName}} の残高が増えるのを見てみましょう!"
+    },
+    "jv": {
+        "title": "👋 Ajak kanca, entuk {{.TenantName}} luwih akeh!",
+        "body": "Nggawa kanca menyang jaringan lan nonton imbangan {{.TenantName}} tuwuh!"
+    },
+    "ko": {
+        "title": "👋 친구를 초대하고 더 많은 {{.TenantName}}를 받으세요!",
+        "body": "친구들을 네트워크에 초대하고 {{.TenantName}} 잔액이 늘어나는 것을 지켜보세요!"
+    },
+    "mr": {
+        "title": "👋 मित्रांना आमंत्रित करा, अधिक {{.TenantName}} कमवा!",
+        "body": "तुमच्या मित्रांना नेटवर्कवर आणा आणि तुमची {{.TenantName}} शिल्लक वाढताना पहा!"
+    },
+    "ms": {
+        "title": "👋 Jemput rakan, dapatkan lebih banyak {{.TenantName}}!",
+        "body": "Bawa rakan anda ke rangkaian dan saksikan baki {{.TenantName}} anda berkembang!"
+    },
+    "no": {
+        "title": "👋 Inviter venner, tjen mer {{.TenantName}}!",
+        "body": "Ta med vennene dine til nettverket og se {{.TenantName}}-balansen din vokse!"
+    },
+    "pa": {
+        "title": "👋 ਦੋਸਤਾਂ ਨੂੰ ਸੱਦਾ ਦਿਓ, ਹੋਰ {{.TenantName}} ਕਮਾਓ!",
+        "body": "ਆਪਣੇ ਦੋਸਤਾਂ ਨੂੰ ਨੈਟਵਰਕ ਤੇ ਲਿਆਓ ਅਤੇ ਆਪਣੇ {{.TenantName}} ਸੰਤੁਲਨ ਨੂੰ ਵਧਦੇ ਹੋਏ ਦੇਖੋ!"
+    },
+    "pl": {
+        "title": "👋 Zapraszaj znajomych, zarabiaj więcej {{.TenantName}}!",
+        "body": "Przyprowadź znajomych do sieci i obserwuj, jak rośnie saldo {{.TenantName}}!"
+    },
+    "ps": {
+        "title": "👋 ملګرو ته بلنه ورکړئ، ډیر {{.TenantName}} ترلاسه کړئ!",
+        "body": "خپل ملګري شبکې ته راوړئ او وګورئ چې ستاسو د {{.TenantName}} توازن وده کوي!"
+    },
+    "pt": {
+        "title": "👋 Convide amigos, ganhe mais {{.TenantName}}!",
+        "body": "Traga seus amigos para a rede e veja seu saldo {{.TenantName}} crescer!"
+    },
+    "ru": {
+        "title": "👋 Приглашайте друзей, зарабатывайте больше {{.TenantName}}!",
+        "body": "Приводите друзей в сеть и смотрите, как растет ваш баланс {{.TenantName}}!"
+    },
+    "sd": {
+        "title": "👋 دوستن کي دعوت ڏيو، وڌيڪ {{.TenantName}} ڪمايو!",
+        "body": "پنھنجي دوستن کي نيٽ ورڪ ڏانھن آڻيو ۽ ڏسو پنھنجي {{.TenantName}} بيلنس وڌندو!"
+    },
+    "sk": {
+        "title": "👋 Pozvite priateľov, zarobte viac {{.TenantName}}!",
+        "body": "Priveďte svojich priateľov do siete a sledujte, ako váš zostatok {{.TenantName}} rastie!"
+    },
+    "sl": {
+        "title": "👋 Povabi prijatelje, zasluži več {{.TenantName}}!",
+        "body": "Pripeljite svoje prijatelje v omrežje in opazujte, kako raste vaše stanje {{.TenantName}}!"
+    },
+    "sq": {
+        "title": "👋 Ftoni miqtë, fitoni më shumë {{.TenantName}}!",
+        "body": "Sillni miqtë tuaj në rrjet dhe shikoni bilancin tuaj të {{.TenantName}} të rritet!"
+    },
+    "sv": {
+        "title": "👋 Bjud in vänner, tjäna mer {{.TenantName}}!",
+        "body": "Ta med dina vänner till nätverket och se din {{.TenantName}}-balans växa!"
+    },
+    "ta": {
+        "title": "👋 நண்பர்களை அழைக்கவும், மேலும் {{.TenantName}} சம்பாதிக்கவும்!",
+        "body": "உங்கள் நண்பர்களை நெட்வொர்க்கிற்கு அழைத்து உங்கள் {{.TenantName}} இருப்பு அதிகரிப்பதைப் பாருங்கள்!"
+    },
+    "te": {
+        "title": "👋 స్నేహితులను ఆహ్వానించండి, మరింత {{.TenantName}} సంపాదించండి!",
+        "body": "మీ స్నేహితులను నెట్‌వర్క్‌కు తీసుకురండి మరియు మీ {{.TenantName}} బ్యాలెన్స్ పెరగడాన్ని చూడండి!"
+    },
+    "th": {
+        "title": "👋 ชวนเพื่อน รับ {{.TenantName}} มากขึ้น!",
+        "body": "นำเพื่อนของคุณเข้าสู่เครือข่ายและดูยอดคงเหลือ {{.TenantName}} ของคุณเติบโตขึ้น!"
+    },
+    "su": {
+        "title": "👋 Ajak réréncangan, kéngingkeun langkung seueur {{.TenantName}}!",
+        "body": "Bawa babaturan anjeun ka jaringan sareng nonton kasaimbangan {{.TenantName}} anjeun tumbuh!"
+    },
+    "kn": {
+        "title": "👋 ಸ್ನೇಹಿತರನ್ನು ಆಹ್ವಾನಿಸಿ, ಹೆಚ್ಚು {{.TenantName}} ಗಳಿಸಿ!",
+        "body": "ನಿಮ್ಮ ಸ್ನೇಹಿತರನ್ನು ನೆಟ್‌ವರ್ಕ್‌ಗೆ ತನ್ನಿ ಮತ್ತು ನಿಮ್ಮ {{.TenantName}} ಸಮತೋಲನವು ಬೆಳೆಯುವುದನ್ನು ವೀಕ್ಷಿಸಿ!"
+    },
+    "tr": {
+        "title": "👋 Arkadaşlarınızı davet edin, daha fazla {{.TenantName}} kazanın!",
+        "body": "Arkadaşlarınızı ağa getirin ve {{.TenantName}} bakiyenizin büyümesini izleyin!"
+    },
+    "zh-hant": {
+        "title": "👋 邀請好友，賺取更多{{.TenantName}}！",
+        "body": "把你的朋友帶到網絡上，看著你的 {{.TenantName}} 餘額增長！"
+    },
+    "uk": {
+        "title": "👋 Запрошуйте друзів, заробляйте більше {{.TenantName}}!",
+        "body": "Приводьте своїх друзів до мережі та дивіться, як ваш баланс {{.TenantName}} зростає!"
+    },
+    "ur": {
+        "title": "👋 دوستوں کو مدعو کریں، مزید {{.TenantName}} کمائیں!",
+        "body": "اپنے دوستوں کو نیٹ ورک پر لائیں اور اپنے {{.TenantName}} بیلنس کو بڑھتے ہوئے دیکھیں!"
+    },
+    "vi": {
+        "title": "👋 Mời bạn bè, kiếm thêm {{.TenantName}}!",
+        "body": "Đưa bạn bè của bạn vào mạng và xem số dư {{.TenantName}} của bạn tăng lên!"
+    },
+    "zh": {
+        "title": "👋 邀请好友，赚取更多{{.TenantName}}！",
+        "body": "把你的朋友带到网络上，看着你的 {{.TenantName}} 余额增长！"
+    },
+    "zu": {
+        "title": "👋 Mema abangani, uthole i-{{.TenantName}} eningi!",
+        "body": "Letha abangani bakho kunethiwekhi futhi ubuke ibhalansi yakho ye-{{.TenantName}} ikhula!"
+    }
+}

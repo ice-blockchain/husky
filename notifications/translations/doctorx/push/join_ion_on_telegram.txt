@@ -1,0 +1,202 @@
+{
+    "en": {
+        "title": "🤩 Join Ice Open Network on Telegram",
+        "body": "Stay connected and follow the latest updates from ION on Telegram"
+    },
+    "ro": {
+        "title": "🤩 Alăturați-vă Ice Open Network pe Telegram",
+        "body": "Rămâneți conectat și urmăriți cele mai recente actualizări de la ION pe Telegram"
+    },
+    "el": {
+        "title": "🤩 Γίνετε μέλος του Ice Open Network στο Telegram",
+        "body": "Μείνετε συνδεδεμένοι και ακολουθήστε τις τελευταίες ενημερώσεις από το ION στο Telegram"
+    },
+    "af": {
+        "title": "🤩 Sluit aan by Ice Open Network op Telegram",
+        "body": "Bly verbind en volg die jongste opdaterings van ION op Telegram"
+    },
+    "am": {
+        "title": "🤩 በ Telegram ላይ የ Ice Open Network ይቀላቀሉ",
+        "body": "ተገናኝተው ከ ION በ Telegram ላይ የቅርብ ጊዜ አዳዲስ ዝመናዎችን ይከተሉ"
+    },
+    "ar": {
+        "title": "🤩 انضم إلى شبكة Ice Open على Telegram",
+        "body": "ابق على اتصال وتابع آخر التحديثات من ION على Telegram"
+    },
+    "az": {
+        "title": "🤩 Ice Open Network-ə Telegram-da qoşulun",
+        "body": "Əlaqədə qalın və ION-dan ən son yenilikləri Telegram-da izləyin"
+    },
+    "bg": {
+        "title": "🤩 Присъединете се към Ice Open Network в Telegram",
+        "body": "Останете свързани и следвайте последните актуализации от ION в Telegram"
+    },
+    "bn": {
+        "title": "🤩 Telegram এ Ice Open Network এ যোগ দিন",
+        "body": "সংযুক্ত থাকুন এবং Telegram এ ION থেকে সর্বশেষ আপডেটগুলি অনুসরণ করুন"
+    },
+    "yo": {
+        "title": "🤩 Darapọ mọ Ice Open Network lori Telegram",
+        "body": "Duro mọ asopọ ki o tẹle awọn imudojuiwọn tuntun lati ọdọ ION lori Telegram"
+    },
+    "cs": {
+        "title": "🤩 Připojte se k Ice Open Network na Telegramu",
+        "body": "Zůstaňte ve spojení a sledujte nejnovější aktualizace od ION na Telegramu"
+    },
+    "de": {
+        "title": "🤩 Treten Sie Ice Open Network auf Telegram bei",
+        "body": "Bleiben Sie verbunden und folgen Sie den neuesten Updates von ION auf Telegram"
+    },
+    "es": {
+        "title": "🤩 Únete a Ice Open Network en Telegram",
+        "body": "Mantente conectado y sigue las últimas actualizaciones de ION en Telegram"
+    },
+    "fa": {
+        "title": "🤩 به شبکه Ice Open در تلگرام بپیوندید",
+        "body": "متصل بمانید و آخرین به‌روزرسانی‌ها را از ION در تلگرام دنبال کنید"
+    },
+    "tl": {
+        "title": "🤩 Sumali sa Ice Open Network sa Telegram",
+        "body": "Manatiling konektado at sundan ang pinakabagong mga update mula sa ION sa Telegram"
+    },
+    "fr": {
+        "title": "🤩 Rejoignez Ice Open Network sur Telegram",
+        "body": "Restez connecté et suivez les dernières mises à jour de ION sur Telegram"
+    },
+    "gu": {
+        "title": "🤩 Telegram પર Ice Open Network માં જોડાઓ",
+        "body": "કનેક્ટ રહો અને Telegram પર ION ના તાજા અપડેટ્સને અનુસરો"
+    },
+    "he": {
+        "title": "🤩 הצטרף ל- Ice Open Network ב-Telegram",
+        "body": "הישאר מחובר ועקוב אחר העדכונים האחרונים מ- ION ב-Telegram"
+    },
+    "hi": {
+        "title": "🤩 Telegram पर Ice Open Network से जुड़ें",
+        "body": "जुड़े रहें और Telegram पर ION से नवीनतम अपडेट प्राप्त करें"
+    },
+    "hu": {
+        "title": "🤩 Csatlakozz az Ice Open Network-hez a Telegramon",
+        "body": "Maradj kapcsolatban és kövesd a legfrissebb frissítéseket az ION-tól a Telegramon"
+    },
+    "id": {
+        "title": "🤩 Bergabung dengan Ice Open Network di Telegram",
+        "body": "Tetap terhubung dan ikuti pembaruan terbaru dari ION di Telegram"
+    },
+    "it": {
+        "title": "🤩 Unisciti a Ice Open Network su Telegram",
+        "body": "Rimani connesso e segui gli ultimi aggiornamenti da ION su Telegram"
+    },
+    "ja": {
+        "title": "🤩 Telegram で Ice Open Network に参加してください",
+        "body": "つながりを保ち、Telegram で ION の最新情報をフォローしてください"
+    },
+    "jv": {
+        "title": "🤩 Gabung Ice Open Network ing Telegram",
+        "body": "Tetep nyambung lan tindakake nganyari paling anyar saka ION ing Telegram"
+    },
+    "ko": {
+        "title": "🤩 Telegram에서 Ice Open Network에 가입하세요",
+        "body": "연결 상태를 유지하고 Telegram에서 ION의 최신 업데이트를 팔로우하세요"
+    },
+    "mr": {
+        "title": "🤩 Telegram वर Ice Open Network मध्ये सामील व्हा",
+        "body": "कनेक्टेड रहा आणि Telegram वर ION कडून नवीनतम अपडेट्सचे अनुसरण करा"
+    },
+    "ms": {
+        "title": "🤩 Sertai Ice Open Network di Telegram",
+        "body": "Kekal berhubung dan ikuti perkembangan terkini daripada ION di Telegram"
+    },
+    "no": {
+        "title": "🤩 Bli med i Ice Open Network på Telegram",
+        "body": "Hold deg koblet og følg de siste oppdateringene fra ION på Telegram"
+    },
+    "pa": {
+        "title": "🤩 Telegram 'ਤੇ Ice Open Network ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ",
+        "body": "ਜੁੜੇ ਰਹੋ ਅਤੇ Telegram 'ਤੇ ION ਤੋਂ ਤਾਜ਼ਾ ਅੱਪਡੇਟਾਂ ਦੀ ਪਾਲਣਾ ਕਰੋ"
+    },
+    "pl": {
+        "title": "🤩 Dołącz do Ice Open Network na Telegramie",
+        "body": "Bądź na bieżąco i śledź najnowsze aktualizacje od ION na Telegramie"
+    },
+    "ps": {
+        "title": "🤩 په Telegram کې د Ice Open Network سره یوځای شئ",
+        "body": "وصل شئ او د ION څخه په Telegram کې وروستي تازه معلومات تعقیب کړئ"
+    },
+    "pt": {
+        "title": "🤩 Junte-se ao Ice Open Network no Telegram",
+        "body": "Mantenha-se conectado e siga as últimas atualizações da ION no Telegram"
+    },
+    "ru": {
+        "title": "🤩 Присоединяйтесь к Ice Open Network в Telegram",
+        "body": "Оставайтесь на связи и следите за последними обновлениями от ION в Telegram"
+    },
+    "sd": {
+        "title": "🤩 Telegram تي Ice Open Network ۾ شامل ٿيو",
+        "body": "سان ڳنڍيل رهو ۽ Telegram تي ION کان جديد تازه ڪاريون پيروي ڪريو"
+    },
+    "sk": {
+        "title": "🤩 Pripojte sa k Ice Open Network na Telegrame",
+        "body": "Zostaňte pripojení a sledujte najnovšie aktualizácie od ION na Telegrame"
+    },
+    "sl": {
+        "title": "🤩 Pridružite se Ice Open Network na Telegramu",
+        "body": "Ostanite povezani in sledite najnovejšim posodobitvam iz ION na Telegramu"
+    },
+    "sq": {
+        "title": "🤩 Bashkohuni me Ice Open Network në Telegram",
+        "body": "Qëndroni të lidhur dhe ndiqni përditësimet më të fundit nga ION në Telegram"
+    },
+    "sv": {
+        "title": "🤩 Gå med i Ice Open Network på Telegram",
+        "body": "Håll kontakten och följ de senaste uppdateringarna från ION på Telegram"
+    },
+    "ta": {
+        "title": "🤩 Telegram இல் Ice Open Network இல் சேரவும்",
+        "body": "இணைந்திருக்கவும் மற்றும் Telegram இல் ION இன் சமீபத்திய புதுப்பிப்புகளைப் பின்தொடரவும்"
+    },
+    "te": {
+        "title": "🤩 Telegramలో Ice Open Networkలో చేరండి",
+        "body": "కనెక్ట్ అయ్యి Telegramలో ION నుండి తాజా నవీకరణలను అనుసరించండి"
+    },
+    "th": {
+        "title": "🤩 เข้าร่วม Ice Open Network บน Telegram",
+        "body": "เชื่อมต่ออยู่เสมอและติดตามการอัปเดตล่าสุดจาก ION บน Telegram"
+    },
+    "su": {
+        "title": "🤩 Gabung Ice Open Network dina Telegram",
+        "body": "Tetep nyambung sareng nuturkeun apdet pang anyarna tina ION dina Telegram"
+    },
+    "kn": {
+        "title": "🤩 Telegram ನಲ್ಲಿ Ice Open Network ಗೆ ಸೇರಿ",
+        "body": "ಕನೆಕ್ಟೆಡ್ ಆಗಿ ಮತ್ತು Telegram ನಲ್ಲಿ ION ನಿಂದ ಇತ್ತೀಚಿನ ನವೀಕರಣಗಳನ್ನು ಅನುಸರಿಸಿ"
+    },
+    "tr": {
+        "title": "🤩 Telegram'da Ice Open Network'e katılın",
+        "body": "Bağlantıda kalın ve Telegram'da ION'dan gelen en son güncellemeleri takip edin"
+    },
+    "zh-hant": {
+        "title": "🤩 在 Telegram 上加入 Ice Open Network",
+        "body": "保持聯繫並關注 ION 在 Telegram 上的最新更新"
+    },
+    "uk": {
+        "title": "🤩 Приєднуйтесь до Ice Open Network у Telegram",
+        "body": "Залишайтеся на зв'язку та слідкуйте за останніми оновленнями від ION у Telegram"
+    },
+    "ur": {
+        "title": "🤩 Telegram پر Ice Open Network میں شامل ہوں",
+        "body": "جڑے رہیں اور Telegram پر ION سے تازہ ترین اپ ڈیٹس کو فالو کریں"
+    },
+    "vi": {
+        "title": "🤩 Tham gia Ice Open Network trên Telegram",
+        "body": "Giữ kết nối và theo dõi các cập nhật mới nhất từ ION trên Telegram"
+    },
+    "zh": {
+        "title": "🤩 在 Telegram 上加入 Ice Open Network",
+        "body": "保持联系并关注 ION 在 Telegram 上的最新更新"
+    },
+    "zu": {
+        "title": "🤩 Joyina i-Ice Open Network ku-Telegram",
+        "body": "Hlala uxhumekile futhi ulandele izibuyekezo zakamuva ezivela ku-ION ku-Telegram"
+    }
+}

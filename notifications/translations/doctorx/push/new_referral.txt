@@ -1,0 +1,257 @@
+{
+  "af": {
+    "body": "Jy het {{.Amount}} {{.Coin}} tokens verdien! 🌟",
+    "altBody": "Jou span het net groter geword! 🎉",
+    "title": "🔥 {{.Username}} het by jou span aangesluit."
+  },
+  "am": {
+    "body": "እርስዎ  {{.Amount}} {{.Coin}} ቶክኖችን አስፈላጊ ነበር! 🌟",
+    "altBody": "የእርስዎ ቡድን አሁን ትልቅ ሆኗል! 🎉",
+    "title": "🔥 {{.Username}} ቡድንዎን ተቀላቅሏል።"
+  },
+  "ar": {
+    "body": "لقد كسبت {{.Amount}} {{.Coin}} توكنز! 🌟",
+    "altBody": "فريقك أصبح أكبر للتو! 🎉",
+    "title": "🔥{{.Username}} انضم إلى فريقك."
+  },
+  "az": {
+    "body": "{{.Amount}} {{.Coin}} token qazanmışsınız! 🌟",
+    "altBody": "Komandanız daha da böyüdü! 🎉",
+    "title": "🔥 {{.Username}} komandanıza qoşuldu."
+  },
+  "bg": {
+    "body": "Спечелихте {{.Amount}} {{.Coin}} токена! 🌟",
+    "altBody": "Вашият екип току-що стана по-голям! 🎉",
+    "title": "🔥 {{.Username}} се присъедини към вашия екип."
+  },
+  "bn": {
+    "body": "আপনি {{.Amount}} {{.Coin}} টোকেন অর্জন করেছেন! 🌟",
+    "altBody": "আপনার দল শুধু বড় হয়েছে! 🎉",
+    "title": "🔥 {{.Username}} আপনার দলে যোগ দিয়েছে।"
+  },
+  "cs": {
+    "body": "Získali jste {{.Amount}} {{.Coin}} tokenů! 🌟",
+    "altBody": "Váš tým se právě rozrostl! 🎉",
+    "title": "🔥 {{.Username}} se připojil k vašemu týmu."
+  },
+  "de": {
+    "body": "Sie haben {{.Amount}} {{.Coin}} Token verdient! 🌟",
+    "altBody": "Ihr Team ist gerade größer geworden! 🎉",
+    "title": "🔥 {{.Username}} ist Ihrem Team beigetreten."
+  },
+  "en": {
+    "body": " You earned {{.Amount}} {{.Coin}} tokens! 🌟",
+    "altBody": " Your team just got bigger! 🎉",
+    "title": "🔥 {{.Username}} has joined your team."
+  },
+  "es": {
+    "body": "¡Has ganado {{.Amount}} {{.Coin}} tokens! 🌟",
+    "altBody": "¡Tu equipo acaba de crecer! 🎉",
+    "title": "🔥 {{.Username}} se ha unido a tu equipo."
+  },
+  "fa": {
+    "body": "شما {{.Amount}} {{.Coin}} توکن به دست آوردید! 🌟",
+    "altBody": "تیم شما به تازگی بزرگتر شده است! 🎉",
+    "title": "🔥 {{.Username}} به تیم شما پیوست."
+  },
+  "fil": {
+    "body": "Nakakuha ka ng {{.Amount}} {{.Coin}} tokens! 🌟",
+    "altBody": "Lumaki lang ang team mo! 🎉",
+    "title": "🔥 Sumali si {{.Username}} sa iyong team."
+  },
+  "fr": {
+    "body": "Vous avez gagné {{.Amount}} {{.Coin}} tokens! 🌟",
+    "altBody": "Votre équipe vient de s'agrandir! 🎉",
+    "title": "🔥 {{.Username}} a rejoint votre équipe."
+  },
+  "ge": {
+    "body": "Κερδίσατε {{.Amount}} {{.Coin}} token! 🌟",
+    "altBody": "Η ομάδα σας μόλις έγινε μεγαλύτερη! 🎉",
+    "title": "🔥 {{.Username}} έγινε μέλος της ομάδας σας."
+  },
+  "gu": {
+    "body": "તમે {{.Amount}} {{.Coin}} ટોકન્સ મેળવ્યા છે! 🌟",
+    "altBody": "તમારી ટીમ હવે મોટી થઈ ગઈ છે! 🎉",
+    "title": "🔥 {{.Username}} તમારી ટીમમાં જોડાયો છે."
+  },
+  "he": {
+    "body": "הרווחת {{.Amount}} {{.Coin}} טוקנים! 🌟",
+    "altBody": "הצוות שלך רק גדל! 🎉",
+    "title": "🔥 {{.Username}} הצטרף לצוות שלך."
+  },
+  "hi": {
+    "body": "आपने {{.Amount}} {{.Coin}} टोकन कमाए हैं! 🌟",
+    "altBody": "आपकी टीम अभी बड़ी हो गई है! 🎉",
+    "title": "🔥 {{.Username}} आपकी टीम में शामिल हो गया है।"
+  },
+  "hu": {
+    "body": "{{.Amount}} {{.Coin}} tokent szereztél! 🌟",
+    "altBody": "A csapatod még nagyobb lett! 🎉",
+    "title": "🔥 {{.Username}} csatlakozott a csapatodhoz."
+  },
+  "id": {
+    "body": "Anda mendapatkan {{.Amount}} {{.Coin}} token! 🌟",
+    "altBody": "Tim Anda semakin besar! 🎉",
+    "title": "🔥 {{.Username}} telah bergabung dengan tim Anda."
+  },
+  "it": {
+    "body": "Hai guadagnato {{.Amount}} {{.Coin}} token! 🌟",
+    "altBody": "La tua squadra è appena diventata più grande! 🎉",
+    "title": "🔥 {{.Username}} si è unito al tuo team."
+  },
+  "ja": {
+    "body": "{{.Amount}} {{.Coin}} トークンを獲得しました！ 🌟",
+    "altBody": "チームが大きくなりました！ 🎉",
+    "title": "🔥 {{.Username}} があなたのチームに加わりました。"
+  },
+  "jv": {
+    "body": "Sampeyan entuk {{.Amount}} {{.Coin}} token! 🌟",
+    "altBody": "Tim sampeyan tambah gedhe! 🎉",
+    "title": "🔥 {{.Username}} wis gabung karo tim sampeyan."
+  },
+  "kn": {
+    "body": "ನೀವು {{.Amount}} {{.Coin}} ಟೋಕನ್ ಗಳಿಸಿದ್ದಾರೆ! 🌟",
+    "altBody": "ನಿಮ್ಮ ತಂಡ ಈಗಷ್ಟೇ ದೊಡ್ಡದಾಗಿದೆ! 🎉",
+    "title": "🔥 {{.Username}} ಅವರು ನಿಮ್ಮ ತಂಡವನ್ನು ಸೇರಿಕೊಂಡಿದ್ದಾರೆ."
+  },
+  "ko": {
+    "body": "{{.Amount}} {{.Coin}} 토큰을 얻었습니다! 🌟",
+    "altBody": "팀이 더 커졌습니다! 🎉",
+    "title": "🔥 {{.Username}}이 팀에 합류했습니다."
+  },
+  "mr": {
+    "body": "तुम्हाला {{.Amount}} {{.Coin}} टोकन्स मिळाले आहेत! 🌟",
+    "altBody": "तुमची टीम आता मोठी झाली आहे! 🎉",
+    "title": "🔥 {{.Username}} तुमच्या टीममध्ये सामील झाला आहे."
+  },
+  "ms": {
+    "body": "Anda memperoleh {{.Amount}} {{.Coin}} token! 🌟",
+    "altBody": "Pasukan anda semakin besar! 🎉",
+    "title": "🔥 {{.Username}} telah menyertai pasukan anda."
+  },
+  "no": {
+    "body": "Du tjente {{.Amount}} {{.Coin}} tokens! 🌟",
+    "altBody": "Teamet ditt har akkurat blitt større! 🎉",
+    "title": "🔥 {{.Username}} har blitt med i teamet ditt."
+  },
+  "pa": {
+    "body": "ਤੁਸੀਂ {{.Amount}} {{.Coin}} ਟੋਕਨ ਕਮਾਏ ਹਨ! 🌟",
+    "altBody": "ਤੁਹਾਡੀ ਟੀਮ ਹੁਣੇ ਵੱਡੀ ਹੋ ਗਈ ਹੈ! 🎉",
+    "title": "🔥 {{.Username}} ਤੁਹਾਡੀ ਟੀਮ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਇਆ ਹੈ।"
+  },
+  "pl": {
+    "body": "Zarobiłeś {{.Amount}} {{.Coin}} tokenów! 🌟",
+    "altBody": "Twój zespół właśnie się powiększył! 🎉",
+    "title": "🔥 {{.Username}} dołączył do Twojego zespołu."
+  },
+  "ps": {
+    "body": "تاسو {{.Amount}} {{.Coin}} ټوکنونه ګټلي دي! 🌟",
+    "altBody": "ستاسو ټیم یوازې لوی شوی! 🎉",
+    "title": "🔥 {{.Username}} ستاسو له ټیم سره یوځای شو."
+  },
+  "pt": {
+    "body": "Você ganhou {{.Amount}} {{.Coin}} tokens! 🌟",
+    "altBody": "Sua equipe acaba de ficar maior! 🎉",
+    "title": "🔥 {{.Username}} juntou-se à sua equipe."
+  },
+  "ro": {
+    "body": "Ai câștigat {{.Amount}} {{.Coin}} tokeni! 🌟",
+    "altBody": "Echipa ta tocmai a devenit mai mare! 🎉",
+    "title": "🔥 {{.Username}} s-a alăturat echipei tale."
+  },
+  "ru": {
+    "body": "Вы заработали {{.Amount}} {{.Coin}} токенов! 🌟",
+    "altBody": "Ваша команда стала больше! 🎉",
+    "title": "🔥 {{.Username}} присоединился к вашей команде."
+  },
+  "sd": {
+    "body": "توهان {{.Amount}} {{.Coin}} ٽوڪن حاصل ڪيا آهن! 🌟",
+    "altBody": "توهان جي ٽيم صرف وڏي ٿي وئي آهي! 🎉",
+    "title": "🔥 {{.Username}} توهان جي ٽيم ۾ شامل ٿيو آهي."
+  },
+  "sk": {
+    "body": "Získali ste {{.Amount}} {{.Coin}} tokenov! 🌟",
+    "altBody": "Váš tím sa práve zväčšil! 🎉",
+    "title": "🔥 {{.Username}} sa pripojil k vášmu tímu."
+  },
+  "sl": {
+    "body": "Zaslužili ste {{.Amount}} {{.Coin}} žetonov! 🌟",
+    "altBody": "Vaša ekipa je pravkar postala večja! 🎉",
+    "title": "🔥 {{.Username}} se je pridružil vaši ekipi."
+  },
+  "sq": {
+    "body": "Fitove {{.Amount}} {{.Coin}} tokena! 🌟",
+    "altBody": "Ekipi juaj sapo u bë më i madh! 🎉",
+    "title": "🔥 {{.Username}} i është bashkuar ekipit tuaj."
+  },
+  "su": {
+    "body": "Anjeun nampi {{.Amount}} {{.Coin}} token! 🌟",
+    "altBody": "Tim anjeun langkung ageung! 🎉",
+    "title": "🔥 {{.Username}} parantos gabung ka tim anjeun."
+  },
+  "sv": {
+    "body": "Du tjänade {{.Amount}} {{.Coin}} tokens! 🌟",
+    "altBody": "SDitt lag har precis blivit större! 🎉",
+    "title": "🔥 {{.Username}} har gått med i ditt team."
+  },
+  "ta": {
+    "body": "நீங்கள் {{.Amount}} {{.Coin}} டோகன்களை சம்பாதித்துள்ளீர்கள்! 🌟",
+    "altBody": "உங்கள் குழு இப்போது பெரிதாகிவிட்டது! 🎉",
+    "title": "🔥 {{.Username}} உங்கள் குழுவில் சேர்ந்துள்ளார்."
+  },
+  "te": {
+    "body": "మీరు {{.Amount}} {{.Coin}} టోకెన్స్ సంపాదించారు! 🌟",
+    "altBody": "మీ బృందం ఇప్పుడే పెద్దదైంది! 🎉",
+    "title": "🔥 {{.Username}} మీ బృందంలో చేరారు."
+  },
+  "th": {
+    "body": "คุณได้รับ {{.Amount}} {{.Coin}} โทเค็น! 🌟",
+    "altBody": "ทีมของคุณใหญ่ขึ้น! 🎉",
+    "title": "🔥 {{.Username}} เข้าร่วมทีมของคุณแล้ว"
+  },
+  "tr": {
+    "body": "{{.Amount}} {{.Coin}} jeton kazandınız! 🌟",
+    "altBody": "Ekibiniz daha da büyüdü! 🎉",
+    "title": "🔥 {{.Username}} ekibinize katıldı."
+  },
+  "uk": {
+    "body": "Ви заробили {{.Amount}} {{.Coin}} токенів! 🌟",
+    "altBody": "Ваша команда стала більшою! 🎉",
+    "title": "🔥 {{.Username}} приєднався до вашої команди."
+  },
+  "ur": {
+    "body": "آپ نے {{.Amount}} {{.Coin}} ٹوکنز کمائے ہیں! 🌟",
+    "altBody": "آپ کی ٹیم ابھی بڑی ہو گئی ہے! 🎉",
+    "title": "🔥 {{.Username}} آپ کی ٹیم میں شامل ہو گیا ہے۔"
+  },
+  "vi": {
+    "body": "Bạn đã kiếm được {{.Amount}} {{.Coin}} token! 🌟",
+    "altBody": "Nhóm của bạn vừa trở nên lớn hơn! 🎉",
+    "title": "🔥 {{.Username}} đã tham gia nhóm của bạn."
+  },
+  "yo": {
+    "body": "O ti gba {{.Amount}} {{.Coin}} tokẹni! 🌟",
+    "altBody": "Ẹgbẹ rẹ ṣẹṣẹ di nla! 🎉",
+    "title": "🔥 {{.Username}} ti darapọ mọ ẹgbẹ rẹ."
+  },
+  "zh": {
+    "body": "你获得了 {{.Amount}} {{.Coin}} 代币！ 🌟",
+    "altBody": "你的團隊變得更大了！ 🎉",
+    "title": "🔥 {{.Username}} 已加入您的團隊。"
+  },
+  "zh-hans": {
+    "body": "你获得了 {{.Amount}} {{.Coin}} 代币！ 🌟",
+    "altBody": "你的团队变得更大了！ 🎉",
+    "title": "🔥 {{.Username}} 已加入您的团队。"
+  },
+  "zh-hant": {
+    "body": "你獲得了 {{.Amount}} {{.Coin}} 代幣！ 🌟",
+    "altBody": "你的團隊變得更大了！ 🎉",
+    "title": "🔥 {{.Username}} 已加入您的團隊。"
+  },
+  "zu": {
+    "body": "Uzuze {{.Amount}} {{.Coin}} tokens! 🌟",
+    "altBody": "UIqembu lakho lisanda kuba likhulu! 🎉",
+    "title": "🔥 {{.Username}} ujoyine iqembu lakho."
+  }
+}
