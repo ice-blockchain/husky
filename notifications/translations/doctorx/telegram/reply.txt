@@ -1,0 +1,6 @@
+{
+   "en":{
+      "body":"🎉 Hi, <b>{{.Username}}</b>!\n\nJoin to our app.",
+      "buttonText": ["👉 Join the app"]
+   }
+}

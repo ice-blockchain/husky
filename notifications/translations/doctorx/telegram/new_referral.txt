@@ -1,0 +1,7 @@
+{
+   "en":{
+      "body":"🔥 <b>{{.DailyNewReferralCount}} people</b> has joined your team in the past 24 hours.\n\nYou earned <b>{{.Amount}} {{.Coin}} tokens!</b> 🌟",
+      "altBody": "🔥 <b>{{.DailyNewReferralCount}} people</b> has joined your team in the past 24 hours.\n\nYour team just got bigger! 🎉",
+      "buttonText": ["👉 View Team"]
+   }
+}
