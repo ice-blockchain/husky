@@ -16,6 +16,7 @@ import (
 	messagebroker "github.com/ice-blockchain/wintr/connectors/message_broker"
 	storage "github.com/ice-blockchain/wintr/connectors/storage/v2"
 	"github.com/ice-blockchain/wintr/log"
+	"github.com/ice-blockchain/wintr/notifications/telegram"
 	"github.com/ice-blockchain/wintr/time"
 )
 
@@ -224,7 +225,7 @@ func (r *repository) ToggleNotificationChannelDomain( //nolint:funlen,gocognit,g
 	return nil
 }
 
-//nolint:gocyclo,revive,cyclop // .
+//nolint:gocyclo,revive,cyclop,gocognit // .
 func (s *userTableSource) Process(ctx context.Context, msg *messagebroker.Message) error {
 	if ctx.Err() != nil {
 		return errors.Wrap(ctx.Err(), "unexpected deadline while processing message")
@@ -249,9 +250,80 @@ func (s *userTableSource) Process(ctx context.Context, msg *messagebroker.Messag
 		if err := s.addScheduledNotifications(ctx, snapshot); err != nil {
 			return errors.Wrapf(err, "failed to addScheduledNotifications for:%#v", snapshot)
 		}
+		if err := s.sendStartTelegramCommandMessageAfterTheRegistration(ctx, snapshot); err != nil {
+			return errors.Wrapf(err, "failed to sendStartTelegramMessage for:%#v", snapshot)
+		}
 	}
 
 	return errors.Wrapf(s.sendNewReferralNotification(ctx, snapshot), "failed to sendNewReferralNotification for :%#v", snapshot)
+}
+
+//nolint:funlen // .
+func (s *userTableSource) sendStartTelegramCommandMessageAfterTheRegistration(ctx context.Context, snapshot *users.UserSnapshot) error {
+	if ctx.Err() != nil {
+		return errors.Wrap(ctx.Err(), "context failed")
+	}
+	if snapshot.User.ID == "" || snapshot.User.TelegramUserID == "" || snapshot.User.TelegramUserID == snapshot.User.ID ||
+		snapshot.User.TelegramBotID == snapshot.User.ID || snapshot.User.TelegramBotID == "" {
+		return nil
+	}
+	sql := `SELECT 1 AS exists FROM sent_telegram_notifications WHERE telegram_user_id = $1 AND notification_type = $2 AND notification_channel = $3`
+	type res struct {
+		Exists int `db:"exists"`
+	}
+	params := []any{snapshot.User.TelegramUserID, StartCommandNotificationType, TelegramNotificationChannel}
+	row, err := storage.Get[res](ctx, s.db, sql, params...)
+	if err != nil && !errors.Is(err, storage.ErrNotFound) {
+		return errors.Wrap(err, "failed to check sent telegram notifications")
+	}
+	if row != nil {
+		return nil
+	}
+	tmpl, found := allTelegramNotificationTemplates[StartCommandNotificationType][snapshot.User.Language]
+	if !found {
+		log.Warn(fmt.Sprintf("language `%v` was not found in the `%v` telegram notifications config", snapshot.User.Language, StartCommandNotificationType))
+		tmpl, found = allTelegramNotificationTemplates[StartCommandNotificationType][defaultLanguage]
+		if !found {
+			log.Panic(fmt.Sprintf("no default translations provided for notification, lang:%v, notificationType:%v", defaultLanguage, StartCommandNotificationType)) //nolint:lll // .
+		}
+	}
+	var botToken string
+	for botName, bot := range s.cfg.TelegramBots {
+		if botName == snapshot.User.TelegramBotID {
+			botToken = bot.BotToken
+
+			break
+		}
+	}
+	if botToken == "" { //nolint:gosec // .
+		log.Warn(fmt.Sprintf("no bot token found for botName:%v", snapshot.User.TelegramBotID))
+
+		return nil
+	}
+	body := tmpl.getAltBody(users.JSON{"WelcomeBonus": s.cfg.WelcomeBonusV2Amount})
+	now := time.Now()
+	uniqueness := fmt.Sprintf("command_user%v_%v_%v_%v", snapshot.User.TelegramUserID, StartCommandNotificationType, snapshot.User.TelegramUserID, now)
+	notification := &telegramNotification{
+		tn: &telegram.Notification{
+			ChatID:   snapshot.User.TelegramUserID,
+			Text:     body,
+			BotToken: botToken,
+		},
+		sn: &sentNotification{
+			SentAt:   now,
+			Language: snapshot.User.Language,
+			sentNotificationPK: sentNotificationPK{
+				UserID:                   snapshot.User.TelegramUserID,
+				Uniqueness:               uniqueness,
+				NotificationType:         StartCommandNotificationType,
+				NotificationChannel:      TelegramNotificationChannel,
+				NotificationChannelValue: snapshot.User.TelegramUserID,
+			},
+		},
+	}
+	notification.tn.Buttons = append(notification.tn.Buttons, prepareTelegramButtonsForStartCommandNotificationType(s.cfg, tmpl.ButtonText)...)
+
+	return errors.Wrapf(s.sendTelegramCommandNotification(ctx, notification), "failed to send start command notification for userID:%v", snapshot.User.ID)
 }
 
 func (s *userTableSource) addScheduledNotifications(ctx context.Context, snapshot *users.UserSnapshot) error {
