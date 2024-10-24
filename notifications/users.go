@@ -272,11 +272,11 @@ func (s *userTableSource) sendStartTelegramCommandMessageAfterTheRegistration(ct
 		Exists int `db:"exists"`
 	}
 	params := []any{snapshot.User.TelegramUserID, StartCommandNotificationType, TelegramNotificationChannel}
-	row, err := storage.Get[res](ctx, s.db, sql, params...)
+	row, err := storage.Select[res](ctx, s.db, sql, params...)
 	if err != nil && !errors.Is(err, storage.ErrNotFound) {
 		return errors.Wrap(err, "failed to check sent telegram notifications")
 	}
-	if row != nil {
+	if len(row) > 0 {
 		return nil
 	}
 	tmpl, found := allTelegramNotificationTemplates[StartCommandNotificationType][snapshot.User.Language]
