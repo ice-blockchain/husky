@@ -1,0 +1,202 @@
+{
+    "en": {
+        "title": "🚨 Time's Running Out 🚨",
+        "body": "You've got 1 hour left to extend your check-in session."
+    },
+    "ro": {
+        "title": "🚨 Timpul se scurge 🚨",
+        "body": "Mai aveți 1 oră pentru a vă extinde sesiunea de check-in."
+    },
+    "el": {
+        "title": "🚨 Ο χρόνος τελειώνει 🚨",
+        "body": "Έχετε 1 ώρα ακόμα για να παρατείνετε τη συνεδρία του check-in."
+    },
+    "af": {
+        "title": "🚨 Tyd raak min 🚨",
+        "body": "Jy het 1 uur oor om jou inkloksessie te verleng."
+    },
+    "am": {
+        "title": "🚨 ጊዜው እያለቀ ነው 🚨",
+        "body": "የመግባት ክፍለ ጊዜዎን ለማራዘም 1 ሰዓት ቀርዎታል።"
+    },
+    "ar": {
+        "title": "🚨 الوقت ينفد",
+        "body": "لديك ساعة واحدة متبقية لتمديد جلسة تسجيل الوصول."
+    },
+    "az": {
+        "title": "🚨 Vaxt Bitir 🚨",
+        "body": "Qeydiyyat sessiyanızı uzatmaq üçün 1 saat vaxtınız qalıb."
+    },
+    "bg": {
+        "title": "🚨 Времето изтича 🚨",
+        "body": "Имате още 1 час, за да удължите сесията си за настаняване."
+    },
+    "bn": {
+        "title": "🚨 সময় ফুরিয়ে আসছে 🚨",
+        "body": "আপনার চেক-ইন সেশন বাড়ানোর জন্য আপনার কাছে 1 ঘন্টা বাকি আছে।"
+    },
+    "yo": {
+        "title": "🚨 Akoko ti n pari 🚨",
+        "body": "O ni wakati 1 ti o ku lati fa igba igba-iwọle rẹ pọ si."
+    },
+    "cs": {
+        "title": "🚨 Čas se krátí 🚨",
+        "body": "Zbývá vám 1 hodina na prodloužení vaší registrace."
+    },
+    "de": {
+        "title": "🚨 Die Zeit läuft ab 🚨",
+        "body": "Sie haben noch 1 Stunde Zeit, um Ihre Check-in-Sitzung zu verlängern."
+    },
+    "es": {
+        "title": "🚨 Se acaba el tiempo 🚨",
+        "body": "Te queda 1 hora para extender tu sesión de check-in."
+    },
+    "fa": {
+        "title": "🚨 زمان در حال اتمام است 🚨",
+        "body": "1 ساعت فرصت دارید تا جلسه اعلام حضور خود را تمدید کنید."
+    },
+    "tl": {
+        "title": "🚨 Ubos na ang Oras 🚨",
+        "body": "Mayroon kang 1 oras na natitira upang palawigin ang iyong sesyon ng check-in."
+    },
+    "fr": {
+        "title": "🚨 Le temps presse 🚨",
+        "body": "Il vous reste 1 heure pour prolonger votre session d'enregistrement."
+    },
+    "gu": {
+        "title": "🚨 સમય પૂરો થઈ રહ્યો છે 🚨",
+        "body": "તમારું ચેક-ઇન સત્ર વધારવા માટે તમારી પાસે 1 કલાક બાકી છે."
+    },
+    "he": {
+        "title": "🚨 הזמן אוזל 🚨",
+        "body": "נותרה לך שעה אחת להאריך את פגישת הצ'ק-אין שלך."
+    },
+    "hi": {
+        "title": "🚨 समय निकल रहा है 🚨",
+        "body": "आपके पास अपना चेक-इन सत्र बढ़ाने के लिए 1 घंटा शेष है।"
+    },
+    "hu": {
+        "title": "🚨 Fogy az idő 🚨",
+        "body": "Még 1 órája van a bejelentkezés meghosszabbítására."
+    },
+    "id": {
+        "title": "🚨 Waktu Habis 🚨",
+        "body": "Anda memiliki 1 jam tersisa untuk memperpanjang sesi check-in Anda."
+    },
+    "it": {
+        "title": "🚨 Il tempo sta per scadere 🚨",
+        "body": "Hai ancora 1 ora per prolungare la tua sessione di check-in."
+    },
+    "ja": {
+        "title": "🚨 時間切れ 🚨",
+        "body": "チェックイン セッションを 1 時間延長してください。"
+    },
+    "jv": {
+        "title": "🚨 Wekdal Wekdal 🚨",
+        "body": "Sampeyan isih duwe 1 jam kanggo nambah sesi check-in."
+    },
+    "ko": {
+        "title": "🚨 시간이 얼마 남지 않았습니다 🚨",
+        "body": "체크인 세션을 연장할 수 있는 시간이 1시간 남았습니다."
+    },
+    "mr": {
+        "title": "🚨 वेळ संपत आहे 🚨",
+        "body": "तुमचे चेक-इन सत्र वाढवण्यासाठी तुमच्याकडे 1 तास शिल्लक आहे."
+    },
+    "ms": {
+        "title": "🚨 Masa semakin suntuk 🚨",
+        "body": "Anda mempunyai 1 jam lagi untuk melanjutkan sesi daftar masuk anda."
+    },
+    "no": {
+        "title": "🚨 Tiden renner ut 🚨",
+        "body": "Du har 1 time igjen til å forlenge innsjekkingsøkten."
+    },
+    "pa": {
+        "title": "🚨 ਸਮਾਂ ਖਤਮ ਹੋ ਰਿਹਾ ਹੈ 🚨",
+        "body": "ਤੁਹਾਡੇ ਕੋਲ ਆਪਣਾ ਚੈੱਕ-ਇਨ ਸੈਸ਼ਨ ਵਧਾਉਣ ਲਈ 1 ਘੰਟਾ ਬਚਿਆ ਹੈ।"
+    },
+    "pl": {
+        "title": "🚨 Czas ucieka 🚨",
+        "body": "Pozostała Ci 1 godzina na przedłużenie sesji odprawy."
+    },
+    "ps": {
+        "title": "🚨 وخت تیریږي 🚨",
+        "body": "تاسو د خپل چیک ان سیشن اوږدولو لپاره 1 ساعت پاتې یاست."
+    },
+    "pt": {
+        "title": "🚨 O tempo está acabando 🚨",
+        "body": "Você tem 1 hora para estender sua sessão de check-in."
+    },
+    "ru": {
+        "title": "🚨 Время на исходе 🚨",
+        "body": "У вас остался 1 час, чтобы продлить сеанс регистрации."
+    },
+    "sd": {
+        "title": "🚨 وقت ختم ٿي ويو 🚨",
+        "body": "توهان وٽ 1 ڪلاڪ بچيو آهي توهان جي چيڪ ان سيشن کي وڌائڻ لاءِ."
+    },
+    "sk": {
+        "title": "🚨 Čas sa kráti 🚨",
+        "body": "Zostáva vám 1 hodina na predĺženie vašej registrácie."
+    },
+    "sl": {
+        "title": "🚨 Čas se izteka 🚨",
+        "body": "Imate še 1 uro, da podaljšate prijavo."
+    },
+    "sq": {
+        "title": "🚨 Koha po mbaron 🚨",
+        "body": "Të ka mbetur edhe 1 orë për të zgjatur seancën e regjistrimit."
+    },
+    "sv": {
+        "title": "🚨 Tiden rinner ut 🚨",
+        "body": "Du har 1 timme kvar på dig att förlänga din incheckningssession."
+    },
+    "ta": {
+        "title": "🚨 நேரம் முடிந்துவிட்டது 🚨",
+        "body": "உங்கள் செக்-இன் அமர்வை நீட்டிக்க இன்னும் 1 மணிநேரம் உள்ளது."
+    },
+    "te": {
+        "title": "🚨 సమయం ముగిసింది 🚨",
+        "body": "మీ చెక్-ఇన్ సెషన్‌ను పొడిగించడానికి మీకు 1 గంట సమయం మిగిలి ఉంది."
+    },
+    "th": {
+        "title": "🚨 หมดเวลา 🚨",
+        "body": "คุณเหลือเวลาอีก 1 ชั่วโมงในการขยายเวลาเช็คอิน"
+    },
+    "su": {
+        "title": "🚨 Waktos Kasempetan 🚨",
+        "body": "Anjeun gaduh 1 jam deui kanggo manjangkeun sési check-in anjeun."
+    },
+    "kn": {
+        "title": "🚨 ಸಮಯ ಮೀರುತ್ತಿದೆ 🚨",
+        "body": "ನಿಮ್ಮ ಚೆಕ್-ಇನ್ ಸೆಶನ್ ಅನ್ನು ವಿಸ್ತರಿಸಲು ನಿಮಗೆ 1 ಗಂಟೆ ಉಳಿದಿದೆ."
+    },
+    "tr": {
+        "title": "🚨 Zaman Aşıyor 🚨",
+        "body": "Check-in seansınızı uzatmak için 1 saatiniz kaldı."
+    },
+    "zh-hant": {
+        "title": "🚨 時間不多了 🚨",
+        "body": "您還有 1 小時的時間來延長簽到時間。"
+    },
+    "uk": {
+        "title": "🚨 Час спливає 🚨",
+        "body": "У вас залишилася 1 година, щоб продовжити сеанс реєстрації."
+    },
+    "ur": {
+        "title": "🚨 وقت ختم ہو رہا ہے 🚨",
+        "body": "آپ کے پاس اپنے چیک ان سیشن کو بڑھانے کے لیے 1 گھنٹہ باقی ہے۔"
+    },
+    "vi": {
+        "title": "🚨 Hết giờ 🚨",
+        "body": "Bạn còn 1 giờ để gia hạn phiên đăng ký của mình."
+    },
+    "zh": {
+        "title": "🚨 时间不多了 🚨",
+        "body": "您还有 1 小时的时间来延长签到时间。"
+    },
+    "zu": {
+        "title": "🚨 Isikhathi siyaphela 🚨",
+        "body": "Unehora elingu-1 elisele lokwengeza isikhathi sakho sokungena."
+    }
+}

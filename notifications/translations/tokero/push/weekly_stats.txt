@@ -1,0 +1,202 @@
+{
+    "en": {
+        "title": "Weekly Network Update 📈",
+        "body": "See how the {{.TenantName}} network is growing and advancing."
+    },
+    "ro": {
+        "title": "Actualizare săptămânală de rețea 📈",
+        "body": "Vezi cum crește și avansează rețeaua {{.TenantName}}."
+    },
+    "el": {
+        "title": "Εβδομαδιαία ενημέρωση δικτύου 📈",
+        "body": "Δείτε πώς αναπτύσσεται και εξελίσσεται το δίκτυο {{.TenantName}}."
+    },
+    "af": {
+        "title": "Weeklikse netwerkopdatering 📈",
+        "body": "Kyk hoe die {{.TenantName}}-netwerk groei en vorder."
+    },
+    "am": {
+        "title": "ሳምንታዊ የአውታረ መረብ ዝመና 📈",
+        "body": "የ {{.TenantName}} አውታረ መረብ እንዴት እያደገ እና እየገሰገሰ እንደሆነ ይመልከቱ።"
+    },
+    "ar": {
+        "title": "تحديث الشبكة الأسبوعي 📈",
+        "body": "شاهد كيف تنمو شبكة {{.TenantName}} وتتقدم."
+    },
+    "az": {
+        "title": "Həftəlik Şəbəkə Yeniləməsi 📈",
+        "body": "{{.TenantName}} şəbəkəsinin necə böyüdüyünə və irəlilədiyinə baxın."
+    },
+    "bg": {
+        "title": "Седмична мрежова актуализация 📈",
+        "body": "Вижте как мрежата {{.TenantName}} расте и напредва."
+    },
+    "bn": {
+        "title": "সাপ্তাহিক নেটওয়ার্ক আপডেট 📈",
+        "body": "দেখুন কিভাবে {{.TenantName}} নেটওয়ার্ক বাড়ছে এবং অগ্রসর হচ্ছে।"
+    },
+    "yo": {
+        "title": "Imudojuiwọn Nẹtiwọọki Ọsẹ 📈",
+        "body": "Wo bii nẹtiwọọki {{.TenantName}} ṣe n dagba ati ilọsiwaju."
+    },
+    "cs": {
+        "title": "Týdenní aktualizace sítě 📈",
+        "body": "Podívejte se, jak síť {{.TenantName}} roste a postupuje."
+    },
+    "de": {
+        "title": "Wöchentliches Netzwerk-Update 📈",
+        "body": "Sehen Sie, wie das {{.TenantName}}-Netzwerk wächst und voranschreitet."
+    },
+    "es": {
+        "title": "Actualización semanal de la red 📈",
+        "body": "Ver cómo crece y avanza la red {{.TenantName}}."
+    },
+    "fa": {
+        "title": "به روز رسانی هفتگی شبکه 📈",
+        "body": "ببینید که چگونه شبکه {{.TenantName}} در حال رشد و پیشرفت است."
+    },
+    "tl": {
+        "title": "Lingguhang Update sa Network 📈",
+        "body": "Tingnan kung paano lumalaki at sumusulong ang network ng {{.TenantName}}."
+    },
+    "fr": {
+        "title": "Mise à jour hebdomadaire du réseau 📈",
+        "body": "Découvrez comment le réseau {{.TenantName}} se développe et progresse."
+    },
+    "gu": {
+        "title": "સાપ્તાહિક નેટવર્ક અપડેટ 📈",
+        "body": "જુઓ કે {{.TenantName}} નેટવર્ક કેવી રીતે વધી રહ્યું છે અને આગળ વધી રહ્યું છે."
+    },
+    "he": {
+        "title": "עדכון רשת שבועי 📈",
+        "body": "ראה כיצד רשת {{.TenantName}} צומחת ומתקדמת."
+    },
+    "hi": {
+        "title": "साप्ताहिक नेटवर्क अपडेट 📈",
+        "body": "देखें कि {{.TenantName}} नेटवर्क कैसे बढ़ रहा है और आगे बढ़ रहा है।"
+    },
+    "hu": {
+        "title": "Heti hálózati frissítés 📈",
+        "body": "Nézze meg, hogyan növekszik és fejlődik az {{.TenantName}} hálózat."
+    },
+    "id": {
+        "title": "Pembaruan Jaringan Mingguan 📈",
+        "body": "Lihat bagaimana jaringan {{.TenantName}} tumbuh dan berkembang."
+    },
+    "it": {
+        "title": "Aggiornamento settimanale della rete 📈",
+        "body": "Guarda come la rete {{.TenantName}} sta crescendo e avanzando."
+    },
+    "ja": {
+        "title": "毎週のネットワーク更新 📈",
+        "body": "{{.TenantName}} ネットワークがどのように成長し、進歩しているかをご覧ください。"
+    },
+    "jv": {
+        "title": "Nganyari Jaringan Mingguan 📈",
+        "body": "Waca carane jaringan {{.TenantName}} saya akeh lan maju."
+    },
+    "ko": {
+        "title": "주간 네트워크 업데이트 📈",
+        "body": "{{.TenantName}} 네트워크가 어떻게 성장하고 발전하는지 확인하십시오."
+    },
+    "mr": {
+        "title": "साप्ताहिक नेटवर्क अपडेट 📈",
+        "body": "{{.TenantName}} नेटवर्क कसे वाढत आहे आणि प्रगत होत आहे ते पहा."
+    },
+    "ms": {
+        "title": "Kemas Kini Rangkaian Mingguan 📈",
+        "body": "Lihat bagaimana rangkaian {{.TenantName}} berkembang dan maju."
+    },
+    "no": {
+        "title": "Ukentlig nettverksoppdatering 📈",
+        "body": "Se hvordan {{.TenantName}}-nettverket vokser og avanserer."
+    },
+    "pa": {
+        "title": "ਹਫਤਾਵਾਰੀ ਨੈੱਟਵਰਕ ਅੱਪਡੇਟ 📈",
+        "body": "ਦੇਖੋ ਕਿ ਕਿਵੇਂ {{.TenantName}} ਨੈੱਟਵਰਕ ਵਧ ਰਿਹਾ ਹੈ ਅਤੇ ਅੱਗੇ ਵਧ ਰਿਹਾ ਹੈ।"
+    },
+    "pl": {
+        "title": "Cotygodniowa aktualizacja sieci 📈",
+        "body": "Zobacz, jak rozwija się i rozwija sieć {{.TenantName}}."
+    },
+    "ps": {
+        "title": "د اونیزې شبکې تازه معلومات 📈",
+        "body": "وګورئ چې د {{.TenantName}} شبکه څنګه وده کوي او پرمختګ کوي."
+    },
+    "pt": {
+        "title": "Atualização de rede semanal 📈",
+        "body": "Veja como a rede {{.TenantName}} está crescendo e avançando."
+    },
+    "ru": {
+        "title": "Еженедельное обновление сети 📈",
+        "body": "Посмотрите, как сеть {{.TenantName}} растет и развивается."
+    },
+    "sd": {
+        "title": "هفتيوار نيٽ ورڪ اپڊيٽ 📈",
+        "body": "ڏسو ته ڪيئن {{.TenantName}} نيٽ ورڪ وڌي رهيو آهي ۽ ترقي ڪري رهيو آهي."
+    },
+    "sk": {
+        "title": "Týždenná aktualizácia siete 📈",
+        "body": "Pozrite sa, ako sieť {{.TenantName}} rastie a napreduje."
+    },
+    "sl": {
+        "title": "Tedenska posodobitev omrežja 📈",
+        "body": "Oglejte si, kako omrežje {{.TenantName}} raste in napreduje."
+    },
+    "sq": {
+        "title": "Përditësimi javor i rrjetit 📈",
+        "body": "Shihni se si rrjeti {{.TenantName}} po rritet dhe po përparon."
+    },
+    "sv": {
+        "title": "Nätverksuppdatering varje vecka 📈",
+        "body": "Se hur {{.TenantName}}-nätverket växer och avancerar."
+    },
+    "ta": {
+        "title": "வாராந்திர நெட்வொர்க் புதுப்பிப்பு 📈",
+        "body": "{{.TenantName}} நெட்வொர்க் எவ்வாறு வளர்ந்து முன்னேறுகிறது என்பதைப் பார்க்கவும்."
+    },
+    "te": {
+        "title": "వీక్లీ నెట్‌వర్క్ అప్‌డేట్ 📈",
+        "body": "{{.TenantName}} నెట్‌వర్క్ ఎలా పెరుగుతోంది మరియు అభివృద్ధి చెందుతోందో చూడండి."
+    },
+    "th": {
+        "title": "อัปเดตเครือข่ายรายสัปดาห์ 📈",
+        "body": "ดูว่าเครือข่าย {{.TenantName}} เติบโตและก้าวหน้าอย่างไร"
+    },
+    "su": {
+        "title": "Pembaruan Jaringan Mingguan 📈",
+        "body": "Tingali kumaha jaringan {{.TenantName}} ngembang sareng maju."
+    },
+    "kn": {
+        "title": "ಸಾಪ್ತಾಹಿಕ ನೆಟ್‌ವರ್ಕ್ ಅಪ್‌ಡೇಟ್ 📈",
+        "body": "{{.TenantName}} ನೆಟ್‌ವರ್ಕ್ ಹೇಗೆ ಬೆಳೆಯುತ್ತಿದೆ ಮತ್ತು ಮುಂದುವರಿಯುತ್ತಿದೆ ಎಂಬುದನ್ನು ನೋಡಿ."
+    },
+    "tr": {
+        "title": "Haftalık Ağ Güncellemesi 📈",
+        "body": "{{.TenantName}} ağının nasıl büyüdüğünü ve ilerlediğini görün."
+    },
+    "zh-hant": {
+        "title": "每週網絡更新📈",
+        "body": "查看 {{.TenantName}} 網絡如何發展和進步。"
+    },
+    "uk": {
+        "title": "Щотижневе оновлення мережі 📈",
+        "body": "Подивіться, як мережа {{.TenantName}} росте та розвивається."
+    },
+    "ur": {
+        "title": "ہفتہ وار نیٹ ورک اپ ڈیٹ 📈",
+        "body": "دیکھیں کہ {{.TenantName}} نیٹ ورک کس طرح بڑھ رہا ہے اور آگے بڑھ رہا ہے۔"
+    },
+    "vi": {
+        "title": "Cập nhật mạng hàng tuần 📈",
+        "body": "Xem mạng {{.TenantName}} đang phát triển và tiến bộ như thế nào."
+    },
+    "zh": {
+        "title": "每周网络更新📈",
+        "body": "查看 {{.TenantName}} 网络如何发展和进步。"
+    },
+    "zu": {
+        "title": "Isibuyekezo Senethiwekhi Samasonto onke 📈",
+        "body": "Bona ukuthi inethiwekhi ye-{{.TenantName}} ikhula futhi ithuthuka kanjani."
+    }
+}

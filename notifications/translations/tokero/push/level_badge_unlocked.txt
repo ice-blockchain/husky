@@ -1,0 +1,206 @@
+{
+   "af":{
+      "body":"Jy het die {{.BadgeName}}-vlakkenteken ontsluit! Kyk dit in jou profiel.",
+      "title":"🎉 Nuwe kenteken verdien!"
+   },
+   "am":{
+      "body":"የ{{.BadgeName}} ደረጃ ባጅ ከፍተዋል! በመገለጫዎ ውስጥ ይመልከቱት።",
+      "title":"🎉 አዲስ ባጅ ተገኘ!"
+   },
+   "ar":{
+      "body":"لقد فتحت شارة مستوى {{.BadgeName}}! تحقق من ذلك في ملف التعريف الخاص بك.",
+      "title":"🎉 تم الحصول على شارة جديدة!"
+   },
+   "az":{
+      "body":"Siz {{.BadgeName}} səviyyəli nişanı açdınız! Bunu profilinizdə yoxlayın.",
+      "title":"🎉 Yeni nişan qazanıldı!"
+   },
+   "bg":{
+      "body":"Отключихте значката за ниво {{.BadgeName}}! Вижте го в профила си.",
+      "title":"🎉 Спечелена нова значка!"
+   },
+   "bn":{
+      "body":"আপনি {{.BadgeName}} স্তরের ব্যাজ আনলক করেছেন! আপনার প্রোফাইলে এটি পরীক্ষা করে দেখুন.",
+      "title":"🎉 নতুন ব্যাজ অর্জিত!"
+   },
+   "cs":{
+      "body":"Odemkli jste odznak úrovně {{.BadgeName}}! Podívejte se na svůj profil.",
+      "title":"🎉 Získali jste nový odznak!"
+   },
+   "de":{
+      "body":"Du hast das Level-Abzeichen {{.BadgeName}} freigeschaltet! Sieh es dir in deinem Profil an.",
+      "title":"🎉 Neues Abzeichen verdient!"
+   },
+   "en":{
+      "body":"You've unlocked the {{.BadgeName}} level badge! Check it out in your profile.",
+      "title":"🎉 New badge earned!"
+   },
+   "es":{
+      "body":"¡Has desbloqueado la insignia de nivel {{.BadgeName}}! Compruébalo en tu perfil.",
+      "title":"🎉 ¡Nueva insignia ganada!"
+   },
+   "fa":{
+      "body":"شما نشان سطح {{.BadgeName}} را باز کرده اید! آن را در پروفایل خود بررسی کنید.",
+      "title":"🎉 نشان جدید به دست آورد!"
+   },
+   "fil":{
+      "body":"Na-unlock mo ang {{.BadgeName}} level badge! Tingnan ito sa iyong profile.",
+      "title":"🎉 Bagong badge ang nakuha!"
+   },
+   "fr":{
+      "body":"Vous avez débloqué le badge de niveau {{.BadgeName}}! Vérifiez-le dans votre profil.",
+      "title":"🎉 Nouveau badge gagné!"
+   },
+   "ge":{
+      "body":"Ξεκλειδώσατε το σήμα επιπέδου {{.BadgeName}}! Δείτε το στο προφίλ σας.",
+      "title":"🎉 Κερδίστηκε νέο σήμα!"
+   },
+   "gu":{
+      "body":"તમે {{.BadgeName}} લેવલનો બેજ અનલૉક કર્યો છે! તેને તમારી પ્રોફાઇલમાં તપાસો.",
+      "title":"🎉 નવો બેજ મેળવ્યો!"
+   },
+   "he":{
+      "body":"פתחת את התג ברמת {{.BadgeName}}! בדוק את זה בפרופיל שלך.",
+      "title":"🎉 זכה בתג חדש!"
+   },
+   "hi":{
+      "body":"आपने {{.BadgeName}} स्तर का बैज अनलॉक कर लिया है! इसे अपने प्रोफाइल में देखें।",
+      "title":"🎉 नया बैज अर्जित किया गया!"
+   },
+   "hu":{
+      "body":"Feloldottad a {{.BadgeName}} szintjelvényt! Nézd meg a profilodban.",
+      "title":"🎉 Új jelvényt szerzett!"
+   },
+   "id":{
+      "body":"Anda telah membuka lencana level {{.BadgeName}}! Lihat di profil Anda.",
+      "title":"🎉 Lencana baru diperoleh!"
+   },
+   "it":{
+      "body":"Hai sbloccato il badge di livello {{.BadgeName}}! Dai un'occhiata nel tuo profilo.",
+      "title":"🎉 Nuovo badge guadagnato!"
+   },
+   "ja":{
+      "body":"{{.BadgeName}} レベル バッジをアンロックしました! プロフィールからチェックしてみてください。",
+      "title":"🎉 新しいバッジを獲得しました！"
+   },
+   "jv":{
+      "body":"Sampeyan wis mbukak badge level {{.BadgeName}}! Priksa metu ing profil.",
+      "title":"🎉 Lencana anyar entuk!"
+   },
+   "kn":{
+      "body":"ನೀವು {{.BadgeName}} ಮಟ್ಟದ ಬ್ಯಾಡ್ಜ್ ಅನ್ನು ಅನ್‌ಲಾಕ್ ಮಾಡಿರುವಿರಿ! ನಿಮ್ಮ ಪ್ರೊಫೈಲ್‌ನಲ್ಲಿ ಇದನ್ನು ಪರಿಶೀಲಿಸಿ.",
+      "title":"🎉 ಹೊಸ ಬ್ಯಾಡ್ಜ್ ಗಳಿಸಲಾಗಿದೆ!"
+   },
+   "ko":{
+      "body":"{{.BadgeName}} 레벨 배지를 잠금 해제했습니다! 프로필에서 확인하세요.",
+      "title":"🎉 새로운 배지를 획득했습니다!"
+   },
+   "mr":{
+      "body":"तुम्ही {{.BadgeName}} स्तराचा बॅज अनलॉक केला आहे! तुमच्या प्रोफाइलमध्ये ते पहा.",
+      "title":"🎉 नवीन बॅज मिळवला!"
+   },
+   "ms":{
+      "body":"Anda telah membuka kunci lencana peringkat {{.BadgeName}}! Semak dalam profil anda.",
+      "title":"🎉 Lencana baharu diperoleh!"
+   },
+   "no":{
+      "body":"Du har låst opp nivåmerket {{.BadgeName}}! Sjekk det ut i profilen din.",
+      "title":"🎉 Nytt merke opptjent!"
+   },
+   "pa":{
+      "body":"ਤੁਸੀਂ {{.BadgeName}} ਪੱਧਰ ਬੈਜ ਨੂੰ ਅਨਲੌਕ ਕਰ ਲਿਆ ਹੈ! ਇਸਨੂੰ ਆਪਣੇ ਪ੍ਰੋਫਾਈਲ ਵਿੱਚ ਦੇਖੋ।",
+      "title":"🎉 ਨਵਾਂ ਬੈਜ ਕਮਾਇਆ!"
+   },
+   "pl":{
+      "body":"Odblokowałeś odznakę poziomu {{.BadgeName}}! Sprawdź to w swoim profilu.",
+      "title":"🎉 Zdobyto nową odznakę!"
+   },
+   "ps":{
+      "body":"تاسو د {{.BadgeName}} کچې بیج خلاص کړی! په خپل پروفایل کې یې وګورئ.",
+      "title":"🎉 نوی بیج ترلاسه کړ!"
+   },
+   "pt":{
+      "body":"Você desbloqueou a insígnia de nível {{.BadgeName}}! Confira no seu perfil.",
+      "title":"🎉 Nova insígnia conquistada!"
+   },
+   "ro":{
+      "body":"Ați deblocat insigna la nivel {{.BadgeName}}! Verifică-l în profilul tău.",
+      "title":"🎉 Insigna nouă obținută!"
+   },
+   "ru":{
+      "body":"Вы разблокировали значок уровня {{.BadgeName}}! Проверьте это в своем профиле.",
+      "title":"🎉 Получен новый значок!"
+   },
+   "sd":{
+      "body":"توھان ان لاڪ ڪيو آھي {{.BadgeName}} ليول بيج! ان کي چيڪ ڪريو توهان جي پروفائيل ۾.",
+      "title":"🎉 نئون بيج ڪمايو!"
+   },
+   "sk":{
+      "body":"Odomkli ste odznak úrovne {{.BadgeName}}! Pozrite si to vo svojom profile.",
+      "title":"🎉 Získali ste nový odznak!"
+   },
+   "sl":{
+      "body":"Odklenili ste značko ravni {{.BadgeName}}! Preverite v svojem profilu.",
+      "title":"🎉 Pridobljena nova značka!"
+   },
+   "sq":{
+      "body":"Ke zhbllokuar distinktivin e nivelit {{.BadgeName}}! Shikojeni në profilin tuaj.",
+      "title":"🎉 Fituar distinktivin e ri!"
+   },
+   "su":{
+      "body":"Anjeun geus muka konci lencana tingkat {{.BadgeName}}! Pariksa dina profil anjeun.",
+      "title":"🎉 Lencana anyar meunang!"
+   },
+   "sv":{
+      "body":"Du har låst upp nivåmärket {{.BadgeName}}! Kolla in det i din profil.",
+      "title":"🎉 Nytt märke intjänat!"
+   },
+   "ta":{
+      "body":"{{.BadgeName}} நிலை பேட்ஜைத் திறந்துவிட்டீர்கள்! அதை உங்கள் சுயவிவரத்தில் பார்க்கவும்.",
+      "title":"🎉 புதிய பேட்ஜ் கிடைத்தது!"
+   },
+   "te":{
+      "body":"మీరు {{.BadgeName}} స్థాయి బ్యాడ్జ్‌ని అన్‌లాక్ చేసారు! మీ ప్రొఫైల్‌లో దాన్ని తనిఖీ చేయండి.",
+      "title":"🎉 కొత్త బ్యాడ్జ్ సంపాదించారు!"
+   },
+   "th":{
+      "body":"คุณปลดล็อกป้ายระดับ {{.BadgeName}} แล้ว! ลองดูในโปรไฟล์ของคุณ",
+      "title":"🎉 ได้รับตราใหม่แล้ว!"
+   },
+   "tr":{
+      "body":"{{.BadgeName}} seviye rozetini açtınız! Profilinizde kontrol edin.",
+      "title":"🎉 Yeni rozet kazanıldı!"
+   },
+   "uk":{
+      "body":"Ви розблокували значок рівня {{.BadgeName}}! Перегляньте це у своєму профілі.",
+      "title":"🎉 Отримано новий значок!"
+   },
+   "ur":{
+      "body":"آپ نے {{.BadgeName}} لیول کے بیج کو غیر مقفل کر دیا ہے! اسے اپنے پروفائل میں چیک کریں۔",
+      "title":"🎉 نیا بیج حاصل کیا گیا!"
+   },
+   "vi":{
+      "body":"Bạn đã mở khóa huy hiệu cấp độ {{.BadgeName}}! Kiểm tra nó ra trong hồ sơ của bạn.",
+      "title":"🎉 Đã kiếm được huy hiệu mới!"
+   },
+   "yo":{
+      "body":"O ti ṣii baaji ipele {{.BadgeName}}! Ṣayẹwo rẹ ninu profaili rẹ.",
+      "title":"🎉 Titun baaji mina!"
+   },
+   "zh":{
+      "body":"你已經解鎖了 {{.BadgeName}} 等級徽章！ 在您的個人資料中查看。",
+      "title":"🎉 獲得新徽章！"
+   },
+   "zh-hans":{
+      "body":"你已经解锁了 {{.BadgeName}} 等级徽章！ 在您的个人资料中查看。",
+      "title":"🎉 获得新徽章！"
+   },
+   "zh-hant":{
+      "body":"你已經解鎖了 {{.BadgeName}} 等級徽章！ 在您的個人資料中查看。",
+      "title":"🎉 獲得新徽章！"
+   },
+   "zu":{
+      "body":"Uvule ibheji yezinga le-{{.BadgeName}}! Kuhlole kuphrofayela yakho.",
+      "title":"🎉 Ibheji elisha elizuziwe!"
+   }
+}
