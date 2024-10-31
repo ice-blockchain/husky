@@ -1,0 +1,6 @@
+{
+   "en":{
+      "body":"🌟<b>You’re a community hero!</b>\n\nYou made it! Welcome to the <b>AMBASSADOR</b> team. 🚀",
+      "buttonText": ["💼 View Role"]
+   }
+}

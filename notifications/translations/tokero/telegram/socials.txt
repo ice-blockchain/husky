@@ -1,0 +1,12 @@
+{
+    "en": {
+        "body": "🌟 Join our social media channels to stay updated with the latest news and important announcements.",
+        "buttonText": [
+                       "TOKERO TG Community",
+                       "TOKERO on X",
+                       "ION TG Community",
+                       "ION on X",
+                       "🌟 Launch App!"
+                       ]
+    }
+}
