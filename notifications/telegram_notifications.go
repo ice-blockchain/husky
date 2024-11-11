@@ -86,7 +86,7 @@ func loadTelegramNotificationTranslationTemplates(tenantName string) { //nolint:
 	const totalLanguages = 50
 	allTelegramNotificationTemplates = make(map[NotificationType]map[languageCode]*telegramNotificationTemplate, len(AllTelegramNotificationTypes))
 	for _, notificationType := range AllTelegramNotificationTypes {
-		content, fErr := translations.ReadFile(fmt.Sprintf("translations/%v/telegram/%v.txt", strings.ToLower(tenantName), notificationType))
+		content, fErr := translations.ReadFile(fmt.Sprintf("translations/%v/telegram/%v.txt", strings.ToLower(strings.ReplaceAll(tenantName, " ", "")), notificationType)) //nolint:lll // .
 		if fErr != nil {
 			panic(fErr)
 		}

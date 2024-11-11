@@ -45,7 +45,7 @@ func (t *telemetry) mustInit(steps []string) *telemetry {
 }
 
 func (t *telemetry) collectElapsed(step int, since stdlibtime.Time) {
-	t.registry.Get(t.steps[step]).(metrics.Timer).UpdateSince(since) //nolint:forcetypeassert // .
+	t.registry.Get(t.steps[step]).(metrics.Timer).UpdateSince(since) //nolint:forcetypeassert,errcheck // .
 }
 
 func (t *telemetry) Printf(format string, args ...any) {
