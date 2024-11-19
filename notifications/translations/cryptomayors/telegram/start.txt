@@ -1,12 +1,12 @@
 {
     "en": {
-        "body": "<b>Hi @{{.Username}}!</b>\n\n⏰ Tap on the <b>TOKERO</b> button every 24 hours to see your coin balance increase.\n\n👬 Build your team, complete tasks and increase your coins earnings! For each friend you invite, you both receive <b>{{.WelcomeBonus}} TMOON tokens</b>.\n\n🌟 The <b>Tokero Token</b> is a utility token designed to enhance the festival experience by providing exclusive benefits, fostering community engagement, and facilitating seamless transactions within the Tokero ecosystem.",
-        "altBody": "<b>Hi!</b>\n\n⏰ Tap on the <b>TOKERO</b> button every 24 hours to see your coin balance increase.\n\n👬 Build your team, complete tasks and increase your coins earnings! For each friend you invite, you both receive <b>{{.WelcomeBonus}} TMOON tokens</b>.\n\n🌟 The <b>Tokero Token</b> is a utility token designed to enhance the festival experience by providing exclusive benefits, fostering community engagement, and facilitating seamless transactions within the Tokero ecosystem.",
+        "body": "<b>Hi @{{.Username}}!</b>\n\n⏰ Tap the Butterfly button every 24 hours to watch your coin balance grow and show everyone who's the boss.\n\n👬 Build your squad, take on challenges, and boost your coin earnings! Invite friends, and for each one who joins, you both score <b>{{.WelcomeBonus}} TMOON tokens</b> to kickstart your journey!\n\n🌟 Crypto Mayors Kombat is all about climbing the ranks and making a name for yourself. No boring setups—just tap, lead, and get rewarded! From epic wins to laughs with your crew, it's non-stop fun. Ready to rule? Let the Kombat begin!",
+        "altBody": "<b>Hi!</b>\n\n⏰ Tap the Butterfly button every 24 hours to watch your coin balance grow and show everyone who's the boss.\n\n👬 Build your squad, take on challenges, and boost your coin earnings! Invite friends, and for each one who joins, you both score <b>{{.WelcomeBonus}} TMOON tokens</b> to kickstart your journey!\n\n🌟 Crypto Mayors Kombat is all about climbing the ranks and making a name for yourself. No boring setups—just tap, lead, and get rewarded! From epic wins to laughs with your crew, it's non-stop fun. Ready to rule? Let the Kombat begin!",
         "buttonText": [
-                       "🌟 Start Now!",
-                       "👾 Join TG Community",
-                       "🤖 Join X Community",
-                       "📋 Knowledge Base"
+                       "🌟 Start Now!",
+                       "👾 Join TG Community",
+                       "🤖 Join X Community",
+                       "📋 Knowledge Base"
                        ]
     }
 }
