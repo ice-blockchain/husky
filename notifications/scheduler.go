@@ -241,8 +241,13 @@ func (s *Scheduler) markScheduledNotificationAsSent(ctx context.Context, now *ti
 			ON CONFLICT DO NOTHING
 			RETURNING user_id, uniqueness, notification_type, notification_channel, notification_channel_value
 		)
-		DELETE FROM scheduled_notifications 
-			WHERE (user_id, uniqueness, notification_type, notification_channel, notification_channel_value) IN (SELECT * FROM sent)`, strings.Join(values, ","))
+		DELETE FROM scheduled_notifications sn
+		USING sent s
+		WHERE sn.user_id = s.user_id 
+		AND sn.uniqueness = s.uniqueness 
+		AND sn.notification_type = s.notification_type 
+		AND sn.notification_channel = s.notification_channel 
+		AND sn.notification_channel_value = s.notification_channel_value`, strings.Join(values, ","))
 	_, err := storage.Exec(ctx, s.db, sql, params...)
 
 	return errors.Wrapf(err, "failed to delete scheduled notifications %#v", notifications)
